@@ -9,7 +9,7 @@ The mod is now called Extended Hotbar (previously "Mehr Hotbar" / "10 Slots").
 This is a name-only update from 0.3.5; the features are unchanged.
 The file stays named DungeonSettlers10Slots.dll to keep updates simple.
 
-Package revision r1 adds licensing and compatibility notices only.
+Package revision r2 updates instructions and licensing notices only.
 The mod DLL, frame image and demo save are unchanged from the 0.3.6 package.
 
 OTHER MODS AND LOADERS

@@ -11,7 +11,7 @@ Die Mod heißt jetzt Extended Hotbar (bisher "Mehr Hotbar" bzw. "10 Slots").
 Gegenüber Version 0.3.5 ändert sich nur der Name, nicht die Funktion.
 Für einfache Updates bleibt der Dateiname DungeonSettlers10Slots.dll gleich.
 
-Die Paketausgabe r1 ergänzt nur Lizenz- und Kompatibilitätshinweise.
+Die Paketausgabe r2 aktualisiert nur Anleitungen und Lizenzhinweise.
 Mod-DLL, Grafik und Testspielstand sind gegenüber dem 0.3.6-Paket unverändert.
 
 WICHTIG ZU ANDEREN MODS
