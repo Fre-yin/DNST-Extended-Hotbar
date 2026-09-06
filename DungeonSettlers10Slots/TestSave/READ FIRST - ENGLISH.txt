@@ -1,0 +1,69 @@
+EXTENDED HOTBAR – DEMO SAVE FOR DUNGEON SETTLERS
+
+This prepared save lets you try Extended Hotbar without unlocking lots
+of skills first. Install the mod before using it; the save alone adds no slots.
+Updated September 6, 2026 with extra items for testing the item slots.
+Saved in Dungeon Settlers DS_B.0.4.17, for Extended Hotbar 0.3.6.
+
+ADDING THE SAVE
+
+1. Close the game and any separate test copy.
+
+2. Back up your existing saves. Press Windows+R and paste:
+
+   %USERPROFILE%\AppData\LocalLow\CanOpener
+
+   Press Enter. Copy the "Dungeon Settlers" folder to a safe backup location.
+   Keep the original folder where it is.
+
+3. Open the original "Dungeon Settlers" folder, then its "Saves" folder.
+   Create the Saves subfolder if it is missing.
+
+4. Right-click the downloaded "mit-Testspielstand" mod ZIP and choose
+   "Extract All". Open "Testspielstand", then the "Saves" folder inside it.
+
+5. Copy ONLY "10SlotsTestfile.json" into your own Saves folder from step 3.
+   Do NOT put it beside the game executable. If Windows asks to replace
+   an existing file, cancel. Do not overwrite your previous save.
+
+6. Start through Steam with Extended Hotbar installed. Choose Load:
+
+   Campaign: We go again
+   Save:     10 Slots Testfile
+
+TRYING IT
+
+Select "Def not Frieren". All ten skill slots and three different items
+are assigned, with extra items available to try. The game starts paused.
+Open the character's inventory and drag a suitable item into one of the
+three item slots to try a different assignment.
+
+Try moving skills, clicking extra slots and changing keys in the options menu.
+Your existing keys are kept. The save does not change them. Mod defaults
+are 1–0 for skills and Q/E/R for items.
+
+This character also uses skills automatically. Turn automatic use off on
+the skills if you want to test them individually. Valid targets, resources,
+cooldowns and available inventory items still matter.
+Save your test progress under a new name.
+
+PLEASE NOTE
+
+This is a test campaign, not a normal fresh start. It includes no other mods
+or someone else's settings.
+
+This optional demo save is not MIT-licensed mod code. Rights to game content
+remain with the respective owners. See LICENSING.txt in the parent mod package.
+
+If you already saved this updated version yourself, you do not need to import it.
+When upgrading from the older demo, keep your previous save backed up outside
+the Saves folder before copying the updated file.
+Copies of the same campaign share its autosave slots, even if you choose
+a different manual save name. Back up existing progress first.
+
+If the save is missing from Load, check its folder and restart the game.
+Do not delete your other saves. Import on a different user profile still
+needs to be tried.
+
+Use this demo with the mod enabled. To play without the mod, use a backup
+from before the mod to avoid losing additional assignments.

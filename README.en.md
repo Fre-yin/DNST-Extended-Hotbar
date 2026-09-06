@@ -14,7 +14,7 @@ More room for skills and items in **Dungeon Settlers** — an unofficial communi
 
 ## Current status
 
-This repository is being prepared for release. For now, it contains the project description and licensing notices. Source code and ready-to-install download packages have not been published here yet.
+This repository is being prepared for release. It contains the mod source code, tests, instructions and licensing notices. Ready-to-install download packages have not been published here yet.
 
 The current test version is **0.3.6**. Package revision **r1** only adds instructions and licensing notices; it does not change the mod's functionality.
 
@@ -54,6 +54,12 @@ Our MIT License also does not cover game code, other game content or the optiona
 
 For details, see [LICENSING.txt](LICENSING.txt), the [frame artwork notice](Assets/NOTICE.txt) and [THIRD_PARTY_NOTICES.txt](THIRD_PARTY_NOTICES.txt). License texts for the external components used by the mod are included under [Licenses](Licenses/).
 
-This initial repository version contains no game artwork, game files, mod DLL or save file. The notices also describe components intended for the later mod package.
+This source repository contains no game artwork, game files, mod DLL or save file. The notices also describe components intended for the later mod package.
 
 Extended Hotbar is an independent community project, not an official product of CanOpener or the publisher.
+
+## Source code and building
+
+The mod's own source code is under [DungeonSettlers10Slots](DungeonSettlers10Slots/), with automated tests under [tests/Hotbar.Tests](tests/Hotbar.Tests/). The technical directory and DLL names are preserved for compatibility; the mod is called Extended Hotbar.
+
+To develop or build it yourself, see [BUILDING.en.md](BUILDING.en.md). Building from source will not be required for normal installation: a ready-to-install release package is planned.

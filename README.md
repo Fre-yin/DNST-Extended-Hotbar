@@ -14,7 +14,7 @@ Mehr Platz für Fähigkeiten und Gegenstände in **Dungeon Settlers** – als in
 
 ## Aktueller Stand
 
-Dieses Repository wird gerade für die Veröffentlichung vorbereitet. Es enthält zunächst die Projektbeschreibung und die Lizenzhinweise. Quellcode und fertige Download-Pakete sind hier noch nicht veröffentlicht.
+Dieses Repository wird gerade für die Veröffentlichung vorbereitet. Es enthält den Mod-Quellcode, Tests, Anleitungen und Lizenzhinweise. Fertige Download-Pakete sind hier noch nicht veröffentlicht.
 
 Der aktuelle Mod-Teststand ist **0.3.6**. Die Paketausgabe **r1** ergänzt nur Anleitungen und Lizenzhinweise; sie verändert die Mod-Funktionen nicht.
 
@@ -54,6 +54,12 @@ Auch Spielcode, andere Spielinhalte und der optionale Testspielstand werden durc
 
 Die genauen Hinweise stehen in [LICENSING.txt](LICENSING.txt), im [Hinweis zur Rahmengrafik](Assets/NOTICE.txt) und in [THIRD_PARTY_NOTICES.txt](THIRD_PARTY_NOTICES.txt). Die Lizenztexte der verwendeten externen Komponenten liegen unter [Licenses](Licenses/).
 
-Dieser erste Repository-Stand enthält keine Spielgrafik, keine Spieldateien, keine Mod-DLL und keinen Spielstand. Die Hinweise beschreiben auch die für das spätere Mod-Paket vorgesehenen Bestandteile.
+Dieses Quellcode-Repository enthält keine Spielgrafik, keine Spieldateien, keine Mod-DLL und keinen Spielstand. Die Hinweise beschreiben auch die für das spätere Mod-Paket vorgesehenen Bestandteile.
 
 Extended Hotbar ist ein unabhängiges Community-Projekt und kein offizielles Produkt von CanOpener oder dem Publisher.
+
+## Quellcode und Selbstbau
+
+Der eigene Modcode liegt unter [DungeonSettlers10Slots](DungeonSettlers10Slots/), die automatisierten Tests unter [tests/Hotbar.Tests](tests/Hotbar.Tests/). Der technische Ordner- und DLL-Name bleibt aus Kompatibilitätsgründen erhalten; die Mod heißt Extended Hotbar.
+
+Wer selbst entwickeln möchte, findet die Schritte in [BUILDING.md](BUILDING.md). Zum späteren normalen Installieren ist kein Selbstbau nötig: Dafür wird es ein fertiges Release-Paket geben.
