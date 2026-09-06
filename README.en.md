@@ -4,6 +4,14 @@
 
 More room for skills and items in **Dungeon Settlers** — an unofficial community mod for MelonLoader.
 
+## Download the mod
+
+**[Get the ready-to-install mod: Extended Hotbar 0.3.6-r2](https://github.com/Fre-yin/DNST-Extended-Hotbar/releases/tag/v0.3.6-r2)**
+
+Scroll to **Assets** at the bottom of the release page. Download **Extended-Hotbar-0.3.6-r2.zip** there. The **mit-Testspielstand** edition also includes an optional demo save.
+
+**Do not use the green “Code → Download ZIP” button.** It downloads the source code for developers, not the installable mod. **Source code (zip/tar.gz)** is not the correct download either.
+
 ## What does the mod do?
 
 - Ten active skill slots, with the basic attack kept as a separate slot.
@@ -14,7 +22,7 @@ More room for skills and items in **Dungeon Settlers** — an unofficial communi
 
 ## Current status
 
-This repository contains the mod source code, tests, instructions and licensing notices. The first release is being prepared. Once released, installation packages will be available in the [downloads section](https://github.com/Fre-yin/DNST-Extended-Hotbar/releases).
+The **0.3.6-r2** test release is available in the [downloads section](https://github.com/Fre-yin/DNST-Extended-Hotbar/releases/tag/v0.3.6-r2). This repository contains the mod source code, tests, instructions and licensing notices.
 
 The current test version is **0.3.6**, package revision **r2**. This revision only updates instructions and licensing notices; it does not change the mod's functionality.
 
@@ -22,14 +30,16 @@ Please back up your saves before trying any mod. Extended Hotbar is still a test
 
 ## Download and installation
 
-Choose one of these two packages in the downloads section:
+Open the [release page](https://github.com/Fre-yin/DNST-Extended-Hotbar/releases/tag/v0.3.6-r2), scroll to the bottom and expand **Assets** if needed. Choose one of these two packages:
 
 - `Extended-Hotbar-0.3.6-r2.zip`: the mod for your own campaign.
 - `Extended-Hotbar-0.3.6-r2-mit-Testspielstand.zip`: the same mod plus an optional demo save with assigned slots and extra items.
 
-You only need one. GitHub's automatic **Source code (zip/tar.gz)** downloads contain the source, not the ready-to-install mod package.
+You only need one. **Code → Download ZIP** and **Source code (zip/tar.gz)** do not contain the mod DLL. A file named `DNST-Extended-Hotbar-main.zip` is therefore not suitable for installation.
 
-Install MelonLoader 0.7.3 separately, extract your chosen mod ZIP and copy its `Mods` folder beside `DungeonSettlers.exe`. A detailed [step-by-step guide](DungeonSettlers10Slots/UserGuide/READ%20FIRST%20-%20ENGLISH.txt) is also included in the package. Import the optional save separately, following its included instructions.
+The correct extracted package contains `Mods/DungeonSettlers10Slots.dll` and the `Mods/DungeonSettlers10SlotsAssets` folder. Copy only the included **Mods** folder into the game folder, not the entire source-code package.
+
+Close the game and back up your saves. Install MelonLoader 0.7.3 separately if needed, extract your chosen mod ZIP and copy its `Mods` folder beside `DungeonSettlers.exe`. Merge with an existing Mods folder; do not create `Mods/Mods`. Back up any older hotbar DLL outside Mods first so that two versions are not loaded together. A detailed [step-by-step guide](DungeonSettlers10Slots/UserGuide/READ%20FIRST%20-%20ENGLISH.txt) is also included in the package. Import the optional save separately, following its included instructions.
 
 ## Requirements
 
@@ -73,4 +83,4 @@ Extended Hotbar is an independent community project, not an official product of 
 
 The mod's own source code is under [DungeonSettlers10Slots](DungeonSettlers10Slots/), with automated tests under [tests/Hotbar.Tests](tests/Hotbar.Tests/). The technical directory and DLL names are preserved for compatibility; the mod is called Extended Hotbar.
 
-To develop or build it yourself, see [BUILDING.en.md](BUILDING.en.md). Building from source is not required for normal installation: use the ready-to-install release package once it is available.
+To develop or build it yourself, see [BUILDING.en.md](BUILDING.en.md). Building from source is not required for normal installation: use the ready-to-install release package linked above.

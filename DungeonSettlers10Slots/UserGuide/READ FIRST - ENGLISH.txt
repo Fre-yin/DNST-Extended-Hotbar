@@ -39,6 +39,24 @@ Do not keep the old and new DLLs in Mods together. MelonLoader does not need
 reinstalling. Your saves and bindings are kept. The game handles older saves;
 follow any version warnings it shows and keep your backup.
 
+GETTING THE RIGHT DOWNLOAD
+
+Open this release page and scroll to "Assets" at the bottom:
+https://github.com/Fre-yin/DNST-Extended-Hotbar/releases/tag/v0.3.6-r2
+
+Download one of these two packages there:
+- Extended-Hotbar-0.3.6-r2.zip: the mod for your own campaign.
+- Extended-Hotbar-0.3.6-r2-mit-Testspielstand.zip: the same mod plus a demo save.
+
+Important: Do NOT use the green "Code → Download ZIP" button.
+"Source code (zip/tar.gz)" also contains source only, not the ready-built mod DLL.
+If your download is named DNST-Extended-Hotbar-main.zip, it is the source code.
+You do not need to program or build anything yourself.
+
+The correct package contains Mods\DungeonSettlers10Slots.dll and the
+Mods\DungeonSettlers10SlotsAssets folder. Copy only this Mods folder into
+the game folder, not the entire source-code package.
+
 INSTALLATION
 
 1. Close the game and any separate test copy.
@@ -90,6 +108,9 @@ Only Mods goes in the Steam game folder. The demo goes in your personal saves
 folder. These are different locations.
 
 TROUBLESHOOTING
+
+No Mods folder in the extracted download? "DNST-Extended-Hotbar-main.zip"
+is the source archive. Get the mod ZIP from "Releases → Assets" as explained above.
 
 If you only see the old bar, check that Mods contains BOTH
 DungeonSettlers10Slots.dll and DungeonSettlers10SlotsAssets.

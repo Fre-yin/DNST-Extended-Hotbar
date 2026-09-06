@@ -45,6 +45,25 @@ Belegungen bleiben erhalten. Ältere Spielstände lädt weiterhin das Spiel selb
 beachte dabei eventuelle Versionshinweise des Spiels und behalte deine Sicherung.
 
 
+DEN RICHTIGEN DOWNLOAD FINDEN
+
+Öffne diese Release-Seite und scrolle ganz nach unten zu "Assets":
+https://github.com/Fre-yin/DNST-Extended-Hotbar/releases/tag/v0.3.6-r2
+
+Lade dort eines dieser beiden Pakete herunter:
+- Extended-Hotbar-0.3.6-r2.zip: Mod für deine eigene Kampagne.
+- Extended-Hotbar-0.3.6-r2-mit-Testspielstand.zip: gleiche Mod plus Demo-Spielstand.
+
+Wichtig: NICHT den grünen Knopf "Code → Download ZIP" verwenden.
+Auch "Source code (zip/tar.gz)" enthält nur Quellcode, keine fertige Mod-DLL.
+Heißt dein Download DNST-Extended-Hotbar-main.zip, hast du den Quellcode.
+Du brauchst nichts selbst zu programmieren oder zusammenzubauen.
+
+Im richtigen Paket liegen Mods\DungeonSettlers10Slots.dll und der Ordner
+Mods\DungeonSettlers10SlotsAssets. Kopiere nur diesen Mods-Ordner in den
+Spielordner, nicht das komplette Quellcode-Paket.
+
+
 SO INSTALLIERST DU DIE MOD
 
 1. Beende das Spiel. Falls noch eine Testkopie läuft, schließe auch diese.
@@ -118,6 +137,9 @@ in deinen persönlichen Spielstandordner. Das sind zwei verschiedene Orte!
 
 WENN ETWAS NICHT KLAPPT
 
+- Kein Mods-Ordner im entpackten Download? "DNST-Extended-Hotbar-main.zip"
+  ist das Quellcode-Archiv. Lade das Mod-ZIP unter "Releases → Assets"
+  wie oben beschrieben herunter.
 - Nur die alte Leiste sichtbar? Prüfe, ob im Mods-Ordner die Datei
   DungeonSettlers10Slots.dll UND der Ordner DungeonSettlers10SlotsAssets liegen.
 - Prüfe auch, ob du wirklich die Steam-Version startest, in die du kopiert hast.

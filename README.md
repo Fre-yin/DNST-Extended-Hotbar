@@ -4,6 +4,14 @@
 
 Mehr Platz für Fähigkeiten und Gegenstände in **Dungeon Settlers** – als inoffizielle Community-Mod für MelonLoader.
 
+## Mod herunterladen
+
+**[Hier zur fertigen Mod: Extended Hotbar 0.3.6-r2](https://github.com/Fre-yin/DNST-Extended-Hotbar/releases/tag/v0.3.6-r2)**
+
+Scrolle auf der Release-Seite ganz nach unten zu **Assets**. Lade dort **Extended-Hotbar-0.3.6-r2.zip** herunter. Die Variante **mit-Testspielstand** enthält zusätzlich einen freiwilligen Demo-Spielstand.
+
+**Nicht über den grünen Knopf „Code → Download ZIP“ herunterladen.** Das liefert nur den Quellcode für Entwickler, nicht die installierbare Mod. Auch **Source code (zip/tar.gz)** ist nicht der richtige Download.
+
 ## Was macht die Mod?
 
 - Zehn Plätze für aktive Fähigkeiten. Der normale Angriff bleibt zusätzlich erhalten.
@@ -14,7 +22,7 @@ Mehr Platz für Fähigkeiten und Gegenstände in **Dungeon Settlers** – als in
 
 ## Aktueller Stand
 
-Dieses Repository enthält den Mod-Quellcode, Tests, Anleitungen und Lizenzhinweise. Der erste Release wird vorbereitet. Nach seiner Freigabe findest du die Installationspakete im [Downloadbereich](https://github.com/Fre-yin/DNST-Extended-Hotbar/releases).
+Die Testversion **0.3.6-r2** ist im [Downloadbereich](https://github.com/Fre-yin/DNST-Extended-Hotbar/releases/tag/v0.3.6-r2) verfügbar. Dieses Repository enthält den Mod-Quellcode, Tests, Anleitungen und Lizenzhinweise.
 
 Der aktuelle Mod-Teststand ist **0.3.6**, Paketausgabe **r2**. Diese Ausgabe aktualisiert nur Anleitungen und Lizenzhinweise; sie verändert die Mod-Funktionen nicht.
 
@@ -22,14 +30,16 @@ Bitte sichere deine Spielstände, bevor du eine Mod ausprobierst. Extended Hotba
 
 ## Download und Installation
 
-Wähle im Downloadbereich eines dieser beiden Pakete:
+Öffne die [Release-Seite](https://github.com/Fre-yin/DNST-Extended-Hotbar/releases/tag/v0.3.6-r2), scrolle ganz nach unten und klappe bei Bedarf **Assets** auf. Wähle eines dieser beiden Pakete:
 
 - `Extended-Hotbar-0.3.6-r2.zip`: die Mod für deine eigene Kampagne.
 - `Extended-Hotbar-0.3.6-r2-mit-Testspielstand.zip`: dieselbe Mod plus optionaler Demo-Spielstand mit belegten Slots und zusätzlichen Items.
 
-Du brauchst nur eines davon. GitHubs automatische Downloads **Source code (zip/tar.gz)** enthalten den Quellcode, nicht das fertige Installationspaket.
+Du brauchst nur eines davon. **Code → Download ZIP** und **Source code (zip/tar.gz)** enthalten keine Mod-DLL. Eine Datei namens `DNST-Extended-Hotbar-main.zip` ist deshalb nicht zum Installieren geeignet.
 
-Installiere MelonLoader 0.7.3 separat, entpacke das gewählte Mod-ZIP und kopiere dessen Ordner `Mods` neben `DungeonSettlers.exe`. Eine ausführliche [Schritt-für-Schritt-Anleitung](DungeonSettlers10Slots/UserGuide/BITTE%20ZUERST%20LESEN.txt) liegt auch im Paket. Der optionale Spielstand wird getrennt importiert, wie in seiner beiliegenden Anleitung beschrieben.
+Im richtigen entpackten Paket findest du `Mods/DungeonSettlers10Slots.dll` und den Ordner `Mods/DungeonSettlers10SlotsAssets`. Nur der enthaltene **Mods**-Ordner kommt in den Spielordner, nicht das gesamte Quellcode-Paket.
+
+Beende das Spiel und sichere deine Spielstände. Installiere bei Bedarf MelonLoader 0.7.3 separat, entpacke das gewählte Mod-ZIP und kopiere dessen Ordner `Mods` neben `DungeonSettlers.exe`. Führe einen vorhandenen Mods-Ordner zusammen; es darf kein `Mods/Mods` entstehen. Sichere eine ältere Hotbar-DLL vorher außerhalb von Mods, damit nicht zwei Versionen gleichzeitig geladen werden. Eine ausführliche [Schritt-für-Schritt-Anleitung](DungeonSettlers10Slots/UserGuide/BITTE%20ZUERST%20LESEN.txt) liegt auch im Paket. Der optionale Spielstand wird getrennt importiert, wie in seiner beiliegenden Anleitung beschrieben.
 
 ## Voraussetzungen
 
@@ -73,4 +83,4 @@ Extended Hotbar ist ein unabhängiges Community-Projekt und kein offizielles Pro
 
 Der eigene Modcode liegt unter [DungeonSettlers10Slots](DungeonSettlers10Slots/), die automatisierten Tests unter [tests/Hotbar.Tests](tests/Hotbar.Tests/). Der technische Ordner- und DLL-Name bleibt aus Kompatibilitätsgründen erhalten; die Mod heißt Extended Hotbar.
 
-Wer selbst entwickeln möchte, findet die Schritte in [BUILDING.md](BUILDING.md). Zum normalen Installieren ist kein Selbstbau nötig: Verwende dafür das fertige Release-Paket, sobald es freigegeben ist.
+Wer selbst entwickeln möchte, findet die Schritte in [BUILDING.md](BUILDING.md). Zum normalen Installieren ist kein Selbstbau nötig: Verwende dafür das oben verlinkte fertige Release-Paket.
