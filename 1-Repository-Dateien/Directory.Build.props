@@ -1,6 +1,0 @@
-<Project>
-  <PropertyGroup>
-    <!-- All dependencies come from local SDK packs and the user's game folder. -->
-    <RestoreConfigFile>$(MSBuildThisFileDirectory)NuGet.Config</RestoreConfigFile>
-  </PropertyGroup>
-</Project>
