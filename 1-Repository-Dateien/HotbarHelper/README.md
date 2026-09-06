@@ -18,7 +18,12 @@ Andere Mods und MelonLoader bleiben installiert. Bei der Installation werden dei
 
 ## Download und erster Start
 
-**[Downloadbereich öffnen](https://github.com/Fre-yin/DNST-Extended-Hotbar/releases)** → Release **Extended Hotbar 0.3.7** → unten bei **Assets** die Datei **Extended-Hotbar-Helper-0.1.2-test.zip** wählen. Falls der neue Release noch fehlt, ist seine Freigabe noch nicht abgeschlossen.
+**[Downloadbereich öffnen](https://github.com/Fre-yin/DNST-Extended-Hotbar/releases)** → Release **Extended Hotbar 0.3.7** → unten bei **Assets** eines dieser Pakete wählen:
+
+- **Extended-Hotbar-Helper-0.1.2-test.zip:** Helper mit enthaltener Mod, ohne Demo-Spielstand.
+- **Extended-Hotbar-Helper-0.1.2-test-mit-Testspielstand.zip:** derselbe Helper mit derselben Mod, zusätzlich der optionale Demo-Spielstand.
+
+Kein weiteres Mod-Paket nötig. Den Demo-Spielstand separat nach der Anleitung im enthaltenen Ordner **Testspielstand** importieren; der Helper erledigt das nicht automatisch. Falls der neue Release noch fehlt, ist seine Freigabe noch nicht abgeschlossen.
 
 **Nicht „Code → Download ZIP“ oder „Source code“ verwenden.** Das sind Entwicklerdateien, kein fertiger Helfer.
 

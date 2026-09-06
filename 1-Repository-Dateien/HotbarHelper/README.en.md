@@ -18,7 +18,12 @@ Other mods and MelonLoader remain installed. Installation does not modify your s
 
 ## Download and first launch
 
-**[Open downloads](https://github.com/Fre-yin/DNST-Extended-Hotbar/releases)** → **Extended Hotbar 0.3.7** release → choose **Extended-Hotbar-Helper-0.1.2-test.zip** under **Assets** at the bottom. If the new release is missing, its publication has not been completed.
+**[Open downloads](https://github.com/Fre-yin/DNST-Extended-Hotbar/releases)** → **Extended Hotbar 0.3.7** release → choose one of these packages under **Assets** at the bottom:
+
+- **Extended-Hotbar-Helper-0.1.2-test.zip:** helper with the bundled mod, without a demo save.
+- **Extended-Hotbar-Helper-0.1.2-test-mit-Testspielstand.zip:** the same helper and mod, plus the optional demo save.
+
+No additional mod package needed. Import the demo separately using the instructions in the included **Testspielstand** folder; the helper does not import it automatically. If the new release is missing, its publication has not been completed.
 
 **Do not use “Code → Download ZIP” or “Source code”.** Those are developer files, not the ready-to-use helper.
 
@@ -60,4 +65,3 @@ Independently authored helper code and original instructions: [MIT](LICENSE). **
 Unofficial community tool, not an official product of CanOpener or the publisher.
 
 **For developers:** [Building, tests and technical limitations](DEVELOPMENT.md). You do not need to code to use the helper.
-

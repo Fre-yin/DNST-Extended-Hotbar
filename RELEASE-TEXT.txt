@@ -2,7 +2,7 @@
 
 **Extended Hotbar 0.3.7 – für Dungeon Settlers DS_B.0.4.19 / Steam-Build 25154317**
 
-Zehn aktive Fähigkeitsplätze, ein separater Basisangriff und drei Gegenstandsplätze. Das gewohnte Charakterfenster bleibt erhalten. Die zusätzlichen Tasten lassen sich in den Spieloptionen belegen.
+**Extended Hotbar** bietet zehn aktive Fähigkeitsplätze, einen separaten Basisangriff und drei Gegenstandsplätze. **Der optionale Hotbar Helper ist ein eigenes Windows-Programm zum Installieren und Aktualisieren der Mod**, inklusive Sicherungen und Hilfsfunktionen. Die Mod ist in beiden Helper-Paketen bereits enthalten.
 
 ### Neu in diesem Update
 
@@ -13,11 +13,14 @@ Zehn aktive Fähigkeitsplätze, ein separater Basisangriff und drei Gegenstandsp
 
 **Scrolle nach unten zu Assets. Nicht über Code → Download ZIP herunterladen!** Auch **Source code (zip/tar.gz)** enthält nur Quellcode, keine installierbare Mod.
 
-- **Extended-Hotbar-Helper-0.1.2-test.zip:** optionaler Windows-Helfer. **Mod 0.3.7 ist bereits enthalten** – kein weiteres Mod-ZIP nötig.
-- **Extended-Hotbar-0.3.7.zip:** manuelles Mod-Paket für deine eigene Kampagne.
-- **Extended-Hotbar-0.3.7-mit-Testspielstand.zip:** dasselbe manuelle Paket plus optionaler Demo-Spielstand „10 Slots Testfile“ mit belegten Slots und zusätzlichen Items.
+| Paket | Helper | Testspielstand |
+| --- | --- | --- |
+| **Extended-Hotbar-0.3.7.zip** | Nein, manuelle Installation | Nein |
+| **Extended-Hotbar-0.3.7-mit-Testspielstand.zip** | Nein, manuelle Installation | Ja |
+| **Extended-Hotbar-Helper-0.1.2-test.zip** | Ja | Nein |
+| **Extended-Hotbar-Helper-0.1.2-test-mit-Testspielstand.zip** | Ja | Ja |
 
-Die beiden manuellen Pakete nicht zusammen installieren. **SHA256SUMS.txt** enthält optionale Prüfsummen für alle drei ZIPs. QA und Frieren sind nicht enthalten.
+**Wähle genau ein Paket. Alle vier enthalten dieselbe Mod 0.3.7.** Der Spielstand „10 Slots Testfile“ enthält belegte Slots und zusätzliche Items. **Auch im Helper-Paket musst du den Spielstand separat importieren; das geschieht nicht automatisch.** **SHA256SUMS.txt** enthält optionale Prüfsummen für alle vier ZIPs. QA und Frieren sind nicht enthalten.
 
 ### Installation / Update
 
@@ -51,7 +54,7 @@ Inoffizielles Community-Projekt, kein offizielles Produkt von CanOpener oder dem
 
 **Extended Hotbar 0.3.7 – for Dungeon Settlers DS_B.0.4.19 / Steam build 25154317**
 
-Ten active skill slots, a separate basic attack and three item quickslots. The familiar character panel stays in place. Additional key bindings can be configured in the game's options.
+**Extended Hotbar** provides ten active skill slots, a separate basic attack and three item quickslots. **The optional Hotbar Helper is a separate Windows application for installing and updating the mod**, including backups and troubleshooting tools. Both helper packages already contain the mod.
 
 ### What's new
 
@@ -62,11 +65,14 @@ Ten active skill slots, a separate basic attack and three item quickslots. The f
 
 **Scroll down to Assets. Do not use Code → Download ZIP!** The automatic **Source code (zip/tar.gz)** downloads also provide source code, not an installable mod.
 
-- **Extended-Hotbar-Helper-0.1.2-test.zip:** optional Windows helper. **Mod 0.3.7 is already included** – no separate mod ZIP needed.
-- **Extended-Hotbar-0.3.7.zip:** manual mod package for your own campaign.
-- **Extended-Hotbar-0.3.7-mit-Testspielstand.zip:** the same manual package plus the optional “10 Slots Testfile” demo save with assigned slots and extra items.
+| Package | Helper | Demo save |
+| --- | --- | --- |
+| **Extended-Hotbar-0.3.7.zip** | No, manual installation | No |
+| **Extended-Hotbar-0.3.7-mit-Testspielstand.zip** | No, manual installation | Yes |
+| **Extended-Hotbar-Helper-0.1.2-test.zip** | Yes | No |
+| **Extended-Hotbar-Helper-0.1.2-test-mit-Testspielstand.zip** | Yes | Yes |
 
-Do not install both manual packages together. **SHA256SUMS.txt** provides optional checksums for all three ZIPs. QA and Frieren are not included.
+**Choose exactly one package. All four contain the same mod 0.3.7.** The “10 Slots Testfile” save has assigned slots and extra items. **Even with the helper package, import the save separately; it is not installed automatically.** **SHA256SUMS.txt** provides optional checksums for all four ZIPs. QA and Frieren are not included.
 
 ### Installation / update
 
