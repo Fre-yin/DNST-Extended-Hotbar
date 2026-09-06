@@ -1,0 +1,105 @@
+EXTENDED HOTBAR – HELPER 0.1.2 (LOCAL TEST VERSION)
+
+Two main buttons: install the mod, or prepare a save for playing without it.
+Extended Hotbar 0.3.7 is included. No manual DLL copying is needed.
+
+GET STARTED
+
+Requires Windows x64 with .NET Framework 4.8, Dungeon Settlers DS_B.0.4.19
+(Steam build 25154317) and separately installed MelonLoader 0.7.3.
+The helper does not install the loader or download online updates.
+Later game/mod versions require an updated helper package.
+
+1. Extract the entire package into its own folder, NOT into Mods.
+2. Close the game and all test copies.
+3. Open Extended-Hotbar-Helper.exe. Check the game folder at the top:
+   it must contain DungeonSettlers.exe. Use Browse to change it if needed.
+4. Choose an action. Changes require your confirmation.
+
+INSTALL / UPDATE EXTENDED HOTBAR
+
+Click the install button, check the destination and confirm.
+Existing hotbar files are backed up before replacement. The legacy
+DungeonSettlers12Slots.dll is also backed up and removed to avoid duplicates.
+Other mods, MelonLoader and saves are retained.
+An unchanged installation reports “Already up to date” without another backup.
+Start the game yourself through Steam afterwards.
+
+PLAY WITHOUT EXTENDED HOTBAR
+
+Click the second main button to prepare a save and uninstall the mod.
+
+1. In the new window, choose the campaign you want to continue.
+2. Read the summary. Normally, leave the suggested original keys selected.
+3. Click the explicit button to create the save copy and uninstall the mod.
+
+The helper creates a SEPARATE copy. Your original remains unchanged and is
+also backed up. The copy has a “(vanilla hotbar)” suffix in the selected helper
+language and its own autosave identity. It retains the first four skill
+assignments, basic attack and one item slot. Learned skills, inventory and
+existing progress are not removed.
+
+Only Extended Hotbar is then removed from the game folder. The affected
+original keys are restored: skills Q/E/R/T, item Y, character selection 1–0.
+Language, graphics, sound and unrelated controls remain unchanged.
+Other mods and MelonLoader remain installed. This restores the original
+hotbar; it does not make the entire game unmodded.
+
+If you have your own complete pre-mod UserSetting.json backup, you may
+optionally select it for your original bindings. Otherwise leave that box off.
+
+IMPORTANT: Save conversion remains experimental. Use a test campaign first
+and check loading, saving and reloading in the game. Do not validate it using
+your only important campaign. Supported export formats: DS_B.0.4.17 and
+DS_B.0.4.19. Ironmode and unknown formats are refused.
+
+Continue only the new copy without Extended Hotbar, not your other modded
+saves. Original and copy progress independently; progress is never merged.
+
+TROUBLESHOOTING / UNDO CHANGES
+
+This section starts collapsed. It contains:
+
+• Save/settings folder: Change it only for another profile. Normally:
+  %USERPROFILE%\AppData\LocalLow\CanOpener\Dungeon Settlers.
+  It contains UserSetting.json and Saves.
+
+• Undo selected change: Choose an entry to restore its previous mod files
+  or affected bindings. Campaign progress is NOT rolled back. Exported copies
+  remain. Files or affected keys changed since then are not overwritten.
+  Interrupted operations must be recovered before making further changes.
+
+• Repair incorrect key labels only: For “Alpha” labels after removing the mod
+  or a failed activation. Restores only affected keys to Q/E/R/T, Y and 1–0.
+  This neither removes the mod nor converts a save. Previous keys are backed up.
+
+To switch back, install the mod again. If the original keys written by the
+helper remain unchanged, it can restore your earlier hotbar bindings.
+
+BACKUPS AND LOAD STATUS
+
+Keep %LOCALAPPDATA%\ExtendedHotbarHelper\Backups while you need undo.
+Old entries without actual changes are omitted from the list. Damaged backups
+or changed files block automatic recovery; do not blindly overwrite them.
+
+Keep the helper open to monitor loading. It checks the log against the current
+game process and folder. A DLL on disk alone is not proof of activation.
+After confirmed activation failure and game exit, it offers original keys,
+with your confirmation. It never starts or closes the game. File changes are
+blocked while the game runs. Monitoring ends when the helper closes.
+
+LANGUAGES AND LICENSES
+
+Controls and help support all ten game languages. The selector changes only
+this helper session, not your saved game language. Instructions contains short
+guides for each language. Windows file pickers follow Windows language.
+Original technical messages remain available separately under error details.
+
+This is a local unsigned test build. Windows may show a reputation warning.
+Use only your verified package; do not disable security software. The helper
+does not request administrator rights or send data online.
+
+Own code and instructions: MIT (LICENSE). The embedded edited original game
+artwork is expressly NOT MIT-licensed. Keep LICENSING.txt,
+THIRD_PARTY_NOTICES.txt, Assets/NOTICE.txt and Licenses.
+The game and MelonLoader are not bundled.

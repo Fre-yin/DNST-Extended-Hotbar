@@ -1,86 +1,121 @@
-# Extended Hotbar
+# Extended Hotbar & Hotbar Helper
 
 [Deutsch](README.md) | **English**
 
-More room for skills and items in **Dungeon Settlers** — an unofficial community mod for MelonLoader.
+**Extended Hotbar** expands Dungeon Settlers to ten active skill slots, a separate basic attack and three item quickslots. **The optional Hotbar Helper is a Windows application for installing and updating the mod.** The familiar character panel stays in place.
 
-## Download the mod
+## Also included: Hotbar Helper
 
-**[Get the ready-to-install mod: Extended Hotbar 0.3.6-r2](https://github.com/Fre-yin/DNST-Extended-Hotbar/releases/tag/v0.3.6-r2)**
+**Want to install or update the mod without manually copying mod files?** The optional **Hotbar Helper** for Windows does that for you. **Extended Hotbar 0.3.7 is already bundled** – no separate mod ZIP needed.
 
-Scroll to **Assets** at the bottom of the release page. Download **Extended-Hotbar-0.3.6-r2.zip** there. The **mit-Testspielstand** edition also includes an optional demo save.
+- Install or update with a button; existing hotbar files are backed up.
+- Undo changes, repair incorrect “Alpha” key labels and check loading status.
+- Prepare a separate save copy for the original hotbar and remove Extended Hotbar. **This save conversion is still experimental; try a test campaign first.**
+- Controls and help in all ten game languages. Other mods and MelonLoader are retained.
 
-**Do not use the green “Code → Download ZIP” button.** It downloads the source code for developers, not the installable mod. **Source code (zip/tar.gz)** is not the correct download either.
+**[Hotbar Helper: overview and instructions →](HotbarHelper/README.en.md)** · [Deutsch](HotbarHelper/README.md)
 
-## What does the mod do?
+The helper is optional: manual installation remains available. It does not install MelonLoader or download updates online; future versions need a new helper package.
 
-- Ten active skill slots, with the basic attack kept as a separate slot.
-- Three item quickslots next to the skill bar.
-- Use skills and items by clicking their slots or pressing the assigned keys.
-- Keep the familiar character panel with status, skills and inventory.
-- Configure the additional key bindings in the game's options. Labels follow the selected game language.
+## Download the mod here
 
-## Current status
+**[Open the downloads section → Releases](https://github.com/Fre-yin/DNST-Extended-Hotbar/releases)**
 
-The **0.3.6-r2** test release is available in the [downloads section](https://github.com/Fre-yin/DNST-Extended-Hotbar/releases/tag/v0.3.6-r2). This repository contains the mod source code, tests, instructions and licensing notices.
+Open **Extended Hotbar 0.3.7** and scroll down to **Assets**. If that release is not visible yet, its publication has not been completed. Do not substitute the older package for the new game build.
 
-The current test version is **0.3.6**, package revision **r2**. This revision only updates instructions and licensing notices; it does not change the mod's functionality.
+**Do not use “Code → Download ZIP”.** That button and the automatic **Source code (zip/tar.gz)** downloads provide developer source code, not an installable mod.
 
-Please back up your saves before trying any mod. Extended Hotbar is still a test version.
+### Four packages – choose exactly one
 
-## Download and installation
+| Download | Mod 0.3.7 | Helper 0.1.2 | Demo save |
+| --- | --- | --- | --- |
+| **Extended-Hotbar-0.3.7.zip** | Yes, manual installation | No | No |
+| **Extended-Hotbar-0.3.7-mit-Testspielstand.zip** | Yes, manual installation | No | Yes |
+| **Extended-Hotbar-Helper-0.1.2-test.zip** | Yes, bundled in the helper | Yes | No |
+| **Extended-Hotbar-Helper-0.1.2-test-mit-Testspielstand.zip** | Yes, bundled in the helper | Yes | Yes |
 
-Open the [release page](https://github.com/Fre-yin/DNST-Extended-Hotbar/releases/tag/v0.3.6-r2), scroll to the bottom and expand **Assets** if needed. Choose one of these two packages:
+**You only need one package.** All four contain the same mod; both helper packages already include it. The optional “10 Slots Testfile” save has assigned slots and extra items. **Even with the helper, import it separately using the instructions in the Testspielstand folder – it is not installed automatically.**
 
-- `Extended-Hotbar-0.3.6-r2.zip`: the mod for your own campaign.
-- `Extended-Hotbar-0.3.6-r2-mit-Testspielstand.zip`: the same mod plus an optional demo save with assigned slots and extra items.
-
-You only need one. **Code → Download ZIP** and **Source code (zip/tar.gz)** do not contain the mod DLL. A file named `DNST-Extended-Hotbar-main.zip` is therefore not suitable for installation.
-
-The correct extracted package contains `Mods/DungeonSettlers10Slots.dll` and the `Mods/DungeonSettlers10SlotsAssets` folder. Copy only the included **Mods** folder into the game folder, not the entire source-code package.
-
-Close the game and back up your saves. Install MelonLoader 0.7.3 separately if needed, extract your chosen mod ZIP and copy its `Mods` folder beside `DungeonSettlers.exe`. Merge with an existing Mods folder; do not create `Mods/Mods`. Back up any older hotbar DLL outside Mods first so that two versions are not loaded together. A detailed [step-by-step guide](DungeonSettlers10Slots/UserGuide/READ%20FIRST%20-%20ENGLISH.txt) is also included in the package. Import the optional save separately, following its included instructions.
+`SHA256SUMS.txt` provides optional checksums for all four ZIPs. QA and Frieren are not part of these packages.
 
 ## Requirements
 
-- A legally obtained copy of Dungeon Settlers for Windows (64-bit).
-- Supported test build: **DS_B.0.4.17**, Steam build **25143510**.
-- **MelonLoader 0.7.3**, installed separately.
+- **64-bit Windows** and a legally obtained copy of Dungeon Settlers.
+- Supported game version: **DS_B.0.4.19 / Steam build 25154317**.
+- **MelonLoader 0.7.3**, installed separately. The game and loader are not bundled.
+- The helper additionally requires **.NET Framework 4.8**.
 
-Compatibility with other game versions has not been confirmed. A game update may also require an update to the mod.
+These are **test versions**. Other game builds are not approved. A game update may require a new mod and helper version. Back up your saves before trying them.
+
+## Install or update
+
+### Using the optional helper
+
+1. Extract the **entire helper ZIP** into its own folder, not into `Mods`.
+2. Close the game and all test copies. Open `Extended-Hotbar-Helper.exe`.
+3. Check the displayed game folder: it must contain `DungeonSettlers.exe`.
+4. Choose **Install / update Extended Hotbar**, review the summary and confirm.
+5. Start the game yourself through Steam afterwards.
+
+The helper backs up existing hotbar files before replacement. Installation preserves other mods, MelonLoader and your saves. It does not install MelonLoader or download updates online; download a new helper package for future versions.
+
+Controls and help support all ten game languages. Selecting a helper language does not change your saved game language. [Full helper instructions](HotbarHelper/READ%20FIRST%20-%20ENGLISH.txt).
+
+### Without the helper: copy the files yourself
+
+1. Close the game, back up your saves and extract one of the **manual mod ZIPs**.
+2. Back up any existing `DungeonSettlers10Slots.dll` or legacy `DungeonSettlers12Slots.dll` **outside** `Mods`. Do not load two hotbar versions together.
+3. Copy the included **Mods** folder into the game folder beside `DungeonSettlers.exe`. Merge with an existing Mods folder; do not create `Mods/Mods`. Do not delete other mods.
+4. Start the game. Initial MelonLoader setup may take longer; if the game closes afterwards, start it again.
+
+The correct mod package contains `Mods/DungeonSettlers10Slots.dll` and `Mods/DungeonSettlers10SlotsAssets`. `DNST-Extended-Hotbar-main.zip` is the wrong download for installation. [Step-by-step instructions](DungeonSettlers10Slots/UserGuide/READ%20FIRST%20-%20ENGLISH.txt).
+
+Import the demo save separately using its included instructions; do not copy it into the game folder or overwrite your own campaign. The unchanged demo save was saved under **DS_B.0.4.17**; it is not a newly playtested 0.4.19 campaign.
+
+## Play without Extended Hotbar again
+
+The helper's second main button offers to **create a separate save copy for the original hotbar and uninstall Extended Hotbar**. Select a campaign and explicitly confirm the summary.
+
+Your original is preserved. The copy keeps the first four skill assignments, basic attack and one item slot. Learned skills and inventory are not removed. Affected keys return to the original bindings; unrelated settings, mods and MelonLoader remain.
+
+**Save conversion is experimental.** Loading, saving and reloading the converted copy in an actual campaign has not yet been signed off. Try a test campaign first, not your only important save. Original and copy progress independently; progress is never merged. Supported export formats are 0.4.17 and 0.4.19; unknown formats and Ironmode are refused.
+
+The help section contains undo and a separate repair for incorrect “Alpha” key labels. Key-label repair alone does not remove the mod or convert a save. [Details and backups](HotbarHelper/READ%20FIRST%20-%20ENGLISH.txt).
 
 ## Default controls
 
 | Action | Keys |
 | --- | --- |
-| Use skill 1 through 10 | 1, 2, 3, 4, 5, 6, 7, 8, 9, 0 |
-| Use item quickslot 1 through 3 | Q, E, R |
-| Select character 1 through 10 | Left Shift + 1 through 0 |
+| Use skills 1 through 10 | 1, 2, 3, 4, 5, 6, 7, 8, 9, 0 |
+| Use item quickslots 1 through 3 | Q, E, R |
+| Select characters 1 through 10 | Left Shift + 1 through 0 |
 
-Existing custom bindings are preserved, so yours may differ from this table. You can change them in the game's options. As in the original game, the bar is hidden when no character is selected.
+Clicking slots works too. Existing custom bindings are preserved and may differ. Additional bindings can be configured in the game's options; their labels follow the game language. As in the original game, the bar is hidden when no character is selected.
+
+## What changed and what was tested?
+
+**Mod 0.3.7:** Updated for DS_B.0.4.19 / build 25154317. Slot behavior, frame artwork and the demo save are unchanged from 0.3.6.
+
+**Helper 0.1.2:** Includes mod 0.3.7, two clear main actions, a separate selection/confirmation dialog for removal, reorganized help and text in ten languages. A repeated language-switching bug was fixed. Installations with no actual changes do not create misleading undo records.
+
+Automated tests and headless game-interface checks covered slots, persistence, key bindings and ten languages. They do not replace a full visible campaign, combat or long-session playtest on the new build. The experimental helper-converted save is explicitly not signed off by these checks. Translation feedback is welcome.
 
 ## Other mods and loaders
 
-This release supports **MelonLoader**. There is currently no BepInEx version. Running it alongside BepInEx mods, such as Reroll Helper, has not been confirmed to work. Please do not simply install both loaders on top of each other.
-
-Compatibility with other MelonLoader mods has not been comprehensively tested either. Support for additional loaders may follow later.
+**MelonLoader only.** No BepInEx edition is available; running alongside BepInEx mods such as Reroll Helper is unconfirmed. Do not simply install both loaders on top of each other. Compatibility with other MelonLoader mods has not been comprehensively tested either.
 
 ## License and game artwork
 
-The independently authored mod code, build scripts and our original instructions are licensed under the [MIT License](LICENSE).
+Independently authored mod/helper code, build scripts and original instructions use the [MIT License](LICENSE).
 
-**The edited frame image is expressly excluded from that license.** It is based on the original Dungeon Settlers frame, enlarged and adapted by Danny. Rights in the original material remain with the respective rights holders. It is not a freely reusable MIT-licensed asset.
+**The edited original frame artwork is not MIT-licensed.** It is based on Dungeon Settlers artwork, enlarged and adapted by Danny; rights in the original remain with their respective holders. Game code, game content and the optional demo save are also excluded from our code license. This includes the artwork embedded in the helper.
 
-Our MIT License also does not cover game code, other game content or the optional test save.
+See [LICENSING.txt](LICENSING.txt), the [artwork notice](Assets/NOTICE.txt), [THIRD_PARTY_NOTICES.txt](THIRD_PARTY_NOTICES.txt) and [license texts](Licenses/). These notices remain included in all download packages.
 
-For details, see [LICENSING.txt](LICENSING.txt), the [frame artwork notice](Assets/NOTICE.txt) and [THIRD_PARTY_NOTICES.txt](THIRD_PARTY_NOTICES.txt). License texts for the external components used by the mod are included under [Licenses](Licenses/).
+This source repository contains no game artwork, game/loader DLLs, compiled mod DLL or actual campaign file. `HotbarHelper/SyntheticSave.json` is an authored test fixture, not a playable save.
 
-This source repository contains no game artwork, game files, mod DLL or save file. The notices also cover the contents of the separate installation packages.
+Unofficial community project, not an official product of CanOpener or the publisher.
 
-Extended Hotbar is an independent community project, not an official product of CanOpener or the publisher.
+## For developers
 
-## Source code and building
-
-The mod's own source code is under [DungeonSettlers10Slots](DungeonSettlers10Slots/), with automated tests under [tests/Hotbar.Tests](tests/Hotbar.Tests/). The technical directory and DLL names are preserved for compatibility; the mod is called Extended Hotbar.
-
-To develop or build it yourself, see [BUILDING.en.md](BUILDING.en.md). Building from source is not required for normal installation: use the ready-to-install release package linked above.
+[Mod source](DungeonSettlers10Slots/) · [Helper source](HotbarHelper/) · [Mod tests](tests/Hotbar.Tests/) · [Build instructions](BUILDING.en.md). Technical directory and DLL names remain unchanged for compatibility. You do not need to compile anything to play.

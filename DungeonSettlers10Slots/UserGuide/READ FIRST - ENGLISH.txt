@@ -2,15 +2,15 @@ EXTENDED HOTBAR – FOR DUNGEON SETTLERS
 
 This mod gives you ten skill slots and three item slots, plus the normal
 basic attack. Your character panel and familiar game menus remain in place.
-Mod version 0.3.6, for Dungeon Settlers DS_B.0.4.17 (Steam build 25143510) on Windows.
+Mod version 0.3.7, for Dungeon Settlers DS_B.0.4.19 (Steam build 25154317) on Windows.
 This is still a test release. Please back up your saves.
 
-The mod is now called Extended Hotbar (previously "Mehr Hotbar" / "10 Slots").
-This is a name-only update from 0.3.5; the features are unchanged.
+This update adapts Extended Hotbar to the new game build.
+Ten skills, three item slots and existing bindings are retained.
 The file stays named DungeonSettlers10Slots.dll to keep updates simple.
 
-Package revision r2 updates instructions and licensing notices only.
-The mod DLL, frame image and demo save are unchanged from the 0.3.6 package.
+Artwork and the optional demo save are unchanged. The demo was saved with
+DS_B.0.4.17; keep a backup when loading it in the newer game.
 
 OTHER MODS AND LOADERS
 
@@ -41,12 +41,13 @@ follow any version warnings it shows and keep your backup.
 
 GETTING THE RIGHT DOWNLOAD
 
-Open this release page and scroll to "Assets" at the bottom:
-https://github.com/Fre-yin/DNST-Extended-Hotbar/releases/tag/v0.3.6-r2
+This update is initially a local test. Once published, find it under Releases,
+then scroll to Assets at the bottom:
+https://github.com/Fre-yin/DNST-Extended-Hotbar/releases
 
 Download one of these two packages there:
-- Extended-Hotbar-0.3.6-r2.zip: the mod for your own campaign.
-- Extended-Hotbar-0.3.6-r2-mit-Testspielstand.zip: the same mod plus a demo save.
+- Extended-Hotbar-0.3.7.zip: the mod for your own campaign.
+- Extended-Hotbar-0.3.7-mit-Testspielstand.zip: the same mod plus a demo save.
 
 Important: Do NOT use the green "Code → Download ZIP" button.
 "Source code (zip/tar.gz)" also contains source only, not the ready-built mod DLL.

@@ -1,0 +1,32 @@
+{
+  "CampaignSaveHeader": {
+    "CampaignGuid": "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa",
+    "SaveName": "SyntheticHelperTest",
+    "DisplayName": "Synthetic helper fixture - not a playable save",
+    "Version": "DS_B.0.4.17",
+    "IronModeEnabled": false,
+    "IsAutoSave": true,
+    "PassedDay": 37,
+    "PlayedTimeMinute": 9007199254740993
+  },
+  "ClanSaveData": {
+    "CampaignGuid": "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa",
+    "Gold": 9007199254740993,
+    "Progress": 1.234567890123456789e+30
+  },
+  "PlayerUnitsSaveData": {
+    "QuickSlots": {
+      "bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb": {
+        "QuickSlots": ["skill1", "skill2", null, "skill4", "skill5", "skill6", "skill7", "skill8", "skill9", "skill10"],
+        "ItemQuickSlotKey": "item1"
+      }
+    },
+    "Inventory": {"item1": 12, "item2": 43},
+    "LearnedSkills": ["skill1", "skill2", "skill3", "skill4", "skill5", "skill6", "skill7", "skill8", "skill9", "skill10"]
+  },
+  "MapSaveData": {"Entities": [{"Type": "test", "Health": 123.123456789123456789}]},
+  "DungeonSettlers10Slots_Items": {
+    "Version": 1,
+    "Units": {"bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb": ["item2", "item3"]}
+  }
+}

@@ -4,15 +4,15 @@ Mit dieser Mod bekommst du zehn Plätze für Fähigkeiten und drei Plätze
 für Gegenstände. Der normale Angriff bleibt zusätzlich erhalten.
 Dein Charakterfenster und das gewohnte Spielmenü bleiben bestehen.
 
-Mod-Version 0.3.6, für Dungeon Settlers DS_B.0.4.17 (Steam-Build 25143510) unter Windows.
+Mod-Version 0.3.7, für Dungeon Settlers DS_B.0.4.19 (Steam-Build 25154317) unter Windows.
 Dies ist weiterhin eine Testversion. Bitte sichere deine Spielstände.
 
-Die Mod heißt jetzt Extended Hotbar (bisher "Mehr Hotbar" bzw. "10 Slots").
-Gegenüber Version 0.3.5 ändert sich nur der Name, nicht die Funktion.
+Dieses Update passt Extended Hotbar an den neuen Spielbuild an.
+Zehn Fähigkeiten, drei Gegenstandsplätze und bestehende Belegungen bleiben erhalten.
 Für einfache Updates bleibt der Dateiname DungeonSettlers10Slots.dll gleich.
 
-Die Paketausgabe r2 aktualisiert nur Anleitungen und Lizenzhinweise.
-Mod-DLL, Grafik und Testspielstand sind gegenüber dem 0.3.6-Paket unverändert.
+Grafik und optionaler Testspielstand sind unverändert. Der Testspielstand wurde
+mit DS_B.0.4.17 gespeichert; behalte beim Laden mit dem neuen Spiel eine Sicherung.
 
 WICHTIG ZU ANDEREN MODS
 
@@ -47,12 +47,13 @@ beachte dabei eventuelle Versionshinweise des Spiels und behalte deine Sicherung
 
 DEN RICHTIGEN DOWNLOAD FINDEN
 
-Öffne diese Release-Seite und scrolle ganz nach unten zu "Assets":
-https://github.com/Fre-yin/DNST-Extended-Hotbar/releases/tag/v0.3.6-r2
+Dieses Update wird zunächst lokal getestet. Sobald es veröffentlicht ist,
+findest du es unter "Releases", unten bei "Assets":
+https://github.com/Fre-yin/DNST-Extended-Hotbar/releases
 
 Lade dort eines dieser beiden Pakete herunter:
-- Extended-Hotbar-0.3.6-r2.zip: Mod für deine eigene Kampagne.
-- Extended-Hotbar-0.3.6-r2-mit-Testspielstand.zip: gleiche Mod plus Demo-Spielstand.
+- Extended-Hotbar-0.3.7.zip: Mod für deine eigene Kampagne.
+- Extended-Hotbar-0.3.7-mit-Testspielstand.zip: gleiche Mod plus Demo-Spielstand.
 
 Wichtig: NICHT den grünen Knopf "Code → Download ZIP" verwenden.
 Auch "Source code (zip/tar.gz)" enthält nur Quellcode, keine fertige Mod-DLL.

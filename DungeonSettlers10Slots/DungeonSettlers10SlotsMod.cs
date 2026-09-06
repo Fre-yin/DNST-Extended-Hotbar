@@ -7,7 +7,7 @@ using Il2CppRefactor.UI;
 using MelonLoader;
 using UnityEngine;
 
-[assembly: MelonInfo(typeof(DungeonSettlers10Slots.DungeonSettlers10SlotsMod), "Extended Hotbar", "0.3.6", "Danny/Codex")]
+[assembly: MelonInfo(typeof(DungeonSettlers10Slots.DungeonSettlers10SlotsMod), "Extended Hotbar", "0.3.7", "Danny/Codex")]
 [assembly: MelonGame(null, "DungeonSettlers")]
 [assembly: HarmonyDontPatchAll]
 
@@ -26,10 +26,10 @@ public sealed class DungeonSettlers10SlotsMod : MelonMod
     internal static bool RunUiAudits { get; } = Environment.GetCommandLineArgs().Contains(UiAuditArgument);
     internal static bool RunAudits { get; } = RunUiAudits || Environment.GetCommandLineArgs().Contains("--ds-run-item-audits")
         || Environment.GetCommandLineArgs().Contains("--ds-run-audits");
-    // DS_B.0.4.17, Steam build 25143510. The native binary and its metadata
+    // DS_B.0.4.19, Steam build 25154317. The native binary and its metadata
     // belong together; a partially copied patch must not enable these hooks.
-    private const string SupportedHash = "07F5CEA4B73F0747A71328EE0670837B53A894856AD511039C2611991DCDFA82";
-    private const string SupportedMetadataHash = "4BBA8FF88B8B0B9A4F42E96F17D6602F84AF2B3EDFF362C34B5EB51FA0B0C971";
+    private const string SupportedHash = "B0CD8B641D551019B82C0AF3DDE1532D6FF7BA155B20B2D3936742924B42DB2A";
+    private const string SupportedMetadataHash = "CE84EC266501C8DF4A23B31D50D8B413C82DAE49A062BC623B3440E8A3F5A23F";
 
     public override void OnInitializeMelon()
     {
@@ -49,10 +49,10 @@ public sealed class DungeonSettlers10SlotsMod : MelonMod
         var metadata = Path.Combine(Application.dataPath, "il2cpp_data", "Metadata", "global-metadata.dat");
         if (FileHash(binary) != SupportedHash || FileHash(metadata) != SupportedMetadataHash)
         {
-            Log.Warning("Unbekannte oder nicht zusammengehörige Spieldateien: 10-Slot-Erweiterung deaktiviert; erwartet DS_B.0.4.17 / Build 25143510 (Spielcode und Metadaten).");
+            Log.Warning("Unbekannte oder nicht zusammengehörige Spieldateien: 10-Slot-Erweiterung deaktiviert; erwartet DS_B.0.4.19 / Build 25154317 (Spielcode und Metadaten).");
             return;
         }
-        Log.Msg("Compatibility fingerprints PASS: DS_B.0.4.17 / Steam 25143510; native binary and metadata match.");
+        Log.Msg("Compatibility fingerprints PASS: DS_B.0.4.19 / Steam 25154317; native binary and metadata match.");
         // Resolve the native offset: basic attack must not consume an extra active-skill slot.
         FirstExtra = QuickSlotData.MAX_SLOT;
         Log.Msg($"Native slot layout: MAX_SLOT={FirstExtra}, target={Capacity}");

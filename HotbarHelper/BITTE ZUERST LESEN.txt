@@ -1,0 +1,125 @@
+EXTENDED HOTBAR – HELFER 0.1.2 (LOKALE TESTVERSION)
+
+Du möchtest die Mod benutzen – oder wieder ohne sie spielen?
+Dafür gibt es jetzt zwei große Knöpfe. Die Mod 0.3.7 ist bereits enthalten.
+Du brauchst keine DLL zu suchen und keine Dateien von Hand zu verschieben.
+
+VOR DEM START
+
+Benötigt: Windows x64 mit .NET Framework 4.8, Dungeon Settlers DS_B.0.4.19
+(Steam-Build 25154317) und separat installiertes MelonLoader 0.7.3.
+Der Helfer installiert den Loader nicht und lädt keine Internetupdates.
+Für spätere Spiel- oder Modversionen brauchst du ein angepasstes Helfer-Paket.
+
+1. Entpacke das gesamte Paket in einen eigenen Ordner, zum Beispiel auf
+   deinem Desktop. Dieser Ordner gehört NICHT in den Mods-Ordner.
+2. Schließe das Spiel und alle laufenden Testkopien.
+3. Öffne Extended-Hotbar-Helper.exe. Prüfe oben den Spielordner:
+   Dort muss DungeonSettlers.exe liegen. Über „Auswählen“ kannst du ihn ändern.
+4. Wähle, was du tun möchtest. Vor Änderungen ist deine Bestätigung nötig.
+
+INSTALLIEREN ODER AKTUALISIEREN
+
+Klicke auf „Extended Hotbar installieren / aktualisieren“.
+Prüfe den angezeigten Ordner und bestätige.
+
+Der Helfer sichert vorhandene Hotbar-Dateien und ersetzt nur diese.
+Eine alte DungeonSettlers12Slots.dll wird ebenfalls gesichert und entfernt,
+damit nicht zwei Hotbar-Versionen gleichzeitig laufen. Andere Mods,
+MelonLoader und Spielstände bleiben erhalten.
+Ist alles bereits unverändert installiert, steht dort „Bereits aktuell“.
+Dann entsteht keine zusätzliche Sicherung. Das ist kein Fehler.
+
+Starte das Spiel anschließend selbst über Steam.
+
+WIEDER OHNE EXTENDED HOTBAR SPIELEN
+
+Klicke auf „Spielstand fürs Originalspiel vorbereiten und Extended Hotbar
+deinstallieren“. Es öffnet sich ein eigenes Fenster:
+
+1. Klicke auf „Spielstand auswählen“ und wähle die Kampagne, mit der du
+   ohne Extended Hotbar weiterspielen möchtest.
+2. Lies die kurze Zusammenfassung. Normalerweise kannst du die
+   vorgeschlagenen Originaltasten unverändert lassen.
+3. Klicke auf „Spielstandkopie erstellen und Mod deinstallieren“.
+
+Der Helfer erstellt eine SEPARATE Kopie. Das Original bleibt unverändert
+und wird zusätzlich gesichert. Die Kopie ist im Spiel am Zusatz
+„(Vanilla-Hotbar)“ erkennbar; der Zusatz folgt der gewählten Helfer-Sprache.
+Sie erhält eigene automatische Speicherplätze und behält die ersten vier
+Fähigkeitsbelegungen, den normalen Angriff und einen Gegenstandsplatz.
+Gelernte Fähigkeiten, Inventar und bisheriger Fortschritt werden nicht entfernt.
+
+Danach entfernt der Helfer nur Extended Hotbar aus dem Spielordner und
+richtet die zugehörigen Originaltasten ein: Fähigkeiten Q/E/R/T,
+Gegenstand Y, Charakterwahl 1–0. Sprache, Grafik, Lautstärke und andere
+Tasten bleiben erhalten. Andere Mods und MelonLoader werden NICHT entfernt:
+Es ist die Original-Hotbar, nicht automatisch ein vollständig ungemoddetes Spiel.
+
+Optional kannst du im Fenster eine eigene Tastenbelegung aus einer vollständigen
+UserSetting.json-Sicherung von VOR der Mod wählen. Ohne eine solche Sicherung
+lass dieses Kästchen aus.
+
+WICHTIG: Die Spielstandkopie ist noch eine Testfunktion. Prüfe zuerst mit einer
+Testkampagne, ob Laden, Speichern und erneutes Laden im Spiel funktionieren.
+Benutze dafür nicht deine einzige wichtige Kampagne. Unterstützte Exportformate
+sind DS_B.0.4.17 und DS_B.0.4.19; Ironmode und unbekannte Formate werden abgelehnt.
+
+Spiele danach nur die neue Kopie ohne Extended Hotbar weiter, nicht einfach
+andere Mod-Spielstände. Original und Kopie entwickeln sich getrennt:
+Fortschritt wird nicht zusammengeführt.
+
+HILFE BEI PROBLEMEN / ÄNDERUNGEN RÜCKGÄNGIG MACHEN
+
+Dieser Bereich ist normalerweise zugeklappt. Darin findest du:
+
+• Spielstand-/Einstellungsordner: Nur ändern, wenn du ein anderes Profil benutzt.
+  Normal ist %USERPROFILE%\AppData\LocalLow\CanOpener\Dungeon Settlers.
+  Der Ordner enthält UserSetting.json und den Unterordner Saves.
+
+• Ausgewählte Änderung rückgängig machen: Wähle eine Änderung aus der Liste.
+  Der Helfer stellt deren Moddateien oder betroffene Tasten wieder her,
+  aber NICHT einen früheren Spielstand. Exportierte Kopien bleiben erhalten.
+  Inzwischen selbst geänderte Dateien oder Tasten werden nicht überschrieben.
+  Eine unterbrochene Änderung muss zuerst wiederhergestellt werden.
+
+• Nur falsche Tastenanzeigen reparieren: Für „Alpha“-Beschriftungen nach
+  Entfernen oder Ausfall der Mod. Setzt nur die betroffenen Tasten auf
+  Q/E/R/T, Y und Charakterwahl 1–0. Entfernt keine Mod und konvertiert keinen
+  Spielstand. Die vorherigen Tasten werden gesichert.
+
+Zum Zurückwechseln zur Mod kannst du sie wieder installieren. Wenn die vom
+Helfer gesetzten Originaltasten unverändert geblieben sind, kann er dabei
+deine davor gesicherten Hotbar-Tasten zurückholen.
+
+SICHERUNGEN UND LADESTATUS
+
+Sicherungen liegen unter %LOCALAPPDATA%\ExtendedHotbarHelper\Backups.
+Bewahre diesen Ordner auf, solange du Änderungen rückgängig machen möchtest.
+Alte Einträge ohne tatsächliche Änderung werden nicht in der Liste angeboten.
+Bei beschädigten Sicherungen oder veränderten Dateien bricht der Helfer ab.
+Kopiere dann nicht blind Dateien aus anderen Sicherungen darüber.
+
+Lass den Helfer offen, wenn du den Ladestatus beobachten möchtest. Er prüft
+das zum aktuellen Spielstart gehörende Protokoll. Eine vorhandene DLL allein
+zählt nicht als erfolgreich geladene Mod. Bei sicher fehlgeschlagener Aktivierung
+bietet er nach Spielende die Originaltasten an – nur mit deiner Bestätigung.
+Er startet oder beendet das Spiel nicht. Während das Spiel läuft, sind
+Dateiänderungen gesperrt. Nach Schließen des Helfers endet auch die Überwachung.
+
+SPRACHEN UND RECHTE
+
+Oberfläche und Hilfe gibt es in allen zehn Spielsprachen. Die Sprachauswahl
+ändert nur den Helfer für diesen Start, nicht deine gespeicherte Spielsprache.
+Unter Instructions liegen zusätzliche kurze Anleitungen in jeder Sprache.
+Windows-Dateidialoge verwenden die Windows-Sprache; technische Originalmeldungen
+stehen separat unter „Fehlerdetails“.
+
+Dies ist eine lokale, unsignierte Testversion. Eine Windows-Reputationswarnung
+ist möglich. Verwende nur dein geprüftes Paket; deaktiviere keine Sicherheitssoftware.
+Der Helfer verlangt keine Administratorrechte und sendet keine Daten ins Internet.
+
+Eigener Code und eigene Anleitungen: MIT (LICENSE). Die enthaltene bearbeitete
+Originalgrafik des Spiels ist ausdrücklich NICHT MIT-lizenziert.
+Behalte LICENSING.txt, THIRD_PARTY_NOTICES.txt, Assets/NOTICE.txt und Licenses.
+Spiel und MelonLoader werden nicht mitgeliefert.
