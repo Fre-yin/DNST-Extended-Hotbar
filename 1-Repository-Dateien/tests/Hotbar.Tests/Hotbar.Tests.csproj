@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <UseAppHost>false</UseAppHost>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>disable</Nullable>
+    <CheckEolTargetFramework>false</CheckEolTargetFramework>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="../../DungeonSettlers10Slots/ItemSlotState.cs" Link="ItemSlotState.cs" />
+    <Compile Include="../../DungeonSettlers10Slots/ItemSlotSaveCodec.cs" Link="ItemSlotSaveCodec.cs" />
+    <Compile Include="../../DungeonSettlers10Slots/BoundedSnapshotCache.cs" Link="BoundedSnapshotCache.cs" />
+    <Compile Include="../../DungeonSettlers10Slots/SlotText.cs" Link="SlotText.cs" />
+    <Compile Include="../../DungeonSettlers10Slots/NativeLocalization.cs" Link="NativeLocalization.cs" />
+  </ItemGroup>
+</Project>

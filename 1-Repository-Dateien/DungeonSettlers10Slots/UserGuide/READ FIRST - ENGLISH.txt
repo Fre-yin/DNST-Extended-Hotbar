@@ -1,0 +1,125 @@
+EXTENDED HOTBAR – FOR DUNGEON SETTLERS
+
+This mod gives you ten skill slots and three item slots, plus the normal
+basic attack. Your character panel and familiar game menus remain in place.
+Mod version 0.3.7, for Dungeon Settlers DS_B.0.4.19 (Steam build 25154317) on Windows.
+This is still a test release. Please back up your saves.
+
+This update adapts Extended Hotbar to the new game build.
+Ten skills, three item slots and existing bindings are retained.
+The file stays named DungeonSettlers10Slots.dll to keep updates simple.
+
+Artwork and the optional demo save are unchanged. The demo was saved with
+DS_B.0.4.17; keep a backup when loading it in the newer game.
+
+OTHER MODS AND LOADERS
+
+This release targets MelonLoader 0.7.3. No BepInEx edition is currently
+provided. Running it together with BepInEx mods such as Reroll Helper has
+not been verified. Do not simply install both loaders over one another.
+Moving a DLL to the other loader's folder does not make it compatible.
+Compatibility with other MelonLoader mods is not guaranteed either.
+
+LICENSE AND ARTWORK
+
+Original mod code and our instructions use MIT (see LICENSE). The enlarged
+frame is edited original game artwork and is explicitly NOT MIT-licensed.
+Its notice also sits in the asset folder. The optional demo save is not
+MIT-licensed mod code either. See LICENSING.txt and THIRD_PARTY_NOTICES.txt.
+Preserve the relevant copyright and license notices when redistributing.
+These notices are not separate permission to redistribute the game artwork.
+Extended Hotbar is an unofficial community mod, not an official product.
+
+UPDATING FROM AN OLDER VERSION?
+
+Close the game. Back up your existing DungeonSettlers10Slots.dll outside Mods.
+If DungeonSettlers12Slots.dll is still there, move it out into your backup too.
+Then copy the new DungeonSettlers10Slots.dll and asset folder from this package.
+Do not keep the old and new DLLs in Mods together. MelonLoader does not need
+reinstalling. Your saves and bindings are kept. The game handles older saves;
+follow any version warnings it shows and keep your backup.
+
+GETTING THE RIGHT DOWNLOAD
+
+This update is initially a local test. Once published, find it under Releases,
+then scroll to Assets at the bottom:
+https://github.com/Fre-yin/DNST-Extended-Hotbar/releases
+
+Download one of these two packages there:
+- Extended-Hotbar-0.3.7.zip: the mod for your own campaign.
+- Extended-Hotbar-0.3.7-mit-Testspielstand.zip: the same mod plus a demo save.
+
+Important: Do NOT use the green "Code → Download ZIP" button.
+"Source code (zip/tar.gz)" also contains source only, not the ready-built mod DLL.
+If your download is named DNST-Extended-Hotbar-main.zip, it is the source code.
+You do not need to program or build anything yourself.
+
+The correct package contains Mods\DungeonSettlers10Slots.dll and the
+Mods\DungeonSettlers10SlotsAssets folder. Copy only this Mods folder into
+the game folder, not the entire source-code package.
+
+INSTALLATION
+
+1. Close the game and any separate test copy.
+
+2. Back up your saves first. Press Windows+R and paste:
+
+   %USERPROFILE%\AppData\LocalLow\CanOpener
+
+   Press Enter. Copy the "Dungeon Settlers" folder to a safe backup location.
+   Do not move or delete the original folder.
+
+3. Install MelonLoader, the software that lets the game load this mod.
+   Skip this step if version 0.7.3 is already installed for this game.
+   Download the official Windows installer here:
+   https://github.com/LavaGang/MelonLoader.Installer/releases/latest
+
+   Open it, select Dungeon Settlers, choose version 0.7.3 and click Install.
+   Do not choose a Nightly version. If the game is missing from the list,
+   use "Add Game Manually" and select DungeonSettlers.exe in your Steam folder.
+
+4. Use the installer's Open Folder button to open the game folder.
+   You should see DungeonSettlers.exe there.
+
+5. Right-click the mod ZIP and choose "Extract All". Copy the extracted
+   "Mods" folder into the game folder, beside DungeonSettlers.exe.
+   Merge with an existing Mods folder if necessary. Do not create Mods\Mods.
+
+6. Start the game normally through Steam. Initial setup can take longer.
+   If the game closes after setup, start it again. No special launch options.
+
+7. Load a campaign and select a character. Look for ten skill slots and
+   three item slots at the bottom. The bar normally hides when no character
+   is selected.
+
+CONTROLS
+
+Mod defaults: skills 1–0, items Q/E/R, character selection left Shift+1–0.
+Your existing keybindings are kept. Check the controls in the options menu
+if yours differ or additional slots have no keys. Resetting controls discards
+your custom bindings.
+
+OPTIONAL DEMO
+
+The "mit-Testspielstand" package includes a "Testspielstand" folder with the
+updated "10 Slots Testfile" and extra items to try. Read "READ FIRST - ENGLISH.txt"
+in that folder to import it. It is optional; your own campaign does not need it.
+If that folder is absent, you have the mod-only package.
+Only Mods goes in the Steam game folder. The demo goes in your personal saves
+folder. These are different locations.
+
+TROUBLESHOOTING
+
+No Mods folder in the extracted download? "DNST-Extended-Hotbar-main.zip"
+is the source archive. Get the mod ZIP from "Releases → Assets" as explained above.
+
+If you only see the old bar, check that Mods contains BOTH
+DungeonSettlers10Slots.dll and DungeonSettlers10SlotsAssets.
+Make sure you launched the Steam installation where you copied the files.
+
+A game update may require an updated mod. If the extra slots disappear,
+do not keep saving that modded campaign until compatibility is checked.
+To return to playing without the mod, use a backup from before the mod.
+Preserving extra assignments when saving without it has not been confirmed.
+
+No other mods, programming or manual settings-file edits are needed.

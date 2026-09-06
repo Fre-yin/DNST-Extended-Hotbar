@@ -1,0 +1,3 @@
+bcaf47ffd620288f530f6bb386f35cce02ac458775ecd40a260bfa82b92fd916  Extended-Hotbar-0.3.7.zip
+43d09dc064455f127da53e1b01f76d510211f97e311cba1dae30d6f5804866ad  Extended-Hotbar-0.3.7-mit-Testspielstand.zip
+a9ec74a236fd8906121ad808ae32dc8f5db44f0f0dbc0f7d9dd9811b9d436e9e  Extended-Hotbar-Helper-0.1.2-test.zip
