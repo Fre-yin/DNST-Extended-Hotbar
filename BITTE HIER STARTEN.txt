@@ -15,7 +15,7 @@ SCHRITT 1 – DIE DATEIEN AUF DER PROJEKTSEITE AKTUALISIEREN
    Drücke darin Strg+A und ziehe den gesamten INHALT in das Uploadfeld.
    Nicht den äußeren Ordner 1-Repository-Dateien selbst hochladen!
 
-   Das sind 90 Dateien einschließlich Unterordnern. Sie ersetzen passende
+   Das sind 92 Dateien einschließlich Unterordnern. Sie ersetzen passende
    alte Dateien und ergänzen den Helfercode. Keine Dateien auf GitHub
    vorher löschen. Falls du dort zwischenzeitlich selbst etwas geändert
    hast, prüfe die betroffenen Dateien vor dem Bestätigen.
