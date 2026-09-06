@@ -1,5 +1,7 @@
 # Extended Hotbar
 
+**Deutsch** | [English](README.en.md)
+
 Mehr Platz für Fähigkeiten und Gegenstände in **Dungeon Settlers** – als inoffizielle Community-Mod für MelonLoader.
 
 ## Was macht die Mod?
