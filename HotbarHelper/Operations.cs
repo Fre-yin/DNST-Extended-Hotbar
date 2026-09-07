@@ -16,7 +16,7 @@ namespace ExtendedHotbar.Helper
         internal const string ModVersion = "0.3.7";
         internal const string GameHash = "B0CD8B641D551019B82C0AF3DDE1532D6FF7BA155B20B2D3936742924B42DB2A";
         internal const string MetadataHash = "CE84EC266501C8DF4A23B31D50D8B413C82DAE49A062BC623B3440E8A3F5A23F";
-        internal const string PackageHash = "BCAF47FFD620288F530F6BB386F35CCE02AC458775ECD40A260BFA82B92FD916";
+        internal const string PackageHash = "DA9C92F107298C211799DF678B5EFB267843F8755E84073DA6AB43CDAF6E30B1";
         internal const string Dll = "Mods/DungeonSettlers10Slots.dll";
         internal const string OldDll = "Mods/DungeonSettlers12Slots.dll";
         internal const string Asset = "Mods/DungeonSettlers10SlotsAssets/SkillFrame__sharedassets0_mod_4898.png";
@@ -24,11 +24,39 @@ namespace ExtendedHotbar.Helper
         internal static readonly string[] Owned = { Dll, OldDll, Asset, Notice };
         internal static Dictionary<string, byte[]> Package()
         {
+            return ReadPackage(PackageBytes());
+        }
+        internal static byte[] PackageBytes()
+        {
             using (var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("HotbarPackage.zip"))
             {
                 if (stream == null) throw new HelperFailure("errorPackage", "Eingebautes Mod-Paket fehlt.");
-                using (var memory = new MemoryStream()) { stream.CopyTo(memory); return ReadPackage(memory.ToArray()); }
+                using (var memory = new MemoryStream())
+                {
+                    stream.CopyTo(memory); var bytes = memory.ToArray();
+                    if (Files.Hash(bytes) != PackageHash) throw new HelperFailure("errorPackage", "Prüfsumme des Mod-Pakets stimmt nicht.");
+                    return bytes;
+                }
             }
+        }
+        // Explicit export only: never extract or import saves, overwrite a file,
+        // or modify game/profile paths as a side effect of installation/startup.
+        internal static void ExportPackage(string path)
+        {
+            var folder = Files.Root(Path.GetDirectoryName(path));
+            var target = Files.Under(folder, Path.GetFileName(path));
+            if (!target.EndsWith(".zip", StringComparison.OrdinalIgnoreCase)) throw new HelperFailure("errorPath", "ZIP-Datei erwartet.");
+            if (File.Exists(target) || Directory.Exists(target)) throw new HelperFailure("errorExportExists", "Bitte einen neuen Dateinamen wählen.");
+            var bytes = PackageBytes();
+            var temporary = Files.Under(folder, ".eh-" + Guid.NewGuid().ToString("N") + ".tmp");
+            try
+            {
+                using (var file = new FileStream(temporary, FileMode.CreateNew, FileAccess.Write, FileShare.None))
+                { file.Write(bytes, 0, bytes.Length); file.Flush(true); }
+                Files.SafeAncestors(target);
+                File.Move(temporary, target); // Fails safely if the destination appeared meanwhile.
+            }
+            finally { if (File.Exists(temporary)) File.Delete(temporary); }
         }
         internal static Dictionary<string, byte[]> ReadPackage(byte[] bytes)
         {
@@ -88,7 +116,9 @@ namespace ExtendedHotbar.Helper
             SafeAncestors(path);
             if (bytes == null) { if (File.Exists(path)) File.Delete(path); return; }
             Directory.CreateDirectory(Path.GetDirectoryName(path));
-            var temp = path + ".extended-hotbar-" + Guid.NewGuid().ToString("N") + ".tmp";
+            // Stay on the same filesystem for atomic replacement without appending
+            // the full target name and pushing an otherwise valid path over MAX_PATH.
+            var temp = Path.Combine(Path.GetDirectoryName(path), ".eh-" + Guid.NewGuid().ToString("N") + ".tmp");
             try
             {
                 using (var file = new FileStream(temp, FileMode.CreateNew, FileAccess.Write, FileShare.None)) { file.Write(bytes, 0, bytes.Length); file.Flush(true); }
@@ -144,6 +174,7 @@ namespace ExtendedHotbar.Helper
 
     internal sealed class Operations
     {
+        internal const string CharacterKeysAction = "Charaktertasten einrichten";
         private readonly IGamePolicy policy;
         internal readonly string Store;
         // Tests inject an isolated fake game policy; the GUI always uses GamePolicy.
@@ -201,9 +232,10 @@ namespace ExtendedHotbar.Helper
             Resolve(game, profile, "save", sourceName);
             var original = Files.Read(source);
             if (original == null) throw new HelperFailure("errorSave", "Spielstand fehlt.");
-            var guid = Guid.NewGuid();
-            var name = "OhneHotbar_" + DateTime.UtcNow.ToString("yyyyMMdd_HHmmss") + "_" + guid.ToString("N").Substring(0, 8);
-            var converted = VanillaSave.Export(Files.Text(original), name, guid, displaySuffix);
+            // Unique file identity, not a new campaign identity. Existing saves
+            // are never selected as an output target or overwritten on retries.
+            var name = "OhneHotbar_" + DateTime.UtcNow.ToString("yyyyMMdd_HHmmss") + "_" + Guid.NewGuid().ToString("N");
+            var converted = VanillaSave.Export(Files.Text(original), name, displaySuffix);
             var settingsPath = Files.Under(profile, "UserSetting.json");
             var settings = Files.Read(settingsPath);
             if (settings == null) throw new HelperFailure("errorSettings", "Benutzereinstellungen fehlen. Bitte das Spiel einmal normal einrichten.");
@@ -229,6 +261,32 @@ namespace ExtendedHotbar.Helper
             if (current == null) throw new HelperFailure("errorSettings", "Benutzereinstellungen fehlen.");
             var native = Files.Utf8.GetBytes(Profiles.Merge(Files.Text(current), Profiles.VanillaDefaults()));
             return Execute(game, profile, "Originaltasten vorbereiten (ohne Spielstandänderung)", new List<PlannedFile> { new PlannedFile("settings", "UserSetting.json", native).Expect(current) });
+        }
+        internal List<JsonNode> PreviewCharacterKeys(string game, string profile, bool shift, out string settingsHash)
+        {
+            policy.Stopped(); policy.Validate(game, true);
+            var current = Files.Read(Files.Under(profile, "UserSetting.json"));
+            if (current == null) throw new HelperFailure("errorSettings", "Benutzereinstellungen fehlen.");
+            settingsHash = Files.Hash(current);
+            return Profiles.CharacterConflicts(Files.Text(current), shift);
+        }
+        internal string ConfigureCharacterKeys(string game, string profile, bool shift, bool overwriteConflicts = false, string expectedSettingsHash = null)
+        {
+            policy.Stopped(); policy.Validate(game, true);
+            var current = Files.Read(Files.Under(profile, "UserSetting.json"));
+            if (current == null) throw new HelperFailure("errorSettings", "Benutzereinstellungen fehlen.");
+            if (expectedSettingsHash != null && Files.Hash(current) != expectedSettingsHash)
+                throw new HelperFailure("errorConflict", "Die Tastenbelegung hat sich seit der angezeigten Zusammenfassung geändert. Bitte erneut prüfen.");
+            var configured = Files.Utf8.GetBytes(Profiles.ConfigureCharacters(Files.Text(current), shift, overwriteConflicts));
+            return Execute(game, profile, CharacterKeysAction, new List<PlannedFile> {
+                new PlannedFile("settings", "UserSetting.json", configured).Expect(current)
+            });
+        }
+        private static bool CharacterKeysOnly(string action)
+        {
+            const string undo = "Wiederherstellen: ";
+            while (action != null && action.StartsWith(undo, StringComparison.Ordinal)) action = action.Substring(undo.Length);
+            return action == CharacterKeysAction;
         }
         // A null result means successful verification with no file changes, not failure.
         private string Execute(string game, string profile, string action, List<PlannedFile> plan)
@@ -358,8 +416,14 @@ namespace ExtendedHotbar.Helper
                 var before = Payload(record, i, true); var after = Payload(record, i, false);
                 if (entry.Area == "settings")
                 {
-                    if (current == null || before == null || after == null || !Profiles.Same(Profiles.Selected(Files.Text(current)), Profiles.Selected(Files.Text(after)))) throw new HelperFailure("errorConflict", "Die betroffenen Tasten wurden inzwischen geändert. Sie werden nicht ungefragt überschrieben.");
-                    before = Files.Utf8.GetBytes(Profiles.Merge(Files.Text(current), Profiles.Selected(Files.Text(before))));
+                    if (current == null || before == null || after == null) throw new HelperFailure("errorConflict", "Tastensicherung fehlt.");
+                    if (CharacterKeysOnly(record.Action))
+                        before = Files.Utf8.GetBytes(Profiles.RestoreCharacterBindings(Files.Text(current), Files.Text(before), Files.Text(after)));
+                    else
+                    {
+                        if (!Profiles.Same(Profiles.Selected(Files.Text(current)), Profiles.Selected(Files.Text(after)))) throw new HelperFailure("errorConflict", "Die betroffenen Tasten wurden inzwischen geändert. Sie werden nicht ungefragt überschrieben.");
+                        before = Files.Utf8.GetBytes(Profiles.Merge(Files.Text(current), Profiles.Selected(Files.Text(before))));
+                    }
                 }
                 else if (Files.Hash(current) != entry.AfterHash) throw new HelperFailure("errorConflict", "Moddatei wurde seit dieser Sicherung geändert: " + entry.Name);
                 plan.Add(new PlannedFile(entry.Area, entry.Name, before).Expect(current));

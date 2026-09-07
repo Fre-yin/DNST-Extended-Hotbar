@@ -1,26 +1,43 @@
-EXTENDED HOTBAR – HELFER 0.1.2 (LOKALE TESTVERSION)
+EXTENDED HOTBAR – HELFER 0.1.11 (LOKALE TESTVERSION)
+
+Der Spielordner wird automatisch gesucht. Bei mehreren Treffern den passenden
+Pfad aus der Liste wählen. Über „Suchen“ kannst du erneut suchen; „Manuell auswählen…“
+und die manuelle Pfadeingabe bleiben möglich. Sicherungs-/Archivordner werden
+bei der ergänzenden Suche ausgelassen. Nicht gefundene Kopien manuell auswählen.
+
+Automatische Online-Updates sind für ein späteres Update geplant. Bis dahin nutzt der Helper Updatepakete aus deinem Downloadordner.
+
+Helper-ZIP und passende .zip.update.json gemeinsam in Downloads ablegen. Im blauen Knopf „Nur Helper aktualisieren“ wählen. Der neue Helper öffnet sich ohne Mod-Installation; die alte EXE und Verknüpfungen bleiben erhalten.
 
 Du möchtest die Mod benutzen – oder wieder ohne sie spielen?
-Dafür gibt es jetzt zwei große Knöpfe. Die Mod 0.3.7 ist bereits enthalten.
+Dafür gibt es eigene Aktionen. Die Mod 0.3.7 ist bereits enthalten.
 Du brauchst keine DLL zu suchen und keine Dateien von Hand zu verschieben.
+Der optionale Testspielstand ist im Mod-Paket enthalten. Unter „Hilfe bei
+Problemen“ kannst du das Paket speichern und anschließend entpacken. Importiere
+den Testspielstand nur bei Bedarf nach seiner Anleitung. Er wird nie automatisch
+eingebunden und stammt unverändert aus DS_B.0.4.17.
 
 VOR DEM START
 
-Benötigt: Windows x64 mit .NET Framework 4.8, Dungeon Settlers DS_B.0.4.19
-(Steam-Build 25154317) und separat installiertes MelonLoader 0.7.3.
-Der Helfer installiert den Loader nicht und lädt keine Internetupdates.
-Für spätere Spiel- oder Modversionen brauchst du ein angepasstes Helfer-Paket.
+Der Helper benötigt Windows x64 mit .NET Framework 4.8. Für Mod-Änderungen
+werden außerdem Dungeon Settlers DS_B.0.4.19
+(Steam-Build 25154317) und separat installiertes MelonLoader 0.7.3 benötigt.
+Nur den Helper zu aktualisieren benötigt kein installiertes oder geschlossenes Spiel.
+Der Helfer installiert den Loader nicht und baut keine Internetverbindung auf.
+Neue Mod-ZIPs können aus dem Downloadordner installiert werden.
+Unbekannte Spielbuilds bleiben gesperrt, bis eine angepasste Version vorliegt.
 
 1. Entpacke das gesamte Paket in einen eigenen Ordner, zum Beispiel auf
    deinem Desktop. Dieser Ordner gehört NICHT in den Mods-Ordner.
 2. Schließe das Spiel und alle laufenden Testkopien.
-3. Öffne Extended-Hotbar-Helper.exe. Prüfe oben den Spielordner:
-   Dort muss DungeonSettlers.exe liegen. Über „Auswählen“ kannst du ihn ändern.
+3. Öffne Extended-Hotbar-Helper.exe. Prüfe den gefundenen Spielordner oder wähle
+   bei mehreren Treffern den gewünschten Pfad aus der Liste:
+   Dort muss DungeonSettlers.exe liegen. Über „Manuell auswählen…“ kannst du ihn ändern.
 4. Wähle, was du tun möchtest. Vor Änderungen ist deine Bestätigung nötig.
 
 INSTALLIEREN ODER AKTUALISIEREN
 
-Klicke auf „Extended Hotbar installieren / aktualisieren“.
+Klicke auf den blauen Knopf und wähle „Mod installieren / aktualisieren“.
 Prüfe den angezeigten Ordner und bestätige.
 
 Der Helfer sichert vorhandene Hotbar-Dateien und ersetzt nur diese.
@@ -32,9 +49,14 @@ Dann entsteht keine zusätzliche Sicherung. Das ist kein Fehler.
 
 Starte das Spiel anschließend selbst über Steam.
 
+LOKALE MOD-UPDATES
+
+Mod-ZIP in Downloads ablegen und „Mod installieren / aktualisieren“ wählen.
+Automatische Online-Updates sind für später geplant. Testspielstände werden nicht importiert.
+
 WIEDER OHNE EXTENDED HOTBAR SPIELEN
 
-Klicke auf „Spielstand fürs Originalspiel vorbereiten und Extended Hotbar
+Klicke auf „Spielstand auf Vanilla zurücksetzen und Extended Hotbar
 deinstallieren“. Es öffnet sich ein eigenes Fenster:
 
 1. Klicke auf „Spielstand auswählen“ und wähle die Kampagne, mit der du
@@ -43,10 +65,12 @@ deinstallieren“. Es öffnet sich ein eigenes Fenster:
    vorgeschlagenen Originaltasten unverändert lassen.
 3. Klicke auf „Spielstandkopie erstellen und Mod deinstallieren“.
 
-Der Helfer erstellt eine SEPARATE Kopie. Das Original bleibt unverändert
-und wird zusätzlich gesichert. Die Kopie ist im Spiel am Zusatz
+Der Helfer erstellt einen zusätzlichen MANUELLEN Spielstand in derselben Kampagne,
+keine neue Kampagne. Das Original bleibt unverändert und wird zusätzlich gesichert.
+Der neue Spielstand ist im Spiel am Zusatz
 „(Vanilla-Hotbar)“ erkennbar; der Zusatz folgt der gewählten Helfer-Sprache.
-Sie erhält eigene automatische Speicherplätze und behält die ersten vier
+Beide Spielstände teilen sich die Autosaves der Kampagne. Bewahre die Sicherung
+auf und überschreibe deinen Originalspielstand nicht. Die Kopie behält die ersten vier
 Fähigkeitsbelegungen, den normalen Angriff und einen Gegenstandsplatz.
 Gelernte Fähigkeiten, Inventar und bisheriger Fortschritt werden nicht entfernt.
 
@@ -66,8 +90,33 @@ Benutze dafür nicht deine einzige wichtige Kampagne. Unterstützte Exportformat
 sind DS_B.0.4.17 und DS_B.0.4.19; Ironmode und unbekannte Formate werden abgelehnt.
 
 Spiele danach nur die neue Kopie ohne Extended Hotbar weiter, nicht einfach
-andere Mod-Spielstände. Original und Kopie entwickeln sich getrennt:
-Fortschritt wird nicht zusammengeführt.
+andere Mod-Spielstände. Fortschritt wird nicht zusammengeführt; beim Weiterspielen
+können die gemeinsamen Autosaves ersetzt werden. Pro Vorgang entsteht eine neue
+manuelle Datei, ohne vorhandene Dateien zu überschreiben. Bereits mit älteren
+Helfer-Versionen erstellte Kampagnenkopien werden nicht zusammengeführt oder gelöscht.
+
+CHARAKTERTASTEN EINRICHTEN
+
+Klicke im Hauptfenster auf „Charaktertasten einrichten“. Schließe das Spiel vorher.
+
+Wähle „Umschalt + 1–0“ oder „1–0 ohne Umschalt“ für Charakter 1–10.
+Die Taste 0 wählt Charakter 10. Wenn deine Fähigkeiten auf 1–0 liegen,
+passt normalerweise Umschalt + 1–0 zur Charakterauswahl.
+Beide Tastenbelegungen der Charakterauswahl werden ersetzt. Bei einfachen
+Ziffern dient Umschalt + Ziffer zur Mehrfachauswahl; beim Umschalt-Preset
+wird diese Zusatzaktion deaktiviert, damit keine Doppelaktion entsteht.
+
+Sind gewünschte Tasten bereits belegt, erscheint zuerst eine Liste. Nur wenn
+du danach ausdrücklich „Trotzdem überschreiben“ bestätigst, werden genau
+diese kollidierenden Tastenzuweisungen freigegeben. Die Fähigkeiten oder
+Gegenstände selbst werden nicht entfernt. Mit „Abbrechen“ bleibt alles unverändert.
+
+Der Helfer sichert deine bisherigen Belegungen. Über „Ausgewählte Änderung
+rückgängig machen“ kannst du sie wiederherstellen, einschließlich freigegebener
+Belegungen anderer Aktionen. Spätere Änderungen an betroffenen Tasten blockieren
+die Rücknahme; andere Tasten bleiben erhalten. Spielstände, Mods und MelonLoader
+werden durch diese Funktion nicht geändert. Unbekannter Herausgeber bleibt
+vorerst bestehen; das Programm wird dadurch nicht signiert.
 
 HILFE BEI PROBLEMEN / ÄNDERUNGEN RÜCKGÄNGIG MACHEN
 

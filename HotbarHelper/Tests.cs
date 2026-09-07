@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading;
 
 namespace ExtendedHotbar.Helper
 {
@@ -12,8 +13,117 @@ namespace ExtendedHotbar.Helper
         private static Dictionary<string, byte[]> package;
         private static void Main(string[] args)
         {
+            if (args.Length == 1 && args[0] == "--find-games")
+            {
+                foreach (var path in GameDiscovery.FindSystem(CancellationToken.None)) Console.WriteLine(path);
+                return;
+            }
+            if (args.Length == 5 && args[0] == "--smoke-local-updates")
+            {
+                try { LocalUpdateSmokeTests.Run(args[1], args[2], args[3], args[4], Settings()); }
+                catch (Exception ex) { Console.WriteLine(ex); Environment.ExitCode = 1; }
+                return;
+            }
+            if (args.Length == 3 && args[0] == "--verify-local-helper")
+            {
+                try {
+                    var selected = LocalHelpers.Scan(args[1], System.Threading.CancellationToken.None, current: Updates.ParseVersion("0.0.0"));
+                    if (selected == null) throw new Exception("No signed local helper found.");
+                    var bytes = LocalHelpers.ReadBytes(selected, System.Threading.CancellationToken.None);
+                    var folder = Updates.Stage(bytes, selected.Offer, Files.Root(args[2]), System.Threading.CancellationToken.None);
+                    bool verified = false; Updates.Launch(folder, bytes, selected.Offer, exe => verified = File.Exists(exe));
+                    if (!verified) throw new Exception("Launch verification failed.");
+                    Console.WriteLine("PASS final local helper discovery, publisher signature, staging and launch checks. Execution deliberately suppressed; no network or game operation.");
+                }
+                catch (Exception ex) { Console.WriteLine(ex); Environment.ExitCode = 1; }
+                return;
+            }
+            if (args.Length == 3 && args[0] == "--verify-local-mod")
+            {
+                try {
+                    var package = LocalMods.Read(args[1], System.Threading.CancellationToken.None, File.ReadAllText(args[2]));
+                    Console.WriteLine("PASS local publisher package: " + package.Version + "; install files: " + package.Payload.Count + ". No installation performed.");
+                }
+                catch (Exception ex) { Console.WriteLine(ex); Environment.ExitCode = 1; }
+                return;
+            }
+            if (args.Length == 4 && args[0] == "--verify-local-update")
+            {
+                try { UpdateTests.VerifyLocalPackage(args[1], args[2], args[3]); }
+                catch (Exception ex) { Console.WriteLine(ex); Environment.ExitCode = 1; }
+                return;
+            }
+            if (args.Length == 1 && args[0] == "--check-public-updates")
+            {
+                using (var timeout = new System.Threading.CancellationTokenSource(TimeSpan.FromSeconds(45)))
+                {
+                    try { var offer = new UpdateClient(new GitHubTransport()).Check(Updates.ParseVersion(Updates.HelperVersion), true, timeout.Token); Console.WriteLine(offer == null ? "Public feed read successfully; no newer supported helper." : "Public update offer: " + offer.Version); }
+                    catch (HelperFailure ex) { Console.WriteLine("Public feed check: " + ex.Code + "; " + ex.Message + "; " + ex.GetBaseException().Message); Environment.ExitCode = 2; }
+                    catch (Exception ex) { Console.WriteLine("Public feed check: " + ex); Environment.ExitCode = 3; }
+                }
+                return;
+            }
             fixture = File.ReadAllText(args[0]); root = Files.Root(args[1]); Directory.CreateDirectory(root);
             package = ReleaseInfo.Package();
+            GameDiscoveryTests.Run(Test, root);
+            Test("bundled mod always includes optional demo and only three install files", () =>
+            {
+                Check(package.Count == 3 && package.Keys.All(x => ReleaseInfo.Owned.Contains(x)));
+                using (var stream = new MemoryStream(ReleaseInfo.PackageBytes()))
+                using (var zip = new System.IO.Compression.ZipArchive(stream, System.IO.Compression.ZipArchiveMode.Read))
+                {
+                    Check(zip.GetEntry("Testspielstand/BITTE ZUERST LESEN.txt") != null);
+                    Check(zip.GetEntry("Testspielstand/READ FIRST - ENGLISH.txt") != null);
+                    using (var input = zip.GetEntry("Testspielstand/Saves/10SlotsTestfile.json").Open())
+                    using (var copy = new MemoryStream())
+                    {
+                        input.CopyTo(copy);
+                        Check(Files.Hash(copy.ToArray()) == "1875B8F45EF12EA6E51DCF57EDBF8F0243434B07E84ED34B1056D37C46C15924");
+                    }
+                }
+            });
+            Test("manual package export creates one verified ZIP and never imports saves", () =>
+            {
+                var folder = Files.Under(root, "demo-export-" + Guid.NewGuid().ToString("N")); Directory.CreateDirectory(folder);
+                var target = Files.Under(folder, "Extended-Hotbar-0.3.7.zip");
+                ReleaseInfo.ExportPackage(target);
+                Check(Files.FileHash(target) == ReleaseInfo.PackageHash);
+                Check(Directory.GetFiles(folder).Length == 1 && Directory.GetDirectories(folder).Length == 0);
+            });
+            Test("manual package export refuses overwrite and non-ZIP destinations", () =>
+            {
+                var folder = Files.Under(root, "demo-export-refusal-" + Guid.NewGuid().ToString("N")); Directory.CreateDirectory(folder);
+                var target = Files.Under(folder, "existing.zip"); File.WriteAllText(target, "user file");
+                Throws(() => ReleaseInfo.ExportPackage(target)); Check(File.ReadAllText(target) == "user file");
+                Throws(() => ReleaseInfo.ExportPackage(Files.Under(folder, "Save.json")));
+                Throws(() => ReleaseInfo.ExportPackage("relative.zip"));
+                Check(Directory.GetFiles(folder).Length == 1);
+            });
+            Test("atomic writes support long valid target names without leftover temporary files", () =>
+            {
+                var folder = Files.Under(root, "atomic-" + Guid.NewGuid().ToString("N")); Directory.CreateDirectory(folder);
+                // Keep the final path valid on default Windows configurations, but
+                // make the old appended temporary suffix exceed MAX_PATH.
+                var length = 239 - folder.Length - 1;
+                Check(length >= 10 && length <= 240);
+                var path = Files.Under(folder, new string('a', length - 4) + ".txt");
+                File.WriteAllBytes(path, Bytes("original"));
+                Check(File.ReadAllText(path) == "original");
+                Files.Atomic(path, Bytes("replacement"));
+                Check(File.ReadAllText(path) == "replacement");
+                var created = Files.Under(folder, new string('b', length - 4) + ".txt");
+                Files.Atomic(created, Bytes("created"));
+                Check(File.ReadAllText(created) == "created");
+                Check(Directory.GetFiles(folder).Length == 2);
+            });
+            UpdateTests.Run(Test, root, Path.Combine(AppDomain.CurrentDomain.BaseDirectory, Updates.ExeName));
+            LocalModTests.Run(Test, root);
+            Test("manual picker label is explicit and distinct from automatic search", () =>
+            {
+                Check(new UiText("de")["browse"] == "Manuell auswählen…");
+                Check(new UiText("en")["browse"] == "Select manually…");
+                foreach (var code in UiText.Codes) Check(new UiText(code)["browse"] != new UiText(code)["gameSearch"]);
+            });
             var english = new UiText("en");
             foreach (var code in UiText.Codes)
             {
@@ -28,7 +138,7 @@ namespace ExtendedHotbar.Helper
                         var wanted = System.Text.RegularExpressions.Regex.Matches(english[key], pattern).Cast<System.Text.RegularExpressions.Match>().Select(x => x.Value).OrderBy(x => x);
                         var found = System.Text.RegularExpressions.Regex.Matches(text[key], pattern).Cast<System.Text.RegularExpressions.Match>().Select(x => x.Value).OrderBy(x => x);
                         Check(wanted.SequenceEqual(found));
-                        Check(text.Format(key, "PATH", "SUFFIX").Length > 0);
+                        Check(text.Format(key, "PATH", "SUFFIX", "COLUMN").Length > 0);
                         if (key.StartsWith("error")) Check(text.Error(new HelperFailure(key, "diagnostic")) == text[key]);
                     }
                     Check(text["saveFilter"].Split('|').Length == 2 && text["backupFilter"].Split('|').Length == 4);
@@ -36,11 +146,14 @@ namespace ExtendedHotbar.Helper
                     Check(text.HistoryAction("Wiederherstellen: Installieren / Aktualisieren").Contains(text["install"]));
                     Check(!text.HistoryAction("Ohne Hotbar vorbereiten").Contains("\n"));
                     Check(text.Format("removalSummary", text["saveSuffix"]).Contains(text["saveSuffix"]));
+                    Check(text.HistoryAction(Operations.CharacterKeysAction) == text["characters"]);
+                    Check(text["charactersDigits"].Contains("1–0") && text["charactersShift"].Contains("1–0"));
+                    Check(text.CharacterConflict(new LosslessJson(Row(34, 0, 49, 0)).Root).Contains(text.Format("bindingSkill", 1)));
                 });
                 Test("localized export only changes intended fields: " + language, () =>
                 {
-                    var id = Guid.NewGuid(); var text = new UiText(language);
-                    var output = new LosslessJson(VanillaSave.Export(fixture, "TestCopy", id, text["saveSuffix"]));
+                    var text = new UiText(language);
+                    var output = new LosslessJson(VanillaSave.Export(fixture, "TestCopy", text["saveSuffix"]));
                     var original = new LosslessJson(fixture);
                     Check(output.Root.Get("CampaignSaveHeader").Get("DisplayName").String == original.Root.Get("CampaignSaveHeader").Get("DisplayName").String + " " + text["saveSuffix"]);
                     foreach (var member in original.Root.Members.Where(x => !new[] { "CampaignSaveHeader", "ClanSaveData", "PlayerUnitsSaveData", "DungeonSettlers10Slots_Items" }.Contains(x.Name))) Check(original.Raw(member.Value) == output.Raw(output.Root.Get(member.Name)));
@@ -54,7 +167,7 @@ namespace ExtendedHotbar.Helper
                 Check(UiText.FromSettings("{}", "fr") == "fr"); Check(UiText.FromSettings("invalid", "de") == "de");
                 Check(UiText.FromSettings("{\"GeneralSettingData\":{\"SaveCurrentLanguageType\":99}}", "ko") == "ko");
                 Check(new UiText("unknown").Code == "en"); Throws(() => UiText.Parse("{\"a\":\"1\",\"a\":\"2\"}"));
-                Throws(() => VanillaSave.Export(fixture, "Test", Guid.NewGuid(), "bad\nsuffix"));
+                Throws(() => VanillaSave.Export(fixture, "Test", "bad\nsuffix"));
             });
             Test("embedded release contains only the three install files", () => Check(package.Count == 3 && package.ContainsKey(ReleaseInfo.Dll)));
             Test("modified release is refused", () => Throws(() => ReleaseInfo.ReadPackage(new byte[] { 1, 2, 3 })));
@@ -88,21 +201,210 @@ namespace ExtendedHotbar.Helper
                 Check(before.SequenceEqual(after));
             });
             Test("duplicate bindings refused", () => Throws(() => Profiles.Bindings(new LosslessJson("{\"KeySettingData\":{\"Bindings\":[" + Row(34, 0, 1, 0) + "," + Row(34, 0, 2, 0) + "]}}"))));
-            Test("provided save fixture exports with independent campaign identity", () =>
+            foreach (var mode in new[] { false, true })
             {
-                var id = Guid.NewGuid(); var result = new LosslessJson(VanillaSave.Export(fixture, "Test_ohneHotbar", id));
-                Check(result.Root.Get("CampaignSaveHeader").Get("CampaignGuid").String == id.ToString());
-                Check(result.Root.Get("ClanSaveData").Get("CampaignGuid").String == id.ToString());
+                var shift = mode;
+                Test("character preset preserves every non-character row and unrelated settings: " + shift, () =>
+                {
+                    var source = shift ? Settings() : Profiles.Merge(Settings(), Profiles.VanillaDefaults());
+                    var original = new LosslessJson(source); var output = new LosslessJson(Profiles.ConfigureCharacters(source, shift));
+                    Check(original.Raw(original.Root.Get("GeneralSettingData")) == output.Raw(output.Root.Get("GeneralSettingData")));
+                    var otherBefore = Profiles.Bindings(original).Items.Where(x => !Profiles.Character(x.Get("InputType").Integer)).Select(original.Raw);
+                    var otherAfter = Profiles.Bindings(output).Items.Where(x => !Profiles.Character(x.Get("InputType").Integer)).Select(output.Raw);
+                    Check(otherBefore.SequenceEqual(otherAfter));
+                    var chars = Profiles.Bindings(output).Items.Where(x => Profiles.Character(x.Get("InputType").Integer)).ToArray();
+                    Check(chars.Length == 40);
+                    for (int i = 0; i < 10; i++)
+                    {
+                        var digit = i == 9 ? 48 : 49 + i;
+                        var unit = chars.Single(x => x.Get("InputType").Integer == 4 + i && x.Get("SlotIndex").Integer == 0);
+                        Check(unit.Get("KeyCode").Integer == digit && unit.Get("ModifierKey").Integer == (shift ? 304 : 0) && unit.Get("IsKeyDown").Text == "true");
+                        var add = chars.Single(x => x.Get("InputType").Integer == 14 + i && x.Get("SlotIndex").Integer == 0);
+                        Check(add.Get("KeyCode").Integer == (shift ? 0 : digit) && add.Get("ModifierKey").Integer == (shift ? 0 : 304));
+                    }
+                    Check(chars.Where(x => x.Get("SlotIndex").Integer == 1).All(x => x.Get("KeyCode").Integer == 0 && x.Get("ModifierKey").Integer == 0));
+                    Check(Profiles.ConfigureCharacters(Profiles.ConfigureCharacters(source, shift), shift) == Profiles.ConfigureCharacters(source, shift));
+                });
+            }
+            Test("bare character digits refuse skill collisions", () =>
+            {
+                try { Profiles.ConfigureCharacters(Settings(), false); throw new Exception("Conflict was not refused"); }
+                catch (HelperFailure ex) { Check(ex.Code == "errorCharacterConflict"); }
+            });
+            foreach (var modifier in new[] { 0, 304 })
+            {
+                var mod = modifier;
+                Test("character keys detect other-action secondary and additive collisions: " + mod, () =>
+                {
+                    var source = Profiles.Merge(Settings(), Profiles.VanillaDefaults()); var doc = new LosslessJson(source); var rows = Profiles.Bindings(doc);
+                    source = doc.Apply(new[] { doc.Replace(rows, "[" + string.Join(",", rows.Items.Select(doc.Raw)) + "," + Row(999, 1, 48, mod) + "]") });
+                    Throws(() => Profiles.ConfigureCharacters(source, false));
+                    if (mod == 304) Throws(() => Profiles.ConfigureCharacters(source, true));
+                    else Check(Profiles.ConfigureCharacters(source, true).Contains(Row(999, 1, 48, 0)));
+                });
+            }
+            Test("explicit overwrite clears only exact conflicting keys and preserves row metadata", () =>
+            {
+                var source = Settings().Replace(Row(34, 0, 49, 0), Row(34, 0, 49, 0).Replace("true", "false").Replace("}", ",\"Extra\":9007199254740993}"));
+                var doc = new LosslessJson(source); var rows = Profiles.Bindings(doc);
+                source = doc.Apply(new[] { doc.Replace(rows, "[" + string.Join(",", rows.Items.Select(doc.Raw)) + "," + Row(999, 1, 49, 304) + "," + Row(998, 1, 49, 306) + "]") });
+                Check(Profiles.CharacterConflicts(source, false).Count == 11);
+                var changed = new LosslessJson(Profiles.ConfigureCharacters(source, false, true));
+                var bindings = Profiles.Bindings(changed).Items;
+                Check(bindings.Single(x => x.Get("InputType").Integer == 34).Get("KeyCode").Integer == 0);
+                Check(bindings.Single(x => x.Get("InputType").Integer == 34).Get("IsKeyDown").Text == "false");
+                Check(changed.Raw(bindings.Single(x => x.Get("InputType").Integer == 34).Get("Extra")) == "9007199254740993");
+                Check(bindings.Single(x => x.Get("InputType").Integer == 999 && x.Get("SlotIndex").Integer == 1).Get("KeyCode").Integer == 0);
+                Check(bindings.Single(x => x.Get("InputType").Integer == 998).Get("KeyCode").Integer == 49);
+                Check(bindings.Single(x => x.Get("InputType").Integer == 60).Get("KeyCode").Integer == 113);
+            });
+            Test("overwrite preview is read-only and changed settings invalidate consent", () =>
+            {
+                var env = new Env(); var hash = Files.FileHash(env.Setting); string expected;
+                Check(env.Op.PreviewCharacterKeys(env.Game, env.Profile, false, out expected).Count == 10 && expected == hash);
+                Check(Files.FileHash(env.Setting) == hash && env.Op.History(env.Game, env.Profile).Count == 0);
+                File.WriteAllText(env.Setting, File.ReadAllText(env.Setting).Replace("Korean", "English"));
+                Throws(() => env.Op.ConfigureCharacterKeys(env.Game, env.Profile, false, true, expected));
+                Check(File.ReadAllText(env.Setting).Contains("English") && env.Op.History(env.Game, env.Profile).Count == 0);
+            });
+            Test("explicit overwrite can undo cleared foreign bindings without reverting unrelated edits", () =>
+            {
+                var env = new Env(); var original = File.ReadAllText(env.Setting);
+                var backup = env.Op.ConfigureCharacterKeys(env.Game, env.Profile, false, true);
+                File.WriteAllText(env.Setting, File.ReadAllText(env.Setting).Replace(Row(60, 0, 113, 0), Row(60, 0, 108, 0)));
+                var undo = env.Op.Restore(env.Game, env.Profile, Path.GetFileName(backup));
+                Check(File.ReadAllText(env.Setting).Contains(Row(34, 0, 49, 0)) && File.ReadAllText(env.Setting).Contains(Row(60, 0, 108, 0)));
+                Check(Profiles.Same(Profiles.SelectedCharacters(File.ReadAllText(env.Setting)), Profiles.SelectedCharacters(original)));
+                env.Op.Restore(env.Game, env.Profile, Path.GetFileName(undo));
+                Check(!File.ReadAllText(env.Setting).Contains(Row(34, 0, 49, 0)) && File.ReadAllText(env.Setting).Contains(Row(60, 0, 108, 0)));
+            });
+            Test("overwrite undo refuses a later edit to a cleared binding", () =>
+            {
+                var env = new Env(); var backup = env.Op.ConfigureCharacterKeys(env.Game, env.Profile, false, true);
+                File.WriteAllText(env.Setting, File.ReadAllText(env.Setting).Replace(Row(34, 0, 0, 0), Row(34, 0, 108, 0)));
+                Throws(() => env.Op.Restore(env.Game, env.Profile, Path.GetFileName(backup)));
+                Check(File.ReadAllText(env.Setting).Contains(Row(34, 0, 108, 0)));
+            });
+            Test("explicit overwrite still honors running-game guard and compensating rollback", () =>
+            {
+                var env = new Env(); var hash = Files.FileHash(env.Setting);
+                env.Policy.Running = true; Throws(() => env.Op.ConfigureCharacterKeys(env.Game, env.Profile, false, true));
+                Check(Files.FileHash(env.Setting) == hash);
+                env.Policy.Running = false; env.Op.AfterWrite = i => { throw new IOException("injected"); };
+                Throws(() => env.Op.ConfigureCharacterKeys(env.Game, env.Profile, false, true));
+                Check(Files.FileHash(env.Setting) == hash);
+            });
+            Test("character merge cannot alter skills or duplicate rows", () =>
+            {
+                Throws(() => Profiles.MergeCharacters(Settings(), "[" + Row(34, 0, 49, 0) + "]"));
+                Throws(() => Profiles.MergeCharacters(Settings(), "[" + Row(4, 0, 49, 0) + "," + Row(4, 0, 49, 0) + "]"));
+            });
+            Test("character operation backs up only settings and repeat is a no-op", () =>
+            {
+                var env = new Env(); var saveHash = Files.FileHash(env.Save); env.PutGame("Mods/Other.dll", Bytes("foreign"));
+                var backup = env.Op.ConfigureCharacterKeys(env.Game, env.Profile, true);
+                var record = env.Op.History(env.Game, env.Profile).Single();
+                Check(backup != null && record.Action == Operations.CharacterKeysAction && record.Entries.Count == 1 && record.Entries[0].Area == "settings");
+                Check(Files.FileHash(env.Save) == saveHash && File.ReadAllText(env.Path("Mods/Other.dll")) == "foreign");
+                Check(env.Op.ConfigureCharacterKeys(env.Game, env.Profile, true) == null && env.Op.History(env.Game, env.Profile).Count == 1);
+            });
+            Test("character undo preserves later skill edits and redo stays character scoped", () =>
+            {
+                var env = new Env(); var original = Profiles.SelectedCharacters(File.ReadAllText(env.Setting));
+                var backup = env.Op.ConfigureCharacterKeys(env.Game, env.Profile, true);
+                File.WriteAllText(env.Setting, File.ReadAllText(env.Setting).Replace(Row(34, 0, 49, 0), Row(34, 0, 108, 0)).Replace("Korean", "English"));
+                var undo = env.Op.Restore(env.Game, env.Profile, Path.GetFileName(backup));
+                Check(Profiles.Same(Profiles.SelectedCharacters(File.ReadAllText(env.Setting)), original));
+                Check(File.ReadAllText(env.Setting).Contains(Row(34, 0, 108, 0)) && File.ReadAllText(env.Setting).Contains("English"));
+                env.Op.Restore(env.Game, env.Profile, Path.GetFileName(undo));
+                Check(File.ReadAllText(env.Setting).Contains(Row(34, 0, 108, 0)));
+            });
+            Test("character undo refuses later character edits", () =>
+            {
+                var env = new Env(); var backup = env.Op.ConfigureCharacterKeys(env.Game, env.Profile, true);
+                File.WriteAllText(env.Setting, File.ReadAllText(env.Setting).Replace(Row(4, 0, 49, 304), Row(4, 0, 108, 304)));
+                Throws(() => env.Op.Restore(env.Game, env.Profile, Path.GetFileName(backup)));
+            });
+            Test("character operation refuses running game wrong build and missing settings", () =>
+            {
+                var env = new Env(); var hash = Files.FileHash(env.Setting);
+                env.Policy.Running = true; Throws(() => env.Op.ConfigureCharacterKeys(env.Game, env.Profile, true));
+                env.Policy.Running = false; env.Policy.Compatible = false; Throws(() => env.Op.ConfigureCharacterKeys(env.Game, env.Profile, true));
+                Check(Files.FileHash(env.Setting) == hash && env.Op.History(env.Game, env.Profile).Count == 0);
+                env.Policy.Compatible = true; File.Delete(env.Setting); Throws(() => env.Op.ConfigureCharacterKeys(env.Game, env.Profile, true));
+            });
+            Test("character conflict aborts without a backup or file changes", () =>
+            {
+                var env = new Env(); var hash = Files.FileHash(env.Setting);
+                Throws(() => env.Op.ConfigureCharacterKeys(env.Game, env.Profile, false));
+                Check(Files.FileHash(env.Setting) == hash && env.Op.History(env.Game, env.Profile).Count == 0);
+            });
+            Test("character write failure rolls back and concurrent edits are preserved", () =>
+            {
+                var env = new Env(); var hash = Files.FileHash(env.Setting);
+                env.Op.AfterWrite = i => { throw new IOException("injected"); };
+                Throws(() => env.Op.ConfigureCharacterKeys(env.Game, env.Profile, true));
+                Check(Files.FileHash(env.Setting) == hash);
+                env = new Env(); env.Op.BeforeCommit = () => File.WriteAllText(env.Setting, File.ReadAllText(env.Setting).Replace("Korean", "English"));
+                Throws(() => env.Op.ConfigureCharacterKeys(env.Game, env.Profile, true));
+                Check(File.ReadAllText(env.Setting).Contains("English"));
+            });
+            Test("export stays in the source campaign and is a manual save", () =>
+            {
+                var env = new Env(); var sourceHash = Files.FileHash(env.Save);
+                var original = new LosslessJson(File.ReadAllText(env.Save));
+                string exported; env.Op.Disable(env.Game, env.Profile, env.Save, Profiles.VanillaDefaults(), out exported);
+                var copy = new LosslessJson(File.ReadAllText(exported));
+                foreach (var part in new[] { "CampaignSaveHeader", "ClanSaveData" })
+                    Check(original.Raw(original.Root.Get(part).Get("CampaignGuid")) == copy.Raw(copy.Root.Get(part).Get("CampaignGuid")));
+                Check(copy.Root.Get("CampaignSaveHeader").Get("IsAutoSave").Text == "false");
+                Check(copy.Root.Get("CampaignSaveHeader").Get("SaveName").String == Path.GetFileNameWithoutExtension(exported));
+                Check(exported != env.Save && Files.FileHash(env.Save) == sourceHash);
+                Check(Directory.GetFiles(Path.GetDirectoryName(env.Save), "*.json").Length == 2);
+            });
+            Test("repeated exports add save files without creating campaign groups or overwriting", () =>
+            {
+                var env = new Env(); var sourceHash = Files.FileHash(env.Save);
+                string first, second; env.Op.Disable(env.Game, env.Profile, env.Save, Profiles.VanillaDefaults(), out first, "(Vanilla-Hotbar)");
+                var firstHash = Files.FileHash(first);
+                env.Op.Disable(env.Game, env.Profile, first, Profiles.VanillaDefaults(), out second, "(Vanilla-Hotbar)");
+                Check(first != second && Files.FileHash(first) == firstHash && Files.FileHash(env.Save) == sourceHash);
+                var saves = Directory.GetFiles(Path.GetDirectoryName(env.Save), "*.json").Select(x => new LosslessJson(File.ReadAllText(x))).ToArray();
+                Check(saves.Length == 3 && saves.Select(x => x.Root.Get("CampaignSaveHeader").Get("CampaignGuid").String).Distinct().Count() == 1);
+                Check(new LosslessJson(File.ReadAllText(first)).Root.Get("CampaignSaveHeader").Get("DisplayName").String == new LosslessJson(File.ReadAllText(second)).Root.Get("CampaignSaveHeader").Get("DisplayName").String);
+            });
+            Test("autosave source becomes manual copy without changing campaign bytes", () =>
+            {
+                var original = new LosslessJson(fixture);
+                var source = original.Apply(new[] { original.Replace(original.Root.Get("CampaignSaveHeader").Get("IsAutoSave"), "true") });
+                var result = new LosslessJson(VanillaSave.Export(source, "ManualCopy"));
+                Check(result.Root.Get("CampaignSaveHeader").Get("IsAutoSave").Text == "false");
+                Check(result.Raw(result.Root.Get("ClanSaveData")) == original.Raw(original.Root.Get("ClanSaveData")));
+            });
+            Test("missing invalid and contradictory campaign identities are refused", () =>
+            {
+                var original = new LosslessJson(fixture);
+                foreach (var value in new[] { "", "not-a-guid", Guid.Empty.ToString() })
+                    Throws(() => VanillaSave.Export(original.Apply(new[] { original.Replace(original.Root.Get("CampaignSaveHeader").Get("CampaignGuid"), LosslessJson.Quote(value)) }), "Copy"));
+                Throws(() => VanillaSave.Export(original.Apply(new[] { original.Replace(original.Root.Get("ClanSaveData").Get("CampaignGuid"), LosslessJson.Quote(Guid.NewGuid().ToString())) }), "Copy"));
+                Throws(() => VanillaSave.Export(original.Apply(new[] { original.Remove(original.Root.Get("CampaignSaveHeader"), "CampaignGuid") }), "Copy"));
+            });
+            Test("provided save fixture retains campaign identity", () =>
+            {
+                var id = new LosslessJson(fixture).Root.Get("CampaignSaveHeader").Get("CampaignGuid").String;
+                var result = new LosslessJson(VanillaSave.Export(fixture, "Test_ohneHotbar"));
+                Check(result.Root.Get("CampaignSaveHeader").Get("CampaignGuid").String == id);
+                Check(result.Root.Get("ClanSaveData").Get("CampaignGuid").String == id);
                 Check(result.Root.Get("CampaignSaveHeader").Get("SaveName").String == "Test_ohneHotbar");
                 Check(result.Root.Optional("DungeonSettlers10Slots_Items") == null);
                 Check(result.Root.Get("PlayerUnitsSaveData").Get("QuickSlots").Members.All(x => x.Value.Get("QuickSlots").Items.Count == 4));
             });
             Test("provided save fixture inventory, units, map and progress stay verbatim", () =>
             {
-                var d = new LosslessJson(fixture); var e = new LosslessJson(VanillaSave.Export(fixture, "Vanilla", Guid.NewGuid()));
+                var d = new LosslessJson(fixture); var e = new LosslessJson(VanillaSave.Export(fixture, "Vanilla"));
                 foreach (var member in d.Root.Members.Where(x => !new[] { "CampaignSaveHeader", "ClanSaveData", "PlayerUnitsSaveData", "DungeonSettlers10Slots_Items" }.Contains(x.Name))) Check(d.Raw(member.Value) == e.Raw(e.Root.Get(member.Name)));
                 foreach (var key in new[] { "ClanSaveData", "PlayerUnitsSaveData", "CampaignSaveHeader" })
-                    foreach (var member in d.Root.Get(key).Members.Where(x => !new[] { "CampaignGuid", "QuickSlots", "SaveName", "DisplayName", "IsAutoSave" }.Contains(x.Name))) Check(d.Raw(member.Value) == e.Raw(e.Root.Get(key).Get(member.Name)));
+                    foreach (var member in d.Root.Get(key).Members.Where(x => !new[] { "QuickSlots", "SaveName", "DisplayName", "IsAutoSave" }.Contains(x.Name))) Check(d.Raw(member.Value) == e.Raw(e.Root.Get(key).Get(member.Name)));
                 foreach (var member in d.Root.Get("PlayerUnitsSaveData").Get("QuickSlots").Members)
                 {
                     var native = e.Root.Get("PlayerUnitsSaveData").Get("QuickSlots").Get(member.Name);
@@ -110,21 +412,21 @@ namespace ExtendedHotbar.Helper
                     for (int i = 0; i < 4; i++) Check(d.Raw(member.Value.Get("QuickSlots").Items[i]) == e.Raw(native.Get("QuickSlots").Items[i]));
                 }
             });
-            Test("unknown game save version refused", () => Throws(() => VanillaSave.Export(fixture.Replace("DS_B.0.4.17", "DS_B.0.4.18"), "Test", Guid.NewGuid())));
+            Test("unknown game save version refused", () => Throws(() => VanillaSave.Export(fixture.Replace("DS_B.0.4.17", "DS_B.0.4.18"), "Test")));
             Test("new 0.4.19 save header preserves version and unrelated bytes", () =>
             {
                 var source = fixture.Replace("DS_B.0.4.17", "DS_B.0.4.19");
                 var original = new LosslessJson(source);
-                var output = new LosslessJson(VanillaSave.Export(source, "NewBuildCopy", Guid.NewGuid()));
+                var output = new LosslessJson(VanillaSave.Export(source, "NewBuildCopy"));
                 Check(output.Root.Get("CampaignSaveHeader").Get("Version").String == "DS_B.0.4.19");
                 foreach (var member in original.Root.Members.Where(x => !new[] { "CampaignSaveHeader", "ClanSaveData", "PlayerUnitsSaveData", "DungeonSettlers10Slots_Items" }.Contains(x.Name)))
                     Check(original.Raw(member.Value) == output.Raw(output.Root.Get(member.Name)));
-                Throws(() => VanillaSave.Export(source.Replace("DS_B.0.4.19", "DS_B.0.4.20"), "Future", Guid.NewGuid()));
+                Throws(() => VanillaSave.Export(source.Replace("DS_B.0.4.19", "DS_B.0.4.20"), "Future"));
             });
-            Test("unknown item extension refused", () => { var d = new LosslessJson(fixture); var v = d.Root.Get("DungeonSettlers10Slots_Items").Get("Version"); Throws(() => VanillaSave.Export(d.Apply(new[] { d.Replace(v, "2") }), "Test", Guid.NewGuid())); });
-            Test("duplicate campaign reference refused", () => { var d = new LosslessJson(fixture); var id = d.Root.Get("CampaignSaveHeader").Get("CampaignGuid").String; Throws(() => VanillaSave.Export(fixture.Insert(1, "\"FutureReference\":" + LosslessJson.Quote(id) + ","), "Test", Guid.NewGuid())); });
-            Test("iron mode refused", () => { var d = new LosslessJson(fixture); Throws(() => VanillaSave.Export(d.Apply(new[] { d.Replace(d.Root.Get("CampaignSaveHeader").Get("IronModeEnabled"), "true") }), "Test", Guid.NewGuid())); });
-            foreach (var unsafeName in new[] { "../x", "C:/x", "x:y", "", "x.json" }) { var name = unsafeName; Test("unsafe save name refused", () => Throws(() => VanillaSave.Export(fixture, name, Guid.NewGuid()))); }
+            Test("unknown item extension refused", () => { var d = new LosslessJson(fixture); var v = d.Root.Get("DungeonSettlers10Slots_Items").Get("Version"); Throws(() => VanillaSave.Export(d.Apply(new[] { d.Replace(v, "2") }), "Test")); });
+            Test("duplicate campaign reference refused", () => { var d = new LosslessJson(fixture); var id = d.Root.Get("CampaignSaveHeader").Get("CampaignGuid").String; Throws(() => VanillaSave.Export(fixture.Insert(1, "\"FutureReference\":" + LosslessJson.Quote(id) + ","), "Test")); });
+            Test("iron mode refused", () => { var d = new LosslessJson(fixture); Throws(() => VanillaSave.Export(d.Apply(new[] { d.Replace(d.Root.Get("CampaignSaveHeader").Get("IronModeEnabled"), "true") }), "Test")); });
+            foreach (var unsafeName in new[] { "../x", "C:/x", "x:y", "", "x.json" }) { var name = unsafeName; Test("unsafe save name refused", () => Throws(() => VanillaSave.Export(fixture, name))); }
             foreach (var unsafePath in new[] { "../x", "a/../b", "C:/x", "a:b", "a//b", "a./b", "a /b" }) { var name = unsafePath; Test("unsafe relative target refused", () => Throws(() => Files.Under(root, name))); }
             foreach (var badRoot in new[] { "relative", "C:relative", "C:\\", @"\\server\share", "" }) { var path = badRoot; Test("ambiguous or broad root refused", () => Throws(() => Files.Root(path))); }
             Test("real directory junction is rejected", () =>
@@ -136,6 +438,12 @@ namespace ExtendedHotbar.Helper
                 using (var process = System.Diagnostics.Process.Start(start)) { if (!process.WaitForExit(15000)) throw new Exception("Junction fixture creation timed out"); Check(process.ExitCode == 0); }
                 Check((File.GetAttributes(link) & FileAttributes.ReparsePoint) != 0);
                 Throws(() => Files.Under(place, "link/file.txt")); Check(!File.Exists(System.IO.Path.Combine(target, "file.txt")));
+                foreach (var name in new[] { "DungeonSettlers.exe", "GameAssembly.dll", "DungeonSettlers_Data/il2cpp_data/Metadata/global-metadata.dat" })
+                {
+                    var path = Files.Under(target, name); Directory.CreateDirectory(Path.GetDirectoryName(path)); File.WriteAllText(path, "inert fixture");
+                }
+                Check(GameDiscovery.Find(new string[0], new[] { target }, new string[0], CancellationToken.None).Single() == target);
+                Check(GameDiscovery.Find(new[] { link }, new[] { link }, new[] { link }, CancellationToken.None).Length == 0);
             });
             Test("install and rollback preserve foreign mods and game", () =>
             {

@@ -1,29 +1,51 @@
-EXTENDED HOTBAR – HELPER 0.1.2 (LOCAL TEST VERSION)
+EXTENDED HOTBAR – HELPER 0.1.11 (LOCAL TEST VERSION)
 
-Two main buttons: install the mod, or prepare a save for playing without it.
+The game folder is detected automatically. If several copies are found, select
+the correct full path from the list. Search repeats detection; Select manually and manual
+path entry remain available. The fallback search skips backup/archive folders.
+Choose undiscovered copies manually.
+
+Automatic online updates are planned for a future release. Until then, the helper uses update packages in your Downloads folder.
+
+Place the helper ZIP and matching .zip.update.json together in Downloads. Choose “Update helper only” from the blue button. The new helper opens without installing the mod; the old EXE and shortcuts remain.
+
+Separate actions let you update the mod, update only the helper, or return a save to vanilla.
 Extended Hotbar 0.3.7 is included. No manual DLL copying is needed.
+The mod package includes the optional demo save. Save the package in the
+troubleshooting section, then extract it and import the demo manually if wanted,
+using its included instructions. It is never imported automatically and remains
+the unchanged DS_B.0.4.17 snapshot.
 
 GET STARTED
 
-Requires Windows x64 with .NET Framework 4.8, Dungeon Settlers DS_B.0.4.19
+The helper requires Windows x64 with .NET Framework 4.8. Mod operations also
+require Dungeon Settlers DS_B.0.4.19
 (Steam build 25154317) and separately installed MelonLoader 0.7.3.
-The helper does not install the loader or download online updates.
-Later game/mod versions require an updated helper package.
+Updating only the helper does not require an installed or closed game.
+The helper does not install the loader or connect to the internet.
+New mod ZIPs can be installed from Downloads. Unknown game builds
+stay blocked until a compatible helper/mod version is available.
 
 1. Extract the entire package into its own folder, NOT into Mods.
 2. Close the game and all test copies.
-3. Open Extended-Hotbar-Helper.exe. Check the game folder at the top:
-   it must contain DungeonSettlers.exe. Use Browse to change it if needed.
+3. Open Extended-Hotbar-Helper.exe. Check the detected game folder or choose
+   the correct path from the list if several copies were found:
+   it must contain DungeonSettlers.exe. Use Select manually to change it if needed.
 4. Choose an action. Changes require your confirmation.
 
 INSTALL / UPDATE EXTENDED HOTBAR
 
-Click the install button, check the destination and confirm.
+Click the blue button, choose “Install / update mod”, check the destination and confirm.
 Existing hotbar files are backed up before replacement. The legacy
 DungeonSettlers12Slots.dll is also backed up and removed to avoid duplicates.
 Other mods, MelonLoader and saves are retained.
 An unchanged installation reports “Already up to date” without another backup.
 Start the game yourself through Steam afterwards.
+
+LOCAL MOD UPDATES
+
+Place the mod ZIP in Downloads and choose “Install / update mod”.
+Automatic online updates are planned for later. Demo saves are not imported.
 
 PLAY WITHOUT EXTENDED HOTBAR
 
@@ -33,9 +55,11 @@ Click the second main button to prepare a save and uninstall the mod.
 2. Read the summary. Normally, leave the suggested original keys selected.
 3. Click the explicit button to create the save copy and uninstall the mod.
 
-The helper creates a SEPARATE copy. Your original remains unchanged and is
-also backed up. The copy has a “(vanilla hotbar)” suffix in the selected helper
-language and its own autosave identity. It retains the first four skill
+The helper creates an additional MANUAL save in the same campaign, not a new
+campaign. Your original remains unchanged and is also backed up. The copy has
+a “(vanilla hotbar)” suffix in the selected helper language. Both saves share the
+campaign's autosaves. Keep the backup and do not overwrite your original save.
+The copy retains the first four skill
 assignments, basic attack and one item slot. Learned skills, inventory and
 existing progress are not removed.
 
@@ -54,7 +78,27 @@ your only important campaign. Supported export formats: DS_B.0.4.17 and
 DS_B.0.4.19. Ironmode and unknown formats are refused.
 
 Continue only the new copy without Extended Hotbar, not your other modded
-saves. Original and copy progress independently; progress is never merged.
+saves. Progress is never merged; continuing either save can replace the shared
+campaign autosaves. Each operation creates a new manual file without overwriting
+existing files. Campaign copies created by older helpers are not merged or deleted.
+
+CONFIGURE CHARACTER KEYS
+
+Click Configure character keys in the main window.
+Close the game first. Choose Left Shift + 1–0 or bare 1–0 for characters
+1–10 (0 selects character 10). If skills use bare digits, normally choose Shift.
+Both character binding columns are replaced. Bare digits retain Shift + digits
+for additive selection; the Shift preset unbinds additive selection to avoid
+duplicate actions.
+
+If keys are already used, the helper lists the conflicts. Only a separate,
+explicit Overwrite anyway confirmation clears those exact key assignments.
+The abilities and items themselves are not removed. Cancel changes nothing.
+
+Previous bindings are backed up. Undo selected change restores character keys
+and bindings cleared from other actions. Later edits to affected keys block undo;
+other keys remain current. Saves, mods and MelonLoader are not changed by this
+feature. The publisher warning is unchanged; this does not sign the program.
 
 TROUBLESHOOTING / UNDO CHANGES
 

@@ -8,6 +8,8 @@ namespace ExtendedHotbar.Helper
     {
         internal static bool Extra(int type) { return type >= 12005 && type <= 12012 || type == 12101 || type == 12102; }
         internal static bool Affected(int type) { return type >= 4 && type <= 23 || type >= 34 && type <= 37 || type == 60 || Extra(type); }
+        // SelectUnit_1..10 and the game's hidden AddSelectUnit_1..10 actions.
+        internal static bool Character(int type) { return type >= 4 && type <= 23; }
         internal static JsonNode Bindings(LosslessJson document)
         {
             var bindings = document.Root.Get("KeySettingData").Get("Bindings");
@@ -23,9 +25,13 @@ namespace ExtendedHotbar.Helper
             return bindings;
         }
         internal static string Selected(string json)
+        { return Selected(json, Affected); }
+        internal static string SelectedCharacters(string json)
+        { return Selected(json, Character); }
+        private static string Selected(string json, Func<int, bool> affected)
         {
             var doc = new LosslessJson(json);
-            return "[" + string.Join(",", Bindings(doc).Items.Where(x => Affected(x.Get("InputType").Integer)).Select(doc.Raw)) + "]";
+            return "[" + string.Join(",", Bindings(doc).Items.Where(x => affected(x.Get("InputType").Integer)).Select(doc.Raw)) + "]";
         }
         internal static bool Same(string left, string right)
         {
@@ -43,17 +49,21 @@ namespace ExtendedHotbar.Helper
             return node.Kind == "string" ? LosslessJson.Quote(node.Text) : node.Text ?? "null";
         }
         internal static string Merge(string current, string selected)
+        { return Merge(current, selected, Affected); }
+        internal static string MergeCharacters(string current, string selected)
+        { return Merge(current, selected, Character); }
+        private static string Merge(string current, string selected, Func<int, bool> affected)
         {
             var doc = new LosslessJson(current);
             var original = Bindings(doc);
             var replacement = new LosslessJson(selected).Root;
-            if (replacement.Kind != "array" || replacement.Items.Any(x => !Affected(x.Get("InputType").Integer))) throw new FormatException("Fremde Tasten im Hotbar-Profil.");
+            if (replacement.Kind != "array" || replacement.Items.Any(x => !affected(x.Get("InputType").Integer))) throw new FormatException("Fremde Tasten im gewählten Profil.");
             Func<JsonNode, string> identity = x => x.Get("InputType").Integer + ":" + x.Get("SlotIndex").Integer;
             var replacements = replacement.Items.ToDictionary(identity, x => selected.Substring(x.Start, x.End - x.Start));
             var values = new List<string>();
             foreach (var entry in original.Items)
             {
-                if (!Affected(entry.Get("InputType").Integer)) { values.Add(doc.Raw(entry)); continue; }
+                if (!affected(entry.Get("InputType").Integer)) { values.Add(doc.Raw(entry)); continue; }
                 string value; var key = identity(entry);
                 if (replacements.TryGetValue(key, out value)) { values.Add(value); replacements.Remove(key); }
             }
@@ -62,6 +72,66 @@ namespace ExtendedHotbar.Helper
             var result = doc.Apply(new[] { doc.Replace(original, "[" + string.Join(",", values) + "]") });
             Bindings(new LosslessJson(result));
             return result;
+        }
+        private static string CharacterDefaults(bool shift)
+        {
+            var rows = new List<string>();
+            for (int i = 0; i < 10; i++)
+            {
+                int digit = i == 9 ? 48 : 49 + i;
+                rows.Add(Row(4 + i, 0, digit, shift ? 304 : 0));
+                rows.Add(Row(4 + i, 1, 0, 0));
+                // A Shift-modified selection must not also emit additive selection.
+                rows.Add(Row(14 + i, 0, shift ? 0 : digit, shift ? 0 : 304));
+                rows.Add(Row(14 + i, 1, 0, 0));
+            }
+            return "[" + string.Join(",", rows) + "]";
+        }
+        internal static List<JsonNode> CharacterConflicts(string current, bool shift)
+        { return CharacterConflicts(new LosslessJson(current), CharacterDefaults(shift)); }
+        private static List<JsonNode> CharacterConflicts(LosslessJson current, string desired)
+        {
+            var requested = new LosslessJson(desired).Root.Items.Where(x => x.Get("KeyCode").Integer != 0).ToArray();
+            return Bindings(current).Items.Where(other => !Character(other.Get("InputType").Integer)
+                && requested.Any(x => x.Get("KeyCode").Integer == other.Get("KeyCode").Integer && x.Get("ModifierKey").Integer == other.Get("ModifierKey").Integer)).ToList();
+        }
+        internal static string ConfigureCharacters(string current, bool shift, bool overwriteConflicts = false)
+        {
+            var desired = CharacterDefaults(shift); var doc = new LosslessJson(current);
+            var conflicts = CharacterConflicts(doc, desired);
+            if (conflicts.Count != 0 && !overwriteConflicts)
+                throw new HelperFailure("errorCharacterConflict", "Gewünschte Charaktertasten sind bereits durch andere Aktionen belegt.");
+            if (conflicts.Count != 0)
+                current = doc.Apply(conflicts.SelectMany(row => new[] {
+                    doc.Replace(row.Get("KeyCode"), "0"), doc.Replace(row.Get("ModifierKey"), "0")
+                }));
+            return MergeCharacters(current, desired);
+        }
+        internal static string RestoreCharacterBindings(string current, string before, string after)
+        {
+            var doc = new LosslessJson(current); var old = new LosslessJson(before); var applied = new LosslessJson(after);
+            Func<JsonNode, string> identity = row => row.Get("InputType").Integer + ":" + row.Get("SlotIndex").Integer;
+            var originals = Bindings(old).Items.ToDictionary(identity);
+            var expected = Bindings(applied).Items.ToDictionary(identity);
+            var present = Bindings(doc).Items.ToDictionary(identity);
+            Func<Dictionary<string, JsonNode>, string, string> value = (rows, key) => rows.ContainsKey(key) ? Canonical(rows[key]) : null;
+            // Restore character rows plus exactly the foreign rows explicitly
+            // cleared by the confirmed overwrite. Later unrelated edits survive.
+            var scope = new HashSet<string>(originals.Keys.Concat(expected.Keys).Where(key =>
+                Character((originals.ContainsKey(key) ? originals[key] : expected[key]).Get("InputType").Integer)
+                || value(originals, key) != value(expected, key)));
+            if (scope.Any(key => value(present, key) != value(expected, key)))
+                throw new HelperFailure("errorConflict", "Betroffene Charaktertasten oder freigegebene Belegungen wurden inzwischen geändert.");
+            var restored = new List<string>();
+            foreach (var row in Bindings(doc).Items)
+            {
+                var key = identity(row);
+                if (!scope.Contains(key)) restored.Add(doc.Raw(row));
+                else if (originals.ContainsKey(key)) restored.Add(old.Raw(originals[key]));
+            }
+            restored.AddRange(Bindings(old).Items.Where(row => scope.Contains(identity(row)) && !present.ContainsKey(identity(row))).Select(old.Raw));
+            var result = doc.Apply(new[] { doc.Replace(Bindings(doc), "[" + string.Join(",", restored) + "]") });
+            Bindings(new LosslessJson(result)); return result;
         }
         // Explicitly chosen fallback for users without a pre-mod binding backup.
         // Only this build's 25 native hotbar/selection actions are reset, not all settings.
@@ -90,9 +160,9 @@ namespace ExtendedHotbar.Helper
 
     internal static class VanillaSave
     {
-        internal static string Export(string source, string saveName, Guid campaignGuid, string displaySuffix = "(ohne Hotbar)")
+        internal static string Export(string source, string saveName, string displaySuffix = "(ohne Hotbar)")
         {
-            if (campaignGuid == Guid.Empty || !System.Text.RegularExpressions.Regex.IsMatch(saveName, @"\A[A-Za-z0-9_-]{1,64}\z")) throw new FormatException("Ungültiger Exportname.");
+            if (!System.Text.RegularExpressions.Regex.IsMatch(saveName, @"\A[A-Za-z0-9_-]{1,64}\z")) throw new FormatException("Ungültiger Exportname.");
             if (string.IsNullOrWhiteSpace(displaySuffix) || displaySuffix.Length > 64 || displaySuffix.Any(char.IsControl)) throw new FormatException("Invalid export display suffix.");
             var doc = new LosslessJson(source);
             var header = doc.Root.Get("CampaignSaveHeader");
@@ -103,15 +173,18 @@ namespace ExtendedHotbar.Helper
             if (header.Get("IsAutoSave").Kind != "bool") throw new FormatException("Unbekanntes Speicherformat.");
             var oldGuid = header.Get("CampaignGuid").String;
             Guid parsed;
-            if (!Guid.TryParse(oldGuid, out parsed) || parsed == Guid.Empty || parsed == campaignGuid) throw new FormatException("Ungültige Kampagnenkennung.");
+            if (!Guid.TryParse(oldGuid, out parsed) || parsed == Guid.Empty) throw new FormatException("Ungültige Kampagnenkennung.");
             var clanGuid = doc.Root.Get("ClanSaveData").Get("CampaignGuid");
             if (clanGuid.String != oldGuid) throw new FormatException("Widersprüchliche Kampagnenkennungen.");
             if (CountGuid(doc.Root, oldGuid) != 2) throw new FormatException("Zusätzliche Kampagnenverweise; Export wird nicht geraten.");
+            // A new manual save belongs to the existing campaign. Keep both GUID
+            // fields verbatim; changing them would create another campaign group.
+            // Consequently autosaves are shared, as disclosed before confirmation.
+            var displayName = header.Get("DisplayName").String;
+            if (!displayName.EndsWith(" " + displaySuffix, StringComparison.Ordinal)) displayName += " " + displaySuffix;
             var edits = new List<JsonEdit> {
-                doc.Replace(header.Get("CampaignGuid"), LosslessJson.Quote(campaignGuid.ToString())),
-                doc.Replace(clanGuid, LosslessJson.Quote(campaignGuid.ToString())),
                 doc.Replace(header.Get("SaveName"), LosslessJson.Quote(saveName)),
-                doc.Replace(header.Get("DisplayName"), LosslessJson.Quote(header.Get("DisplayName").String + " " + displaySuffix)),
+                doc.Replace(header.Get("DisplayName"), LosslessJson.Quote(displayName)),
                 doc.Replace(header.Get("IsAutoSave"), "false")
             };
             var slots = doc.Root.Get("PlayerUnitsSaveData").Get("QuickSlots");

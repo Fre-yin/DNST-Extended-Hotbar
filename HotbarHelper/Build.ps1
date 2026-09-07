@@ -1,7 +1,7 @@
 [CmdletBinding()]
 param(
     [string] $OutputDirectory = (Join-Path $PSScriptRoot 'bin'),
-    [string] $PackagePath = (Join-Path $PSScriptRoot '..\DungeonSettlers10Slots\dist\Extended-Hotbar-0.3.7.zip'),
+    [string] $PackagePath = (Join-Path $PSScriptRoot '..\DungeonSettlers10Slots\dist\standard-0.3.7\Extended-Hotbar-0.3.7.zip'),
     [string] $TestSavePath = (Join-Path $PSScriptRoot 'SyntheticSave.json'),
     [string] $ReadOnlyGameCheck,
     [switch] $SkipTests
@@ -16,18 +16,23 @@ if (-not (Test-Path -LiteralPath $taskCompiler)) { throw 'Roslyn compiler not fo
 $taskOut = [IO.Path]::GetFullPath($OutputDirectory)
 New-Item -ItemType Directory -Path $taskOut -Force | Out-Null
 $taskPackage = [IO.Path]::GetFullPath($PackagePath)
-if (-not (Test-Path -LiteralPath $taskPackage)) { throw 'Download the unchanged Extended-Hotbar-0.3.7.zip release and pass its location with -PackagePath.' }
-if ((Get-FileHash -LiteralPath $taskPackage -Algorithm SHA256).Hash -ne 'BCAF47FFD620288F530F6BB386F35CCE02AC458775ECD40A260BFA82B92FD916') { throw 'Unexpected mod package; no helper build.' }
-$taskRefs = @('mscorlib','System','System.Core','System.Drawing','System.Windows.Forms','System.Web.Extensions','System.IO.Compression','System.IO.Compression.FileSystem') | ForEach-Object { '/reference:' + (Join-Path $taskFramework ($_ + '.dll')) }
+if (-not (Test-Path -LiteralPath $taskPackage)) { throw 'Provide the unchanged 0.3.7 release including its optional test save with -PackagePath.' }
+if ((Get-FileHash -LiteralPath $taskPackage -Algorithm SHA256).Hash -ne 'DA9C92F107298C211799DF678B5EFB267843F8755E84073DA6AB43CDAF6E30B1') { throw 'Unexpected mod package; no helper build.' }
+$taskRefs = @('mscorlib','System','System.Core','System.Drawing','System.Windows.Forms','System.Web.Extensions','System.IO.Compression','System.IO.Compression.FileSystem','System.Xml') | ForEach-Object { '/reference:' + (Join-Path $taskFramework ($_ + '.dll')) }
 $taskCommon = @('/nologo','/noconfig','/nostdlib+','/langversion:latest','/warnaserror+','/optimize+','/platform:x64') + $taskRefs
-$taskCore = @('LosslessJson.cs','Profiles.cs','Operations.cs','LoadStatus.cs','UiText.cs') | ForEach-Object { Join-Path $PSScriptRoot $_ }
+$taskCore = @('FrameworkTarget.cs','LosslessJson.cs','Profiles.cs','Operations.cs','LoadStatus.cs','UiText.cs','Updates.cs','UpdateSignature.cs','LocalMods.cs','LocalHelpers.cs','GameDiscovery.cs') | ForEach-Object { Join-Path $PSScriptRoot $_ }
 $taskLanguages = @('en','ko','fr','de','ru','zh-Hans','zh-Hant','ja','es','pt-BR') | ForEach-Object { '/resource:' + (Join-Path $PSScriptRoot ('Languages\' + $_ + '.json')) + ',Language.' + $_ + '.json' }
+$taskTrustPath = Join-Path $PSScriptRoot 'UpdateTrust.xml'
+if (-not (Test-Path -LiteralPath $taskTrustPath)) { throw 'Pinned public update key missing. Initialize publisher signing first.' }
+$taskPublicKey = [IO.File]::ReadAllText($taskTrustPath)
+if ($taskPublicKey -notmatch '^<RSAKeyValue><Modulus>[A-Za-z0-9+/=]+</Modulus><Exponent>AQAB</Exponent></RSAKeyValue>$') { throw 'Only the public RSA key may be embedded, never private signing material.' }
+$taskLanguages += '/resource:' + $taskTrustPath + ',UpdateTrust.xml'
 $taskExe = Join-Path $taskOut 'Extended-Hotbar-Helper.exe'
 & dotnet $taskCompiler @taskCommon @taskLanguages '/target:winexe' ('/out:' + $taskExe) ('/win32manifest:' + (Join-Path $PSScriptRoot 'app.manifest')) ('/resource:' + $taskPackage + ',HotbarPackage.zip') @taskCore (Join-Path $PSScriptRoot 'MainForm.cs') (Join-Path $PSScriptRoot 'RemovalDialog.cs')
 if ($LASTEXITCODE -ne 0) { throw 'Helper build failed.' }
 if (-not $SkipTests) {
     $taskTests = Join-Path $taskOut 'Helper.Tests.exe'
-    & dotnet $taskCompiler @taskCommon @taskLanguages '/target:exe' ('/out:' + $taskTests) ('/resource:' + $taskPackage + ',HotbarPackage.zip') @taskCore (Join-Path $PSScriptRoot 'Tests.cs')
+    & dotnet $taskCompiler @taskCommon @taskLanguages '/target:exe' ('/out:' + $taskTests) ('/resource:' + $taskPackage + ',HotbarPackage.zip') @taskCore (Join-Path $PSScriptRoot 'Tests.cs') (Join-Path $PSScriptRoot 'UpdateTests.cs') (Join-Path $PSScriptRoot 'LocalModTests.cs') (Join-Path $PSScriptRoot 'LocalUpdateSmokeTests.cs') (Join-Path $PSScriptRoot 'GameDiscoveryTests.cs')
     if ($LASTEXITCODE -ne 0) { throw 'Test build failed.' }
     & $taskTests ([IO.Path]::GetFullPath($TestSavePath)) (Join-Path $taskOut 'test-runs') $ReadOnlyGameCheck
     if ($LASTEXITCODE -ne 0) { throw 'Helper tests failed.' }

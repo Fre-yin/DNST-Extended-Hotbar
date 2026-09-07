@@ -1,8 +1,9 @@
 [CmdletBinding()]
 param(
-    [string] $OutputDirectory = (Join-Path $PSScriptRoot '..\output\Extended-Hotbar-Helper-0.1.2-test'),
-    [string] $PackagePath = (Join-Path $PSScriptRoot '..\DungeonSettlers10Slots\dist\Extended-Hotbar-0.3.7.zip'),
-    [string] $TestSavePath = (Join-Path $PSScriptRoot 'SyntheticSave.json')
+    [string] $OutputDirectory = (Join-Path $PSScriptRoot '..\output\Extended-Hotbar-Helper-0.1.11-test'),
+    [string] $PackagePath = (Join-Path $PSScriptRoot '..\DungeonSettlers10Slots\dist\standard-0.3.7\Extended-Hotbar-0.3.7.zip'),
+    [string] $TestSavePath = (Join-Path $PSScriptRoot 'SyntheticSave.json'),
+    [Alias('SignOnlineUpdate')][switch] $SignUpdatePackage
 )
 $ErrorActionPreference = 'Stop'
 $taskStage = [IO.Path]::GetFullPath($OutputDirectory)
@@ -52,3 +53,4 @@ try {
     }
 } finally { $taskArchive.Dispose() }
 Get-FileHash -LiteralPath $taskZipPath -Algorithm SHA256 | Format-List Path,Hash
+if ($SignUpdatePackage) { & (Join-Path $PSScriptRoot 'Sign-Update.ps1') -PackagePath $taskZipPath }

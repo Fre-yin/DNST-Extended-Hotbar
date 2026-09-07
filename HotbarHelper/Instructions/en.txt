@@ -1,12 +1,16 @@
-Extended Hotbar · Helper 0.1.2 (test build)
+Extended Hotbar · Helper 0.1.11 (test build)
 
-Extract the entire package into its own folder, not Mods. Open Extended-Hotbar-Helper.exe and check the game folder. Choose one of the two main actions. Other tools are under troubleshooting / undo changes. Close the game before making changes.
+The game folder is detected automatically. If several copies are found, choose the correct path. Manual selection remains available.
 
-Install / update Extended Hotbar
-Install/update installs the included version, not an internet update. MelonLoader 0.7.3 must already be installed. Requires DS_B.0.4.19 / Steam 25154317 and Windows x64 with .NET Framework 4.8.
+The mod package includes the optional demo save. Save the package under “Troubleshooting”. Import the demo save manually if wanted.
 
-Prepare a save for the original game and uninstall Extended Hotbar…
-EXPERIMENTAL: create a separate campaign copy with four skill bindings and one item slot, then disable Hotbar. The original is backed up and unchanged. Test loading, saving and reloading the COPY before relying on it. Other mods stay installed. Ironmode and unknown formats are refused.
+Place the mod ZIP in Downloads, choose “Install / update mod” and check the game folder. Close the game before installing. Demo saves are not imported automatically.
+
+Install / update mod
+Place the mod ZIP in Downloads, choose “Install / update mod” and check the game folder. Close the game before installing. Demo saves are not imported automatically.
+
+Reset save to vanilla and uninstall Extended Hotbar
+EXPERIMENTAL: create an additional manual save in the same campaign with four skill bindings and one item slot, then disable Hotbar. The original is backed up and unchanged. Test loading, saving and reloading the COPY before relying on it. Other mods stay installed. Ironmode and unknown formats are refused. Both saves share the campaign's autosaves. Keep the backup and do not overwrite your original save.
 
 Troubleshooting / undo changes ▾
 Undo selected change
@@ -22,6 +26,18 @@ Keep them for undo. Language selection only changes this helper. Windows file pi
 
 Local unsigned test build. Keep the package's license notices. Game artwork is not covered by the MIT code license.
 
-Already up to date. No files were changed and no additional backup was created.
+Configure character keys…
+Choose keys for characters 1–10 (0 = character 10).
 
-This entry contains no changes to undo. Nothing was restored or removed.
+With Hotbar skills on 1–0, choose Left Shift + 1–0.
+Without the mod, bare 1–0 can be used if free.
+
+Replaces both bindings only for character selection and additive selection. With bare digits, Shift + digits adds to selection; with the Shift preset, additive selection is unbound to prevent duplicate actions.
+
+Mods and saves stay unchanged. If keys are already used, the helper lists them and asks separately to overwrite anyway. Without that confirmation, nothing changes. Cleared bindings and character keys are backed up and can be restored.
+
+Close the game and test copies first.
+
+Automatic online updates are planned for a future release. Until then, the helper uses update packages in your Downloads folder.
+
+Place the helper ZIP and matching .zip.update.json together in Downloads. Choose “Update helper only” from the blue button. The new helper opens without installing the mod; the old EXE and shortcuts remain.

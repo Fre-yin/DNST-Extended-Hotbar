@@ -68,6 +68,16 @@ namespace ExtendedHotbar.Helper
             var key = failure != null ? failure.Code : ex is FormatException ? "errorData" : ex is UnauthorizedAccessException || ex is System.Security.SecurityException ? "errorAccess" : "errorIO";
             return this[key];
         }
+        internal string CharacterConflict(JsonNode row)
+        {
+            int type = row.Get("InputType").Integer;
+            var action = type >= 34 && type <= 37 ? Format("bindingSkill", type - 33)
+                : type >= 12005 && type <= 12012 ? Format("bindingSkill", type - 12000)
+                : type == 60 ? Format("bindingItem", 1)
+                : type == 12101 || type == 12102 ? Format("bindingItem", type - 12099)
+                : Format("bindingOther", type);
+            return Format("bindingConflictLine", (row.Get("ModifierKey").Integer == 304 ? "Shift + " : "") + (char)row.Get("KeyCode").Integer, action, row.Get("SlotIndex").Integer + 1);
+        }
         internal string HistoryAction(string action)
         {
             const string restore = "Wiederherstellen: ";
@@ -77,6 +87,7 @@ namespace ExtendedHotbar.Helper
                 case "Installieren / Aktualisieren": return this["install"];
                 case "Ohne Hotbar vorbereiten": return this["export"].Replace("\n", " ");
                 case "Originaltasten vorbereiten (ohne Spielstandänderung)": return this["native"];
+                case Operations.CharacterKeysAction: return this["characters"];
                 default: return this["change"];
             }
         }

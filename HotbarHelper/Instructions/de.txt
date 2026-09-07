@@ -1,12 +1,16 @@
-Extended Hotbar · Helfer 0.1.2 (Testversion)
+Extended Hotbar · Helfer 0.1.11 (Testversion)
 
-Entpacke das ganze Paket in einen eigenen Ordner, nicht in Mods. Öffne Extended-Hotbar-Helper.exe und prüfe den Spielordner. Wähle eine der beiden Hauptaktionen. Weitere Werkzeuge findest du unter „Hilfe bei Problemen / Änderungen rückgängig machen“. Vor Änderungen das Spiel schließen.
+Der Spielordner wird automatisch gesucht. Bei mehreren Treffern den passenden Pfad wählen. Die manuelle Auswahl bleibt möglich.
 
-Extended Hotbar installieren / aktualisieren
-Installieren/Aktualisieren nutzt die enthaltene Version, kein Internetupdate. MelonLoader 0.7.3 muss bereits installiert sein. Benötigt DS_B.0.4.19 / Steam 25154317 und Windows x64 mit .NET Framework 4.8.
+Der optionale Testspielstand ist im Mod-Paket enthalten. Unter „Hilfe bei Problemen“ lässt sich das Paket speichern. Den Testspielstand bei Bedarf manuell importieren.
 
-Spielstand fürs Originalspiel vorbereiten und Extended Hotbar deinstallieren…
-TESTFUNKTION: separate Kampagnenkopie mit vier Skill-Belegungen und einem Itemslot erstellen, danach Hotbar deaktivieren. Das Original bleibt unverändert und wird gesichert. Laden, Speichern und erneutes Laden der KOPIE zuerst im Spiel prüfen. Andere Mods bleiben installiert. Ironmode und unbekannte Formate werden abgelehnt.
+Mod-ZIP in Downloads ablegen, „Mod installieren / aktualisieren“ wählen und den Spielordner prüfen. Vor der Installation das Spiel schließen. Demo-Spielstände werden nicht automatisch importiert.
+
+Mod installieren / aktualisieren
+Mod-ZIP in Downloads ablegen, „Mod installieren / aktualisieren“ wählen und den Spielordner prüfen. Vor der Installation das Spiel schließen. Demo-Spielstände werden nicht automatisch importiert.
+
+Spielstand auf Vanilla zurücksetzen und Extended Hotbar deinstallieren
+TESTFUNKTION: zusätzlichen manuellen Spielstand in derselben Kampagne mit vier Skill-Belegungen und einem Itemslot erstellen, danach Hotbar deaktivieren. Das Original bleibt unverändert und wird gesichert. Laden, Speichern und erneutes Laden der KOPIE zuerst im Spiel prüfen. Andere Mods bleiben installiert. Ironmode und unbekannte Formate werden abgelehnt. Beide Spielstände teilen sich die Autosaves der Kampagne. Bewahre die Sicherung auf und überschreibe deinen Originalspielstand nicht.
 
 Hilfe bei Problemen / Änderungen rückgängig machen ▾
 Ausgewählte Änderung rückgängig machen
@@ -22,6 +26,18 @@ Für Rücknahmen aufbewahren. Die Sprachauswahl ändert nur diesen Helfer. Windo
 
 Lokale unsignierte Testversion. Lizenzhinweise des Pakets aufbewahren. Die Spielgrafik ist nicht von der MIT-Code-Lizenz erfasst.
 
-Bereits aktuell. Es wurden keine Dateien geändert und keine zusätzliche Sicherung angelegt.
+Charaktertasten einrichten…
+Wähle die Tasten für Charakter 1–10 (0 = Charakter 10).
 
-Dieser Eintrag enthält keine rückgängig zu machende Änderung. Es wurde nichts wiederhergestellt oder entfernt.
+Mit Hotbar-Fähigkeiten auf 1–0: Umschalt + 1–0 wählen.
+Ohne Mod: 1–0 ist möglich, sofern frei.
+
+Ersetzt beide Belegungen nur für die Charakterauswahl und ihre Mehrfachauswahl. Bei 1–0 bleibt Umschalt + 1–0 für Mehrfachauswahl; beim Umschalt-Preset wird sie deaktiviert, damit keine Doppelaktion entsteht.
+
+Mods und Spielstände bleiben unverändert. Sind Tasten anderweitig belegt, zeigt der Helfer eine Liste und fragt separat nach „Trotzdem überschreiben“. Ohne diese Bestätigung bleibt alles unverändert. Dabei freigegebene Belegungen und die Charaktertasten werden gesichert und können rückgängig gemacht werden.
+
+Spiel und Testkopien vorher schließen.
+
+Automatische Online-Updates sind für ein späteres Update geplant. Bis dahin nutzt der Helper Updatepakete aus deinem Downloadordner.
+
+Helper-ZIP und passende .zip.update.json gemeinsam in Downloads ablegen. Im blauen Knopf „Nur Helper aktualisieren“ wählen. Der neue Helper öffnet sich ohne Mod-Installation; die alte EXE und Verknüpfungen bleiben erhalten.

@@ -1,12 +1,16 @@
-Extended Hotbar · Assistant 0.1.2 (version test)
+Extended Hotbar · Assistant 0.1.11 (version test)
 
-Extrayez tout le paquet dans un dossier séparé, pas dans Mods. Ouvrez Extended-Hotbar-Helper.exe, vérifiez le dossier du jeu et choisissez l’une des deux actions principales. Les autres outils se trouvent dans l’aide au dépannage / annulation des modifications. Fermez le jeu avant toute modification.
+Le dossier du jeu est détecté automatiquement. Si plusieurs copies sont trouvées, choisissez le bon chemin. La sélection manuelle reste disponible.
 
-Installer / mettre à jour Extended Hotbar
-Installe la version incluse, sans mise à jour Internet. Nécessite MelonLoader 0.7.3 déjà installé, DS_B.0.4.19 / Steam 25154317 et Windows x64 avec .NET Framework 4.8.
+Le paquet du mod inclut la sauvegarde de démo facultative. Enregistrez le paquet dans l’aide au dépannage. Importez la sauvegarde manuellement si souhaité.
 
-Préparer une partie pour le jeu d'origine et désinstaller Extended Hotbar…
-EXPÉRIMENTAL : copie de campagne distincte avec quatre affectations de compétences et un emplacement d'objet, puis désactivation de Hotbar. L'original reste intact et est sauvegardé. Testez le chargement, l'enregistrement et le rechargement de la COPIE. Les autres mods restent installés. Ironmode et formats inconnus refusés.
+Placez le ZIP du mod dans Téléchargements, choisissez «Installer / mettre à jour le mod» et vérifiez le dossier du jeu. Fermez le jeu avant l’installation. Les sauvegardes de démonstration ne sont pas importées automatiquement.
+
+Installer / mettre à jour le mod
+Placez le ZIP du mod dans Téléchargements, choisissez «Installer / mettre à jour le mod» et vérifiez le dossier du jeu. Fermez le jeu avant l’installation. Les sauvegardes de démonstration ne sont pas importées automatiquement.
+
+Rétablir la sauvegarde en vanilla et désinstaller Extended Hotbar
+EXPÉRIMENTAL : sauvegarde manuelle supplémentaire dans la même campagne avec quatre affectations de compétences et un emplacement d'objet, puis désactivation de Hotbar. L'original reste intact et est sauvegardé. Testez le chargement, l'enregistrement et le rechargement de la COPIE. Les autres mods restent installés. Ironmode et formats inconnus refusés. Les deux sauvegardes partagent les sauvegardes automatiques de la campagne. Conservez la copie de secours et n'écrasez pas votre sauvegarde originale.
 
 Résoudre un problème / annuler des changements ▾
 Annuler la modification sélectionnée
@@ -22,6 +26,18 @@ Conservez-les pour annuler. La langue ne change que cet assistant. Les sélecteu
 
 Version test locale non signée. Conservez les notices de licence. Les graphismes du jeu ne sont pas couverts par la licence MIT du code.
 
-Déjà à jour. Aucun fichier modifié et aucune copie de sécurité supplémentaire créée.
+Configurer les touches des personnages…
+Choisissez les touches des personnages 1–10 (0 = personnage 10).
 
-Cette entrée ne contient aucun changement à annuler. Rien n'a été restauré ni supprimé.
+Avec les compétences Hotbar sur 1–0, choisissez Maj gauche + 1–0.
+Sans le mod, 1–0 est possible si ces touches sont libres.
+
+Remplace les deux affectations de sélection des personnages et de sélection additive uniquement. Avec 1–0, Maj + chiffres ajoute à la sélection ; avec le préréglage Maj, la sélection additive est désactivée pour éviter une double action.
+
+Mods et sauvegardes restent inchangés. Si des touches sont utilisées, le programme les liste et demande une confirmation distincte pour les écraser. Sans confirmation, rien ne change. Les affectations libérées et les touches des personnages sont sauvegardées et peuvent être restaurées.
+
+Fermez le jeu et les copies de test.
+
+Les mises à jour automatiques en ligne sont prévues pour une prochaine version. En attendant, l’assistant utilise les paquets du dossier Téléchargements.
+
+Placez le ZIP de l’assistant et son fichier .zip.update.json dans Téléchargements. Avec le bouton bleu, choisissez «Mettre à jour l’assistant seul». Il s’ouvre sans installer le mod ; l’ancien EXE et les raccourcis restent.

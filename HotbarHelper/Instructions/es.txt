@@ -1,12 +1,16 @@
-Extended Hotbar · Asistente 0.1.2 (prueba)
+Extended Hotbar · Asistente 0.1.11 (prueba)
 
-Extrae todo el paquete en una carpeta propia, no en Mods. Abre Extended-Hotbar-Helper.exe, comprueba la carpeta del juego y elige una de las dos acciones principales. Las demás herramientas están en ayuda para problemas / deshacer cambios. Cierra el juego antes de hacer cambios.
+La carpeta del juego se detecta automáticamente. Si hay varias copias, elige la ruta correcta. La selección manual sigue disponible.
 
-Instalar / actualizar Extended Hotbar
-Instala la versión incluida, no una actualización de Internet. Requiere MelonLoader 0.7.3 ya instalado, DS_B.0.4.19 / Steam 25154317 y Windows x64 con .NET Framework 4.8.
+El paquete del mod incluye la partida de prueba opcional. Guarda el paquete en la sección de ayuda para problemas. Importa la partida manualmente si quieres.
 
-Preparar una partida para el juego original y desinstalar Extended Hotbar…
-EXPERIMENTAL: crea una campaña independiente con cuatro asignaciones de habilidades y una ranura de objeto; después desactiva Hotbar. Guarda el original sin modificarlo. Prueba cargar, guardar y volver a cargar la COPIA. Los demás mods siguen instalados. Se rechazan Ironmode y formatos desconocidos.
+Coloca el ZIP del mod en Descargas, elige «Instalar / actualizar mod» y comprueba la carpeta del juego. Cierra el juego antes de instalar. Las partidas de demostración no se importan automáticamente.
+
+Instalar / actualizar mod
+Coloca el ZIP del mod en Descargas, elige «Instalar / actualizar mod» y comprueba la carpeta del juego. Cierra el juego antes de instalar. Las partidas de demostración no se importan automáticamente.
+
+Restablecer la partida a vanilla y desinstalar Extended Hotbar
+EXPERIMENTAL: crea una partida guardada manual adicional en la misma campaña con cuatro asignaciones de habilidades y una ranura de objeto; después desactiva Hotbar. Guarda el original sin modificarlo. Prueba cargar, guardar y volver a cargar la COPIA. Los demás mods siguen instalados. Se rechazan Ironmode y formatos desconocidos. Ambas partidas comparten los autoguardados de la campaña. Conserva la copia de seguridad y no sobrescribas tu partida original.
 
 Resolver problemas / deshacer cambios ▾
 Deshacer el cambio seleccionado
@@ -22,6 +26,18 @@ Consérvalas para deshacer. El idioma solo cambia el asistente. Los selectores d
 
 Prueba local sin firma. Conserva los avisos de licencia. Los gráficos del juego no están cubiertos por la licencia MIT del código.
 
-Ya está actualizado. No se cambiaron archivos ni se creó otra copia de seguridad.
+Configurar teclas de personajes…
+Elige las teclas para personajes 1–10 (0 = personaje 10).
 
-Esta entrada no contiene cambios que deshacer. No se restauró ni eliminó nada.
+Con habilidades Hotbar en 1–0, elige Mayús izquierda + 1–0.
+Sin el mod, puedes usar 1–0 si están libres.
+
+Sustituye ambas asignaciones solo de selección de personajes y selección adicional. Con 1–0, Mayús + números añade a la selección; con el ajuste Mayús, la selección adicional se desactiva para evitar acciones dobles.
+
+Los mods y las partidas no cambian. Si las teclas están ocupadas, el asistente las muestra y pide otra confirmación para sobrescribirlas. Sin confirmación no cambia nada. Las asignaciones liberadas y las teclas de personajes se respaldan y se pueden restaurar.
+
+Cierra el juego y las copias de prueba.
+
+Las actualizaciones automáticas en línea están previstas para una versión futura. Mientras tanto, el asistente usa los paquetes de Descargas.
+
+Coloca el ZIP del asistente y su archivo .zip.update.json en Descargas. En el botón azul elige «Actualizar solo el asistente». Se abre sin instalar el mod; el EXE anterior y los accesos directos se conservan.

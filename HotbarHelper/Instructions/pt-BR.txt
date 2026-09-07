@@ -1,12 +1,16 @@
-Extended Hotbar · Assistente 0.1.2 (teste)
+Extended Hotbar · Assistente 0.1.11 (teste)
 
-Extraia todo o pacote em uma pasta própria, não em Mods. Abra Extended-Hotbar-Helper.exe, confira a pasta do jogo e escolha uma das duas ações principais. As outras ferramentas ficam em ajuda com problemas / desfazer alterações. Feche o jogo antes de fazer alterações.
+A pasta do jogo é detectada automaticamente. Se houver várias cópias, escolha o caminho correto. A seleção manual continua disponível.
 
-Instalar / atualizar Extended Hotbar
-Instala a versão incluída, não uma atualização pela Internet. Requer MelonLoader 0.7.3 já instalado, DS_B.0.4.19 / Steam 25154317 e Windows x64 com .NET Framework 4.8.
+O pacote do mod inclui o save de teste opcional. Salve o pacote na seção de ajuda para problemas. Importe o save manualmente se quiser.
 
-Preparar um save para o jogo original e desinstalar Extended Hotbar…
-EXPERIMENTAL: cria campanha independente com quatro atribuições de habilidades e um slot de item, depois desativa Hotbar. O original fica intacto e tem backup. Teste carregar, salvar e recarregar a CÓPIA. Outros mods continuam instalados. Ironmode e formatos desconhecidos são recusados.
+Coloque o ZIP do mod em Downloads, escolha “Instalar / atualizar mod” e confira a pasta do jogo. Feche o jogo antes de instalar. Saves de demonstração não são importados automaticamente.
+
+Instalar / atualizar mod
+Coloque o ZIP do mod em Downloads, escolha “Instalar / atualizar mod” e confira a pasta do jogo. Feche o jogo antes de instalar. Saves de demonstração não são importados automaticamente.
+
+Restaurar o save para vanilla e desinstalar Extended Hotbar
+EXPERIMENTAL: cria um save manual adicional na mesma campanha com quatro atribuições de habilidades e um slot de item, depois desativa Hotbar. O original fica intacto e tem backup. Teste carregar, salvar e recarregar a CÓPIA. Outros mods continuam instalados. Ironmode e formatos desconhecidos são recusados. Os dois saves compartilham os salvamentos automáticos da campanha. Guarde o backup e não sobrescreva o save original.
 
 Resolver problemas / desfazer alterações ▾
 Desfazer a alteração selecionada
@@ -22,6 +26,18 @@ Guarde-os para desfazer. O idioma muda apenas o assistente. Seletores do Windows
 
 Teste local sem assinatura. Preserve os avisos de licença. A arte do jogo não está coberta pela licença MIT do código.
 
-Já está atualizado. Nenhum arquivo foi alterado e nenhum backup adicional foi criado.
+Configurar teclas de personagens…
+Escolha as teclas dos personagens 1–10 (0 = personagem 10).
 
-Esta entrada não contém alterações para desfazer. Nada foi restaurado ou removido.
+Com habilidades Hotbar em 1–0, escolha Shift esquerdo + 1–0.
+Sem o mod, use 1–0 se estiverem livres.
+
+Substitui as duas atribuições apenas da seleção de personagens e da seleção adicional. Com 1–0, Shift + números adiciona à seleção; no modo Shift, a seleção adicional fica desativada para evitar ações duplicadas.
+
+Mods e saves não mudam. Se as teclas estiverem ocupadas, o assistente mostra a lista e pede outra confirmação para sobrescrevê-las. Sem confirmação, nada muda. As atribuições liberadas e as teclas dos personagens têm backup e podem ser restauradas.
+
+Feche o jogo e as cópias de teste.
+
+Atualizações automáticas online estão planejadas para uma versão futura. Até lá, o assistente usa os pacotes da pasta Downloads.
+
+Coloque o ZIP do assistente e o .zip.update.json correspondente juntos em Downloads. No botão azul, escolha “Atualizar só o assistente”. Ele abre sem instalar o mod; o EXE antigo e os atalhos permanecem.
