@@ -2,13 +2,15 @@
 [CmdletBinding()]
 param(
     [string] $GameDir,
-    [switch] $IncludeTestSave,
+    # Retained for callers; new packages always include the optional demo.
+    [switch] $IncludeTestSave = $true,
     # A documentation-only repack keeps the DLL version and old archives intact.
     [ValidateRange(0, 999)]
     [int] $PackageRevision = 0
 )
 
 $ErrorActionPreference = 'Stop'
+if (-not $IncludeTestSave) { throw 'New releases always include the optional test save; no separate no-save variant.' }
 $repositoryRoot = Split-Path -Parent $PSScriptRoot
 $project = Join-Path $PSScriptRoot 'DungeonSettlers10Slots.csproj'
 $properties = ([xml](Get-Content -LiteralPath $project -Raw)).Project.PropertyGroup
@@ -16,7 +18,6 @@ $version = $properties.Version
 $assemblyName = $properties.AssemblyName
 if ($assemblyName -ne 'DungeonSettlers10Slots') { throw 'Unerwarteter DLL-Name; keine Paketierung.' }
 $suffix = if ($PackageRevision -gt 0) { "-r$PackageRevision" } else { '' }
-if ($IncludeTestSave) { $suffix += '-mit-Testspielstand' }
 $destination = Join-Path $PSScriptRoot "dist\Extended-Hotbar-$version$suffix"
 $archive = "$destination.zip"
 if ((Test-Path -LiteralPath $destination) -or (Test-Path -LiteralPath $archive)) {
@@ -34,7 +35,7 @@ if (-not (Test-Path -LiteralPath $framePath -PathType Leaf)) {
 $testSave = Join-Path $PSScriptRoot 'TestSave\Saves\10SlotsTestfile.json'
 if ($IncludeTestSave) {
     if (-not (Test-Path -LiteralPath $testSave -PathType Leaf)) {
-        throw 'The optional demo save is not included in the source repository. Add the prepared local snapshot under TestSave/Saves or omit -IncludeTestSave.'
+        throw 'The demo save is not included in the source repository. New packages require the prepared local snapshot under TestSave/Saves; obtain it from the matching release package.'
     }
     # Package only the explicitly staged snapshot, never scan a live profile.
     $saveData = Get-Content -LiteralPath $testSave -Raw | ConvertFrom-Json -Depth 100

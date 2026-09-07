@@ -47,19 +47,19 @@ pwsh -File .\DungeonSettlers10Slots\Build-Release.ps1 -GameDir "C:\Games\Dungeon
 
 The script builds the DLL, runs the tests and creates a verified ZIP under `DungeonSettlers10Slots/dist`. Existing output is never overwritten. `-PackageRevision` identifies the package revision, not a new mod version. Use an unused revision number for another package.
 
-Add `-IncludeTestSave` to include the prepared demo save. You must explicitly place it at `DungeonSettlers10Slots/TestSave/Saves/10SlotsTestfile.json`. Git ignores this folder too. The script does not scan or modify personal save folders. If the frame or an explicitly requested demo save is missing, it stops before building the package.
+New packages always include the optional demo save. Explicitly place it at `DungeonSettlers10Slots/TestSave/Saves/10SlotsTestfile.json`. The legacy `-IncludeTestSave` switch remains for callers; no separate no-demo variant is created. Git ignores this folder. The script does not scan or modify personal saves. A missing frame image or prepared demo stops packaging.
 
 The exclusions in `.gitignore` apply to Git, not manual browser uploads. Do not upload generated build directories, locally added artwork or save files alongside the source through the GitHub website.
 
 The source is at version **0.3.7** and still checks the supported game build's fingerprints. Do not simply change that check to enable an unknown game update: interfaces and behavior must be verified again first.
 
-## Optional: build Helper 0.1.2
+## Optional: build Helper 0.1.11
 
 Use a short checkout path, such as `C:\Dev\ExtendedHotbar`. Isolated tests create nested folders; long base paths may hit the Windows/.NET Framework path-length limit. `Build.ps1` also accepts a short `-OutputDirectory`. `Package.ps1` builds internally under `HotbarHelper/bin`, so use a short checkout for packaging.
 
 The helper is a separate Windows application. Building requires a .NET SDK with Roslyn, PowerShell and the **.NET Framework 4.8 Developer Pack**. Running it only requires the .NET Framework 4.8 runtime. Game/loader assemblies and NuGet packages are not needed for this build.
 
-Also download the unchanged **Extended-Hotbar-0.3.7.zip** from the same release. The helper embeds that package and checks its exact SHA256 hash; a locally repacked ZIP is not an interchangeable replacement. Do not include that ZIP in a source upload.
+Also download **Extended-Hotbar-0.3.7.zip** from release **helper-v0.1.11**. This standard package includes the optional demo and has SHA256 `DA9C92F107298C211799DF678B5EFB267843F8755E84073DA6AB43CDAF6E30B1`. Older ZIPs with the same filename may have different contents. The helper requires the exact hash; repacking is not a replacement. Do not include the ZIP in a source upload.
 
 ```powershell
 pwsh -File .\HotbarHelper\Build.ps1 -PackagePath "C:\Downloads\Extended-Hotbar-0.3.7.zip"
@@ -73,4 +73,4 @@ pwsh -File .\HotbarHelper\Package.ps1 -PackagePath "C:\Downloads\Extended-Hotbar
 
 This also creates a helper ZIP with instructions in ten languages and licensing notices. Existing packages are never overwritten; select a new `-OutputDirectory` when repeating. Details, optional checks and limitations: [HotbarHelper/README.md](HotbarHelper/README.md).
 
-Passing helper tests does not approve experimental save conversion. A complete campaign load/save/reload test of its output remains outstanding.
+The user reported a successful in-game save-conversion test. Automated checks still do not establish complete campaign/long-session compatibility. Helper 0.1.11 is prepared as a prerelease; online updates remain disabled.

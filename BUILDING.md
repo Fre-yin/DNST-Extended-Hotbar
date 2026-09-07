@@ -47,19 +47,19 @@ pwsh -File .\DungeonSettlers10Slots\Build-Release.ps1 -GameDir "C:\Games\Dungeon
 
 Das Skript baut die DLL, führt die Tests aus und erstellt ein geprüftes ZIP unter `DungeonSettlers10Slots/dist`. Bereits vorhandene Ausgaben werden nicht überschrieben. Die Nummer nach `-PackageRevision` bezeichnet nur die Paketausgabe, nicht eine neue Mod-Version. Wähle bei einem weiteren Paket eine noch unbenutzte Nummer.
 
-Mit `-IncludeTestSave` lässt sich der vorbereitete Demo-Spielstand beilegen. Dafür muss er gezielt unter `DungeonSettlers10Slots/TestSave/Saves/10SlotsTestfile.json` liegen. Dieser Ordner wird ebenfalls von Git ignoriert. Das Skript durchsucht oder verändert keine persönlichen Spielstandordner. Ohne die Grafik beziehungsweise ohne den ausdrücklich angeforderten Demo-Spielstand bricht es vor dem Paketbau ab.
+Neue Pakete enthalten den optionalen Demo-Spielstand immer. Lege ihn gezielt unter `DungeonSettlers10Slots/TestSave/Saves/10SlotsTestfile.json` ab. Der alte Schalter `-IncludeTestSave` bleibt für Aufrufer erhalten; eine Variante ohne Demo wird nicht mehr erstellt. Dieser Ordner wird von Git ignoriert. Das Skript durchsucht oder verändert keine persönlichen Spielstandordner. Ohne die Grafik oder den vorbereiteten Demo-Spielstand bricht es vor dem Paketbau ab.
 
 Die Ausschlüsse in `.gitignore` gelten für Git, nicht für manuelle Browser-Uploads. Lade erzeugte Build-Ordner, lokal ergänzte Grafiken und Spielstände daher nicht zusammen mit dem Quellcode über die GitHub-Webseite hoch.
 
 Der Quellcode steht bei Version **0.3.7** und prüft weiterhin die Fingerabdrücke des unterstützten Spielbuilds. Ändere diese Prüfung nicht einfach, um ein unbekanntes Spielupdate freizuschalten; dafür müssen die Schnittstellen und das Verhalten erneut geprüft werden.
 
-## Optional: Helfer 0.1.2 bauen
+## Optional: Helfer 0.1.11 bauen
 
 Verwende einen kurzen Projektpfad, beispielsweise `C:\Dev\ExtendedHotbar`. Die isolierten Tests erzeugen verschachtelte Ordner; sehr lange Ausgangspfade können an der Windows/.NET-Framework-Pfadlängengrenze scheitern. Für `Build.ps1` lässt sich auch ein kurzer `-OutputDirectory` angeben. `Package.ps1` baut intern unter `HotbarHelper/bin`; dafür den gesamten Quellcode kurz ablegen.
 
 Der Helfer ist ein separates Windows-Programm. Zum Bauen brauchst du ein .NET SDK mit Roslyn, PowerShell und das **.NET Framework 4.8 Developer Pack**. Zum Ausführen genügt die .NET-Framework-4.8-Laufzeit. Spiel- oder Loader-DLLs und NuGet-Pakete werden für diesen Build nicht benötigt.
 
-Lade zusätzlich das unveränderte **Extended-Hotbar-0.3.7.zip** aus demselben Release herunter. Der Helfer bettet dieses Paket ein und prüft seinen exakten SHA256-Wert; ein selbst neu gepacktes ZIP ist kein gleichwertiger Ersatz. Die ZIP-Datei gehört nicht in den Quellcode-Upload.
+Lade zusätzlich **Extended-Hotbar-0.3.7.zip** aus dem Release **helper-v0.1.11** herunter. Dieses Standardpaket enthält den optionalen Demo-Spielstand und hat SHA256 `DA9C92F107298C211799DF678B5EFB267843F8755E84073DA6AB43CDAF6E30B1`. Ältere, gleich benannte ZIPs können andere Inhalte haben. Der Helfer prüft den exakten Hash; selbst neu packen ist kein Ersatz. Die ZIP-Datei gehört nicht in den Quellcode-Upload.
 
 ```powershell
 pwsh -File .\HotbarHelper\Build.ps1 -PackagePath "C:\Downloads\Extended-Hotbar-0.3.7.zip"
@@ -73,4 +73,4 @@ pwsh -File .\HotbarHelper\Package.ps1 -PackagePath "C:\Downloads\Extended-Hotbar
 
 Das erstellt zusätzlich ein Helfer-ZIP mit Anleitungen in zehn Sprachen und Lizenzhinweisen. Vorhandene Pakete werden nicht überschrieben; bei Wiederholung einen neuen `-OutputDirectory` angeben. Einzelheiten, optionale Prüfungen und Grenzen: [HotbarHelper/README.md](HotbarHelper/README.md).
 
-Auch bestandene Helfertests sind keine Freigabe der experimentellen Spielstandsumwandlung. Ihr vollständiger Kampagnen-Laden/Speichern/Neuladen-Test steht aus.
+Der Nutzer hat einen erfolgreichen Spieltest der Spielstandsumwandlung gemeldet. Automatisierte Tests belegen dennoch keine vollständige Kampagnen-/Langzeitkompatibilität. Helper 0.1.11 wird als Vorabversion vorbereitet; Online-Updates bleiben deaktiviert.

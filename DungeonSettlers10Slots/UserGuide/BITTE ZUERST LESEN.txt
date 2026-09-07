@@ -51,9 +51,9 @@ Dieses Update wird zunächst lokal getestet. Sobald es veröffentlicht ist,
 findest du es unter "Releases", unten bei "Assets":
 https://github.com/Fre-yin/DNST-Extended-Hotbar/releases
 
-Lade dort eines dieser beiden Pakete herunter:
-- Extended-Hotbar-0.3.7.zip: Mod für deine eigene Kampagne.
-- Extended-Hotbar-0.3.7-mit-Testspielstand.zip: gleiche Mod plus Demo-Spielstand.
+Extended-Hotbar-0.3.7.zip enthält die Mod und den optionalen Testspielstand.
+Du entscheidest selbst, ob du den Spielstand nach seiner Anleitung importierst.
+Er wird nicht automatisch eingebunden. Eine getrennte Variante ist nicht nötig.
 
 Wichtig: NICHT den grünen Knopf "Code → Download ZIP" verwenden.
 Auch "Source code (zip/tar.gz)" enthält nur Quellcode, keine fertige Mod-DLL.
@@ -126,7 +126,7 @@ Dort findest du auch die zusätzlichen Fähigkeiten und Gegenstandsplätze.
 
 DU MÖCHTEST SOFORT EINE VOLLE LEISTE AUSPROBIEREN?
 
-Dafür enthält das Paket "mit-Testspielstand" den Ordner "Testspielstand".
+Dafür enthält das Mod-Paket den Ordner "Testspielstand".
 Darin liegt der aktualisierte "10 Slots Testfile" mit zusätzlichen Items
 zum Ausprobieren. Öffne dort "BITTE ZUERST LESEN.txt" für den Import.
 Der Teststand ist freiwillig. Für deine eigene Kampagne brauchst du ihn nicht.

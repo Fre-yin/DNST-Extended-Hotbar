@@ -45,9 +45,9 @@ This update is initially a local test. Once published, find it under Releases,
 then scroll to Assets at the bottom:
 https://github.com/Fre-yin/DNST-Extended-Hotbar/releases
 
-Download one of these two packages there:
-- Extended-Hotbar-0.3.7.zip: the mod for your own campaign.
-- Extended-Hotbar-0.3.7-mit-Testspielstand.zip: the same mod plus a demo save.
+Extended-Hotbar-0.3.7.zip includes the mod and the optional demo save.
+Import the demo manually using its instructions only if you want it.
+It is never imported automatically. No separate demo variant is needed.
 
 Important: Do NOT use the green "Code → Download ZIP" button.
 "Source code (zip/tar.gz)" also contains source only, not the ready-built mod DLL.
@@ -101,7 +101,7 @@ your custom bindings.
 
 OPTIONAL DEMO
 
-The "mit-Testspielstand" package includes a "Testspielstand" folder with the
+The mod package includes a "Testspielstand" folder with the
 updated "10 Slots Testfile" and extra items to try. Read "READ FIRST - ENGLISH.txt"
 in that folder to import it. It is optional; your own campaign does not need it.
 If that folder is absent, you have the mod-only package.
