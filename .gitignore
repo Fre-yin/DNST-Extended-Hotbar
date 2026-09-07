@@ -1,0 +1,32 @@
+# Build output and local development files
+**/bin/
+**/obj/
+**/dist/
+.vs/
+.idea/
+.tools/
+artifacts/
+output/
+tmp/
+*.user
+*.suo
+# Never commit game/loader binaries, release archives or local save fixtures
+*.dll
+*.exe
+*.pdb
+*.zip
+*.log
+**/TestSave/Saves/
+**/SkillFrame__sharedassets0_mod_4898.png
+# Local configuration and credentials
+.env
+.env.*
+!.env.example
+# Local publisher keys and recovery material are never source files
+**/PublisherKeys/
+**/Backups/
+*.dpapi
+*.pfx
+*.p12
+*.key
+*.pem
