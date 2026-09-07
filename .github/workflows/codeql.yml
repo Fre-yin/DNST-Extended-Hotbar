@@ -1,0 +1,110 @@
+name: CodeQL
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+  schedule:
+    - cron: '23 5 * * 1'
+
+permissions:
+  contents: read
+
+jobs:
+  all-source:
+    name: All C# sources (dependency-limited)
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: read
+      security-events: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+
+      - name: Install the existing net6.0 target packs
+        uses: actions/setup-dotnet@26b0ec14cb23fa6904739307f278c14f94c95bf1 # v5
+        with:
+          dotnet-version: '6.0.x'
+
+      # Keep the whole repository visible. Game/Unity/IL2CPP references are
+      # deliberately not distributed; this scan can still report low quality.
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@cdf488f595d80d6e07e03d4674febd5ab45fa938 # v4
+        with:
+          languages: csharp
+          build-mode: none
+
+      - name: Analyze all sources
+        uses: github/codeql-action/analyze@cdf488f595d80d6e07e03d4674febd5ab45fa938 # v4
+        with:
+          category: '/language:csharp'
+
+  helper-and-core:
+    name: Helper and core tests (manual build)
+    runs-on: windows-2022
+    timeout-minutes: 30
+    permissions:
+      contents: read
+      security-events: write
+    defaults:
+      run:
+        shell: pwsh
+    steps:
+      - name: Checkout
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+
+      # The mod tests still target net6.0. Roslyn builds the helper against
+      # the .NET Framework 4.8 Developer Pack on the Windows runner.
+      - name: Install compiler and test target packs
+        uses: actions/setup-dotnet@26b0ec14cb23fa6904739307f278c14f94c95bf1 # v5
+        with:
+          dotnet-version: |
+            6.0.x
+            10.0.x
+
+      - name: Download the pinned helper resource
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $package = Join-Path $env:RUNNER_TEMP 'Extended-Hotbar-0.3.7.zip'
+          Invoke-WebRequest -Uri 'https://github.com/Fre-yin/DNST-Extended-Hotbar/releases/download/helper-v0.1.11/Extended-Hotbar-0.3.7.zip' -OutFile $package -TimeoutSec 120
+          $expected = 'DA9C92F107298C211799DF678B5EFB267843F8755E84073DA6AB43CDAF6E30B1'
+          if ((Get-FileHash -LiteralPath $package -Algorithm SHA256).Hash -ne $expected) {
+            throw 'Unexpected mod resource; refusing the helper build.'
+          }
+          # Embedded by the existing build; never installed or launched.
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@cdf488f595d80d6e07e03d4674febd5ab45fa938 # v4
+        with:
+          languages: csharp
+          build-mode: manual
+
+      - name: Build the real helper and run its isolated tests
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $package = Join-Path $env:RUNNER_TEMP 'Extended-Hotbar-0.3.7.zip'
+          $output = Join-Path $env:RUNNER_TEMP 'cql-h'
+          & .\HotbarHelper\Build.ps1 -PackagePath $package -OutputDirectory $output
+
+      - name: Rebuild the game-independent core tests
+        run: |
+          dotnet build .\tests\Hotbar.Tests\Hotbar.Tests.csproj --configuration Release --no-incremental -p:UseSharedCompilation=false
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+
+      - name: Run the core tests
+        run: |
+          dotnet run --project .\tests\Hotbar.Tests\Hotbar.Tests.csproj --configuration Release --no-build
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+
+      # Separate category: this result supplements, never replaces, all-source.
+      - name: Analyze the compiled helper and core tests
+        uses: github/codeql-action/analyze@cdf488f595d80d6e07e03d4674febd5ab45fa938 # v4
+        with:
+          category: '/language:csharp/build:helper-and-core'
