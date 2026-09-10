@@ -1,13 +1,29 @@
-Extended Hotbar · Asistente 0.1.11 (prueba)
+Extended Hotbar · Asistente 0.1.12 (prueba)
+
+Cargador de esta copia del juego
+Elige el cargador ya instalado. No mezcles cargadores en una misma copia.
+
+La instalación no cambia teclas. Las ranuras extra empiezan sin asignar; se conservan tus asignaciones.
+
+¿Aplicar este perfil?
+
+Habilidades 1–10: 1–0
+Personajes 1–10: Mayús izquierda + 1–0
+Objetos 1–3: Q/E/R
+
+Sustituye ambas asignaciones de estas acciones y desactiva la selección aditiva. Los demás conflictos se muestran antes de escribir. Cierra el juego y sus copias. Se guarda una copia para deshacer.
 
 La carpeta del juego se detecta automáticamente. Si hay varias copias, elige la ruta correcta. La selección manual sigue disponible.
 
-El paquete del mod incluye la partida de prueba opcional. Guarda el paquete en la sección de ayuda para problemas. Importa la partida manualmente si quieres.
+Las actualizaciones automáticas en línea están previstas para una versión futura. Mientras tanto, el asistente usa los paquetes de Descargas.
 
-Coloca el ZIP del mod en Descargas, elige «Instalar / actualizar mod» y comprueba la carpeta del juego. Cierra el juego antes de instalar. Las partidas de demostración no se importan automáticamente.
+Solo el paquete MelonLoader contiene la partida de prueba opcional. BepInEx no la incluye. No hay importación automática.
 
 Instalar / actualizar mod
 Coloca el ZIP del mod en Descargas, elige «Instalar / actualizar mod» y comprueba la carpeta del juego. Cierra el juego antes de instalar. Las partidas de demostración no se importan automáticamente.
+
+Actualizar solo el asistente
+Coloca el ZIP del asistente y su archivo .zip.update.json en Descargas. En el botón azul elige «Actualizar solo el asistente». Se abre sin instalar el mod; el EXE anterior y los accesos directos se conservan.
 
 Restablecer la partida a vanilla y desinstalar Extended Hotbar
 EXPERIMENTAL: crea una partida guardada manual adicional en la misma campaña con cuatro asignaciones de habilidades y una ranura de objeto; después desactiva Hotbar. Guarda el original sin modificarlo. Prueba cargar, guardar y volver a cargar la COPIA. Los demás mods siguen instalados. Se rechazan Ironmode y formatos desconocidos. Ambas partidas comparten los autoguardados de la campaña. Conserva la copia de seguridad y no sobrescribas tu partida original.
@@ -37,7 +53,3 @@ Sustituye ambas asignaciones solo de selección de personajes y selección adici
 Los mods y las partidas no cambian. Si las teclas están ocupadas, el asistente las muestra y pide otra confirmación para sobrescribirlas. Sin confirmación no cambia nada. Las asignaciones liberadas y las teclas de personajes se respaldan y se pueden restaurar.
 
 Cierra el juego y las copias de prueba.
-
-Las actualizaciones automáticas en línea están previstas para una versión futura. Mientras tanto, el asistente usa los paquetes de Descargas.
-
-Coloca el ZIP del asistente y su archivo .zip.update.json en Descargas. En el botón azul elige «Actualizar solo el asistente». Se abre sin instalar el mod; el EXE anterior y los accesos directos se conservan.

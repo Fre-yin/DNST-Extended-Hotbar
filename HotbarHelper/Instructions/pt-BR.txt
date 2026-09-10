@@ -1,13 +1,29 @@
-Extended Hotbar · Assistente 0.1.11 (teste)
+Extended Hotbar · Assistente 0.1.12 (teste)
+
+Carregador desta cópia do jogo
+Escolha o carregador já instalado. Nunca misture carregadores na mesma cópia.
+
+A instalação não altera teclas. Os espaços extras começam sem atalhos; suas configurações são mantidas.
+
+Aplicar este perfil?
+
+Habilidades 1–10: 1–0
+Personagens 1–10: Shift esquerdo + 1–0
+Itens 1–3: Q/E/R
+
+Substitui as duas atribuições dessas ações e desativa a seleção aditiva. Outros conflitos são exibidos antes de gravar. Feche o jogo e suas cópias. Um backup permite desfazer.
 
 A pasta do jogo é detectada automaticamente. Se houver várias cópias, escolha o caminho correto. A seleção manual continua disponível.
 
-O pacote do mod inclui o save de teste opcional. Salve o pacote na seção de ajuda para problemas. Importe o save manualmente se quiser.
+Atualizações automáticas online estão planejadas para uma versão futura. Até lá, o assistente usa os pacotes da pasta Downloads.
 
-Coloque o ZIP do mod em Downloads, escolha “Instalar / atualizar mod” e confira a pasta do jogo. Feche o jogo antes de instalar. Saves de demonstração não são importados automaticamente.
+Somente o pacote MelonLoader contém o save de teste opcional. BepInEx não o inclui. Não há importação automática.
 
 Instalar / atualizar mod
 Coloque o ZIP do mod em Downloads, escolha “Instalar / atualizar mod” e confira a pasta do jogo. Feche o jogo antes de instalar. Saves de demonstração não são importados automaticamente.
+
+Atualizar só o assistente
+Coloque o ZIP do assistente e o .zip.update.json correspondente juntos em Downloads. No botão azul, escolha “Atualizar só o assistente”. Ele abre sem instalar o mod; o EXE antigo e os atalhos permanecem.
 
 Restaurar o save para vanilla e desinstalar Extended Hotbar
 EXPERIMENTAL: cria um save manual adicional na mesma campanha com quatro atribuições de habilidades e um slot de item, depois desativa Hotbar. O original fica intacto e tem backup. Teste carregar, salvar e recarregar a CÓPIA. Outros mods continuam instalados. Ironmode e formatos desconhecidos são recusados. Os dois saves compartilham os salvamentos automáticos da campanha. Guarde o backup e não sobrescreva o save original.
@@ -37,7 +53,3 @@ Substitui as duas atribuições apenas da seleção de personagens e da seleçã
 Mods e saves não mudam. Se as teclas estiverem ocupadas, o assistente mostra a lista e pede outra confirmação para sobrescrevê-las. Sem confirmação, nada muda. As atribuições liberadas e as teclas dos personagens têm backup e podem ser restauradas.
 
 Feche o jogo e as cópias de teste.
-
-Atualizações automáticas online estão planejadas para uma versão futura. Até lá, o assistente usa os pacotes da pasta Downloads.
-
-Coloque o ZIP do assistente e o .zip.update.json correspondente juntos em Downloads. No botão azul, escolha “Atualizar só o assistente”. Ele abre sem instalar o mod; o EXE antigo e os atalhos permanecem.

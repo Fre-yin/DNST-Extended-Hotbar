@@ -99,23 +99,23 @@ namespace ExtendedHotbar.Helper
                 bool called = false; Updates.Launch(folder, bytes, selected.Offer, exe => called = File.Exists(exe), publicKey); Check(called);
             });
             test("local helper rejects unsigned higher version and cancellation", () => {
-                var unsigned = Files.Under(localFolder, "Extended-Hotbar-Helper-0.1.12-test.zip"); File.WriteAllBytes(unsigned, package);
+                var unsigned = Files.Under(localFolder, "Extended-Hotbar-Helper-0.1.13-test.zip"); File.WriteAllBytes(unsigned, package);
                 Throws(() => LocalHelpers.Scan(localFolder, CancellationToken.None, publicKey, current));
                 Throws(() => LocalUpdates.Scan(localFolder, "", true, CancellationToken.None, publicKey, current));
                 using (var cancel = new CancellationTokenSource()) { cancel.Cancel(); Throws(() => LocalHelpers.Read(localPath, cancel.Token, publicKey)); }
             });
-            test("update selects newer helper from the pinned public release", () => { Check(offer.Version == Updates.ParseVersion("0.1.11")); Check(offer.Prerelease && offer.Hash == Files.Hash(package)); });
+            test("update selects newer helper from the pinned public release", () => { Check(offer.Version == Updates.ParseVersion("0.1.12")); Check(offer.Prerelease && offer.Hash == Files.Hash(package)); });
             test("update ignores current older and draft versions", () => { Check(Updates.Select(feed, offer.Version, true) == null); Check(Updates.Select(feed.Replace("\"draft\":false", "\"draft\":true"), current, true) == null); Check(Updates.Select(feed, Updates.ParseVersion("0.2.0"), true) == null); });
             test("stable channel excludes test names and prereleases", () => { Check(Updates.Select(feed, current, false) == null); Check(Updates.Select(feed.Replace("\"prerelease\":true", "\"prerelease\":false"), current, false) == null); Check(Updates.Select(feed.Replace("-test.zip", ".zip").Replace("\"prerelease\":true", "\"prerelease\":false"), current, false) != null); });
-            test("source and test-save archives are not update packages", () => { Check(Updates.Select(feed.Replace("-test.zip", "-test-mit-Testspielstand.zip"), current, true) == null); Check(Updates.Select(feed.Replace("Extended-Hotbar-Helper-0.1.11-test.zip", "Source-code.zip"), current, true) == null); });
+            test("source and test-save archives are not update packages", () => { Check(Updates.Select(feed.Replace("-test.zip", "-test-mit-Testspielstand.zip"), current, true) == null); Check(Updates.Select(feed.Replace("Extended-Hotbar-Helper-0.1.12-test.zip", "Source-code.zip"), current, true) == null); });
             test("numeric version ordering is independent of release order", () => {
-                var newer = feed.Substring(1, feed.Length - 2); var older = newer.Replace("0.1.11", "0.1.9");
+                var newer = feed.Substring(1, feed.Length - 2); var older = newer.Replace("0.1.12", "0.1.9");
                 foreach (var releases in new[] { "[" + newer + "," + older + "]", "[" + older + "," + newer + "]" })
-                    Check(Updates.Select(releases, current, true).Version == Updates.ParseVersion("0.1.11"));
+                    Check(Updates.Select(releases, current, true).Version == Updates.ParseVersion("0.1.12"));
             });
             test("duplicate version with different digest is refused", () => { var release = feed.Substring(1, feed.Length - 2); Throws(() => Updates.Select("[" + release + "," + release.Replace(Files.Hash(package), new string('A', 64)) + "]", current, true)); });
             test("metadata requires GitHub digest and completed asset size", () => { Throws(() => Updates.Select(feed.Replace("sha256:", "md5:"), current, true)); Throws(() => Updates.Select(feed.Replace("\"uploaded\"", "\"new\""), current, true)); Throws(() => Updates.Select(feed.Replace("\"size\":" + package.Length, "\"size\":0"), current, true)); Throws(() => Updates.Select(feed.Replace("\"size\":" + package.Length, "\"size\":33554433"), current, true)); });
-            test("metadata rejects other repository HTTP and malformed structures", () => { Throws(() => Updates.Select(feed.Replace("https://github.com/", "http://github.com/"), current, true)); Throws(() => Updates.Select(feed.Replace(Updates.Repository, "other/repository"), current, true)); Throws(() => Updates.Select("{}", current, true)); Throws(() => Updates.Select(feed.Replace("\"draft\":false", "\"draft\":\"false\""), current, true)); Throws(() => Updates.Select(feed.Replace("helper-v0.1.11", "../main"), current, true)); });
+            test("metadata rejects other repository HTTP and malformed structures", () => { Throws(() => Updates.Select(feed.Replace("https://github.com/", "http://github.com/"), current, true)); Throws(() => Updates.Select(feed.Replace(Updates.Repository, "other/repository"), current, true)); Throws(() => Updates.Select("{}", current, true)); Throws(() => Updates.Select(feed.Replace("\"draft\":false", "\"draft\":\"false\""), current, true)); Throws(() => Updates.Select(feed.Replace("helper-v0.1.12", "../main"), current, true)); });
             test("update versions reject ambiguous or unsupported formats", () => { foreach (var version in new[] { "1.2", "1.2.3.4", "1.2.3-beta", "01.2.3", "65536.1.1", "../1.2.3" }) Throws(() => Updates.ParseVersion(version)); });
             test("download origins allow only fixed HTTPS and GitHub asset redirects", () => {
                 Check(GitHubTransport.Allowed(new Uri(Updates.Feed), false)); Check(GitHubTransport.Allowed(new Uri(offer.Url), false));
@@ -138,7 +138,7 @@ namespace ExtendedHotbar.Helper
             test("stage is side by side and old helper remains unchanged", () => { string store = Files.Under(root, "update-stage"); Directory.CreateDirectory(store); string old = Files.Under(store, Updates.ExeName); File.WriteAllText(old, "old-helper"); stage = Updates.Stage(package, offer, store, CancellationToken.None, publicKey); Check(File.ReadAllText(old) == "old-helper"); Check(File.ReadAllBytes(Files.Under(stage, Updates.ExeName)).SequenceEqual(File.ReadAllBytes(executable))); Check(Directory.GetFiles(stage, "*", SearchOption.AllDirectories).Length == 21); });
             test("internet origin is retained for Windows security checks", () => { using (var stream = Updates.InternetZone(stage, false)) Check(Files.Text(Updates.ReadBounded(stream, 4096, CancellationToken.None)).Contains("ZoneId=3")); });
             test("launch verifies files again and uses a non-shell-command target", () => { string started = null; Updates.Launch(stage, package, offer, exe => started = exe, publicKey); Check(started == Files.Under(stage, Updates.ExeName)); File.AppendAllText(Files.Under(stage, "LICENSE"), "changed"); bool launched = false; Throws(() => Updates.Launch(stage, package, offer, exe => launched = true, publicKey)); Check(!launched); });
-            test("wrong helper identity or version cannot be staged for execution", () => { var fake = Package(Files.Utf8.GetBytes("not an executable")); Throws(() => Updates.Stage(fake, SignedOffer(fake, current), Files.Under(root, "bad-stage"), CancellationToken.None, publicKey)); var wrongVersion = Updates.Select(feed.Replace("0.1.11", "0.1.12"), current, true); wrongVersion.SignedMetadata = offer.SignedMetadata; Throws(() => Updates.Stage(package, wrongVersion, Files.Under(root, "wrong-version"), CancellationToken.None, publicKey)); });
+            test("wrong helper identity or version cannot be staged for execution", () => { var fake = Package(Files.Utf8.GetBytes("not an executable")); Throws(() => Updates.Stage(fake, SignedOffer(fake, current), Files.Under(root, "bad-stage"), CancellationToken.None, publicKey)); var wrongVersion = Updates.Select(feed.Replace("0.1.12", "0.1.13"), current, true); wrongVersion.SignedMetadata = offer.SignedMetadata; Throws(() => Updates.Stage(package, wrongVersion, Files.Under(root, "wrong-version"), CancellationToken.None, publicKey)); });
             test("cancelled stage creates no launchable destination", () => { string destination = Files.Under(root, "cancel-stage"); using (var c = new CancellationTokenSource()) { c.Cancel(); Throws(() => Updates.Stage(package, offer, destination, c.Token, publicKey)); } Check(!Directory.Exists(destination)); });
             test("preferences preserve opt-out and corrupt preferences disable checks", () => { var path = Files.Under(root, "preferences/options.json"); Check(UpdatePreferences.Load(path).Automatic); new UpdatePreferences { Automatic = false, IncludeTests = false }.Save(path); Check(!UpdatePreferences.Load(path).Automatic && !UpdatePreferences.Load(path).IncludeTests); File.WriteAllText(path, "bad json"); Check(!UpdatePreferences.Load(path).Automatic); });
             test("update handoff is data only and rejects broad or network paths", () => { string game = Files.Under(root, "Game with spaces ä"), profile = Files.Under(root, "Profile"); Check(Updates.ParseHandoff(Updates.Handoff(game, profile)).SequenceEqual(new[] { game, profile })); Throws(() => Updates.Handoff("C:\\", profile)); Throws(() => Updates.Handoff("\\\\host\\share", profile)); Throws(() => Updates.ParseHandoff(new string('A', 8193))); });
@@ -161,7 +161,7 @@ namespace ExtendedHotbar.Helper
                 }
             });
             test("signed scope binds repository version name size hash and release channel", () => {
-                var replacements = new Dictionary<string,string> { { Updates.Repository, "evil/repo" }, { "ExtendedHotbarHelper.Update.v1", "OtherProduct" }, { "\"helperVersion\":\"0.1.11\"", "\"helperVersion\":\"0.1.12\"" }, { "Extended-Hotbar-Helper-0.1.11-test.zip", "Other.zip" }, { "\"size\":" + package.Length, "\"size\":1" }, { Files.Hash(package), new string('B', 64) }, { "\"prerelease\":true", "\"prerelease\":false" } };
+                var replacements = new Dictionary<string,string> { { Updates.Repository, "evil/repo" }, { "ExtendedHotbarHelper.Update.v1", "OtherProduct" }, { "\"helperVersion\":\"0.1.12\"", "\"helperVersion\":\"0.1.13\"" }, { "Extended-Hotbar-Helper-0.1.12-test.zip", "Other.zip" }, { "\"size\":" + package.Length, "\"size\":1" }, { Files.Hash(package), new string('B', 64) }, { "\"prerelease\":true", "\"prerelease\":false" } };
                 foreach (var pair in replacements) { var signed = Signed(package, pair.Key, pair.Value); Throws(() => UpdateSignature.Verify(WithSignature(offer, signed), signed, publicKey, DateTime.UtcNow)); }
             });
             test("expired future-dated and excessive-lifetime signatures fail closed", () => {
@@ -177,7 +177,7 @@ namespace ExtendedHotbar.Helper
         { return new UpdateOffer(offer.Version, offer.FileName, offer.Hash, offer.Url, offer.Tag, offer.Size, offer.Prerelease, offer.SignatureUrl, Files.Hash(envelope), envelope.Length) { SignedMetadata = envelope }; }
         private static string Feed(byte[] package)
         {
-            string name = "Extended-Hotbar-Helper-0.1.11-test.zip", tag = "helper-v0.1.11";
+            string name = "Extended-Hotbar-Helper-0.1.12-test.zip", tag = "helper-v0.1.12";
             return "[{\"draft\":false,\"prerelease\":true,\"tag_name\":" + LosslessJson.Quote(tag) + ",\"assets\":[{\"name\":" + LosslessJson.Quote(name)
                 + ",\"state\":\"uploaded\",\"size\":" + package.Length + ",\"digest\":\"sha256:" + Files.Hash(package) + "\",\"browser_download_url\":"
                 + LosslessJson.Quote("https://github.com/" + Updates.Repository + "/releases/download/" + tag + "/" + name) + "}," + SignatureAsset(package, name, tag) + "]}]";
@@ -193,7 +193,7 @@ namespace ExtendedHotbar.Helper
         private static byte[] Signed(byte[] package, string changeFrom = null, string changeTo = null, RSACryptoServiceProvider key = null)
         {
             var fields = "{\"purpose\":\"ExtendedHotbarHelper.Update.v1\",\"repository\":" + LosslessJson.Quote(Updates.Repository)
-                + ",\"helperVersion\":\"0.1.11\",\"fileName\":\"Extended-Hotbar-Helper-0.1.11-test.zip\",\"size\":" + package.Length
+                + ",\"helperVersion\":\"0.1.12\",\"fileName\":\"Extended-Hotbar-Helper-0.1.12-test.zip\",\"size\":" + package.Length
                 + ",\"sha256\":\"" + Files.Hash(package) + "\",\"prerelease\":true,\"issuedUtc\":" + LosslessJson.Quote(signatureTime.ToString("yyyy-MM-ddTHH:mm:ssZ", CultureInfo.InvariantCulture))
                 + ",\"expiresUtc\":" + LosslessJson.Quote(signatureTime.AddDays(180).ToString("yyyy-MM-ddTHH:mm:ssZ", CultureInfo.InvariantCulture)) + "}";
             if (changeFrom != null) fields = fields.Replace(changeFrom, changeTo);

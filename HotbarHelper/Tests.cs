@@ -66,6 +66,7 @@ namespace ExtendedHotbar.Helper
             fixture = File.ReadAllText(args[0]); root = Files.Root(args[1]); Directory.CreateDirectory(root);
             package = ReleaseInfo.Package();
             GameDiscoveryTests.Run(Test, root);
+            DualLoaderTests.Run(Test, root, fixture, Settings());
             Test("bundled mod always includes optional demo and only three install files", () =>
             {
                 Check(package.Count == 3 && package.Keys.All(x => ReleaseInfo.Owned.Contains(x)));
@@ -478,10 +479,11 @@ namespace ExtendedHotbar.Helper
                 Check(Directory.GetDirectories(env.Store).Length == count && Files.FileHash(env.Setting) == settings);
                 foreach (var entry in package) Check(Files.FileHash(env.Path(entry.Key)) == Files.Hash(entry.Value));
             });
-            Test("legacy no-change record does not hide the prior native key backup", () =>
+            Test("legacy history never reactivates a key profile on install", () =>
             {
                 var env = new Env(); env.Op.Install(env.Game, env.Profile, package); var settings = Profiles.Selected(File.ReadAllText(env.Setting));
                 env.Op.PrepareNativeKeys(env.Game, env.Profile); LegacyNoOp(env);
+                settings = Profiles.Selected(File.ReadAllText(env.Setting));
                 env.Op.Install(env.Game, env.Profile, package);
                 Check(Profiles.Same(Profiles.Selected(File.ReadAllText(env.Setting)), settings));
             });
@@ -566,7 +568,7 @@ namespace ExtendedHotbar.Helper
                 Throws(() => env.Op.Restore(env.Game, env.Profile, Path.GetFileName(backup)));
             });
             Test("native key preparation does not touch save or mod", () => { var env = new Env(); env.Op.Install(env.Game, env.Profile, package); var hash = Files.FileHash(env.Save); env.Op.PrepareNativeKeys(env.Game, env.Profile); Check(Files.FileHash(env.Save) == hash && File.Exists(env.Path(ReleaseInfo.Dll))); });
-            Test("install reactivates previously saved hotbar keys", () => { var env = new Env(); var original = Profiles.Selected(File.ReadAllText(env.Setting)); env.Op.PrepareNativeKeys(env.Game, env.Profile); File.WriteAllText(env.Setting, File.ReadAllText(env.Setting).Replace("Korean", "English")); env.Op.Install(env.Game, env.Profile, package); Check(Profiles.Same(Profiles.Selected(File.ReadAllText(env.Setting)), original)); Check(File.ReadAllText(env.Setting).Contains("English")); });
+            Test("install never reactivates backed-up keys", () => { var env = new Env(); env.Op.PrepareNativeKeys(env.Game, env.Profile); File.WriteAllText(env.Setting, File.ReadAllText(env.Setting).Replace("Korean", "English")); var original = File.ReadAllText(env.Setting); env.Op.Install(env.Game, env.Profile, package); Check(File.ReadAllText(env.Setting) == original); });
             Test("install preserves manually changed vanilla hotkeys", () => { var env = new Env(); env.Op.PrepareNativeKeys(env.Game, env.Profile); File.WriteAllText(env.Setting, File.ReadAllText(env.Setting).Replace("\"KeyCode\":113", "\"KeyCode\":108")); var changed = File.ReadAllText(env.Setting); env.Op.Install(env.Game, env.Profile, package); Check(File.ReadAllText(env.Setting) == changed); });
             Test("invalid save prevents disable before any mutation", () => { var env = new Env(); env.Op.Install(env.Game, env.Profile, package); File.WriteAllText(env.Save, "bad"); string exported; Throws(() => env.Op.Disable(env.Game, env.Profile, env.Save, Profiles.VanillaDefaults(), out exported)); Check(File.Exists(env.Path(ReleaseInfo.Dll))); });
             Test("localized save filenames are supported", () => { var env = new Env(); var name = Files.Under(env.Profile, "Saves/Mein Prüfstand 1.json"); File.Copy(env.Save, name); string exported; env.Op.Disable(env.Game, env.Profile, name, Profiles.VanillaDefaults(), out exported); Check(File.Exists(exported) && Files.FileHash(name) == Files.FileHash(env.Save)); });

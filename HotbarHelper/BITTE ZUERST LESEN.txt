@@ -1,4 +1,4 @@
-EXTENDED HOTBAR – HELFER 0.1.11 (LOKALE TESTVERSION)
+EXTENDED HOTBAR – HELFER 0.1.12 (LOKALE TESTVERSION)
 
 Der Spielordner wird automatisch gesucht. Bei mehreren Treffern den passenden
 Pfad aus der Liste wählen. Über „Suchen“ kannst du erneut suchen; „Manuell auswählen…“
@@ -10,9 +10,9 @@ Automatische Online-Updates sind für ein späteres Update geplant. Bis dahin nu
 Helper-ZIP und passende .zip.update.json gemeinsam in Downloads ablegen. Im blauen Knopf „Nur Helper aktualisieren“ wählen. Der neue Helper öffnet sich ohne Mod-Installation; die alte EXE und Verknüpfungen bleiben erhalten.
 
 Du möchtest die Mod benutzen – oder wieder ohne sie spielen?
-Dafür gibt es eigene Aktionen. Die Mod 0.3.7 ist bereits enthalten.
+Dafür gibt es eigene Aktionen. Die Mod 0.3.8 ist bereits enthalten.
 Du brauchst keine DLL zu suchen und keine Dateien von Hand zu verschieben.
-Der optionale Testspielstand ist im Mod-Paket enthalten. Unter „Hilfe bei
+Nur das MelonLoader-Paket enthält den optionalen Testspielstand. Unter „Hilfe bei
 Problemen“ kannst du das Paket speichern und anschließend entpacken. Importiere
 den Testspielstand nur bei Bedarf nach seiner Anleitung. Er wird nie automatisch
 eingebunden und stammt unverändert aus DS_B.0.4.17.
@@ -21,7 +21,10 @@ VOR DEM START
 
 Der Helper benötigt Windows x64 mit .NET Framework 4.8. Für Mod-Änderungen
 werden außerdem Dungeon Settlers DS_B.0.4.19
-(Steam-Build 25154317) und separat installiertes MelonLoader 0.7.3 benötigt.
+(Steam-Build 25154317) und ein bereits installierter passender Loader benötigt:
+MelonLoader 0.7.3 oder BepInEx 6 Unity IL2CPP x64 (getestet: be.788).
+BepInEx 5 / Mono ist nicht geeignet. Beide Loader niemals in dieselbe Kopie mischen.
+Spielkopien teilen sich normalerweise Spielstände und Einstellungen!
 Nur den Helper zu aktualisieren benötigt kein installiertes oder geschlossenes Spiel.
 Der Helfer installiert den Loader nicht und baut keine Internetverbindung auf.
 Neue Mod-ZIPs können aus dem Downloadordner installiert werden.
@@ -33,7 +36,8 @@ Unbekannte Spielbuilds bleiben gesperrt, bis eine angepasste Version vorliegt.
 3. Öffne Extended-Hotbar-Helper.exe. Prüfe den gefundenen Spielordner oder wähle
    bei mehreren Treffern den gewünschten Pfad aus der Liste:
    Dort muss DungeonSettlers.exe liegen. Über „Manuell auswählen…“ kannst du ihn ändern.
-4. Wähle, was du tun möchtest. Vor Änderungen ist deine Bestätigung nötig.
+4. Prüfe die Auswahl des Modloaders. Eindeutig erkannte Loader werden vorausgewählt.
+   Wähle danach, was du tun möchtest. Vor Änderungen ist deine Bestätigung nötig.
 
 INSTALLIEREN ODER AKTUALISIEREN
 
@@ -47,7 +51,8 @@ MelonLoader und Spielstände bleiben erhalten.
 Ist alles bereits unverändert installiert, steht dort „Bereits aktuell“.
 Dann entsteht keine zusätzliche Sicherung. Das ist kein Fehler.
 
-Starte das Spiel anschließend selbst über Steam.
+Starte danach die ausgewählte Spielkopie selbst. Für BepInEx den zugehörigen
+Launcher verwenden; ein Steam-Start kann sonst die Originalkopie öffnen.
 
 LOKALE MOD-UPDATES
 
@@ -95,6 +100,18 @@ können die gemeinsamen Autosaves ersetzt werden. Pro Vorgang entsteht eine neue
 manuelle Datei, ohne vorhandene Dateien zu überschreiben. Bereits mit älteren
 Helfer-Versionen erstellte Kampagnenkopien werden nicht zusammengeführt oder gelöscht.
 
+OPTIONALES HOTBAR-TASTENPROFIL
+
+Ohne Helper bleiben zusätzliche Skill- und Item-Tasten standardmäßig unbelegt.
+Originaltasten und eigene gespeicherte Belegungen bleiben erhalten. Bereits
+vorhandene Konflikte werden nicht beim Start gelöscht. Selbst im Spiel belegen,
+oder im Helper ausdrücklich „Optionales Hotbar-Tastenprofil…“ anwenden:
+Fähigkeiten 1–0, Charaktere linke Umschalttaste + 1–0, Gegenstände Q/E/R.
+Beide Spalten dieser Aktionen werden ersetzt, Mehrfachauswahl wird freigegeben.
+Weitere Konflikte werden separat aufgelistet; ohne Überschreib-Bestätigung keine
+Änderung. Die Tastenänderung wird gesichert und kann rückgängig gemacht werden.
+Installation allein wendet dieses Profil niemals an.
+
 CHARAKTERTASTEN EINRICHTEN
 
 Klicke im Hauptfenster auf „Charaktertasten einrichten“. Schließe das Spiel vorher.
@@ -137,9 +154,8 @@ Dieser Bereich ist normalerweise zugeklappt. Darin findest du:
   Q/E/R/T, Y und Charakterwahl 1–0. Entfernt keine Mod und konvertiert keinen
   Spielstand. Die vorherigen Tasten werden gesichert.
 
-Zum Zurückwechseln zur Mod kannst du sie wieder installieren. Wenn die vom
-Helfer gesetzten Originaltasten unverändert geblieben sind, kann er dabei
-deine davor gesicherten Hotbar-Tasten zurückholen.
+Zum Zurückwechseln die passende Mod erneut installieren. Dabei werden KEINE
+alten Tastenprofile wiederhergestellt. Belegungen bleiben wie von dir eingestellt.
 
 SICHERUNGEN UND LADESTATUS
 
@@ -171,4 +187,4 @@ Der Helfer verlangt keine Administratorrechte und sendet keine Daten ins Interne
 Eigener Code und eigene Anleitungen: MIT (LICENSE). Die enthaltene bearbeitete
 Originalgrafik des Spiels ist ausdrücklich NICHT MIT-lizenziert.
 Behalte LICENSING.txt, THIRD_PARTY_NOTICES.txt, Assets/NOTICE.txt und Licenses.
-Spiel und MelonLoader werden nicht mitgeliefert.
+Spiel und Modloader werden nicht mitgeliefert.

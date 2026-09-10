@@ -1,13 +1,29 @@
-Extended Hotbar · Helfer 0.1.11 (Testversion)
+Extended Hotbar · Helfer 0.1.12 (Testversion)
+
+Modloader dieser Spielkopie
+Passenden Loader wählen. Er muss bereits installiert sein; keine Mischung in derselben Kopie.
+
+Installation ändert keine Tasten. Zusätzliche Plätze starten unbelegt; vorhandene Wunschbelegungen bleiben erhalten.
+
+Dieses Profil ausdrücklich anwenden?
+
+Fähigkeiten 1–10: 1–0
+Charaktere 1–10: linke Umschalttaste + 1–0
+Gegenstände 1–3: Q/E/R
+
+Ersetzt beide Belegungen dieser Aktionen. Zusätzliche Charakterauswahl bleibt dabei unbelegt. Andere Konflikte werden vor dem Schreiben separat angezeigt. Spiel und Testkopien schließen. Sicherung und Rücknahme sind möglich.
 
 Der Spielordner wird automatisch gesucht. Bei mehreren Treffern den passenden Pfad wählen. Die manuelle Auswahl bleibt möglich.
 
-Der optionale Testspielstand ist im Mod-Paket enthalten. Unter „Hilfe bei Problemen“ lässt sich das Paket speichern. Den Testspielstand bei Bedarf manuell importieren.
+Automatische Online-Updates sind für ein späteres Update geplant. Bis dahin nutzt der Helper Updatepakete aus deinem Downloadordner.
 
-Mod-ZIP in Downloads ablegen, „Mod installieren / aktualisieren“ wählen und den Spielordner prüfen. Vor der Installation das Spiel schließen. Demo-Spielstände werden nicht automatisch importiert.
+Nur das MelonLoader-Paket enthält den optionalen Testspielstand. BepInEx enthält keinen. Kein automatischer Import.
 
 Mod installieren / aktualisieren
 Mod-ZIP in Downloads ablegen, „Mod installieren / aktualisieren“ wählen und den Spielordner prüfen. Vor der Installation das Spiel schließen. Demo-Spielstände werden nicht automatisch importiert.
+
+Nur Helper aktualisieren
+Helper-ZIP und passende .zip.update.json gemeinsam in Downloads ablegen. Im blauen Knopf „Nur Helper aktualisieren“ wählen. Der neue Helper öffnet sich ohne Mod-Installation; die alte EXE und Verknüpfungen bleiben erhalten.
 
 Spielstand auf Vanilla zurücksetzen und Extended Hotbar deinstallieren
 TESTFUNKTION: zusätzlichen manuellen Spielstand in derselben Kampagne mit vier Skill-Belegungen und einem Itemslot erstellen, danach Hotbar deaktivieren. Das Original bleibt unverändert und wird gesichert. Laden, Speichern und erneutes Laden der KOPIE zuerst im Spiel prüfen. Andere Mods bleiben installiert. Ironmode und unbekannte Formate werden abgelehnt. Beide Spielstände teilen sich die Autosaves der Kampagne. Bewahre die Sicherung auf und überschreibe deinen Originalspielstand nicht.
@@ -37,7 +53,3 @@ Ersetzt beide Belegungen nur für die Charakterauswahl und ihre Mehrfachauswahl.
 Mods und Spielstände bleiben unverändert. Sind Tasten anderweitig belegt, zeigt der Helfer eine Liste und fragt separat nach „Trotzdem überschreiben“. Ohne diese Bestätigung bleibt alles unverändert. Dabei freigegebene Belegungen und die Charaktertasten werden gesichert und können rückgängig gemacht werden.
 
 Spiel und Testkopien vorher schließen.
-
-Automatische Online-Updates sind für ein späteres Update geplant. Bis dahin nutzt der Helper Updatepakete aus deinem Downloadordner.
-
-Helper-ZIP und passende .zip.update.json gemeinsam in Downloads ablegen. Im blauen Knopf „Nur Helper aktualisieren“ wählen. Der neue Helper öffnet sich ohne Mod-Installation; die alte EXE und Verknüpfungen bleiben erhalten.

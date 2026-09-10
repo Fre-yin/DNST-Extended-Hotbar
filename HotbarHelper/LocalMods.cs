@@ -5,7 +5,6 @@ using System.IO.Compression;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
-using System.Text.RegularExpressions;
 using System.Threading;
 
 namespace ExtendedHotbar.Helper
@@ -14,6 +13,7 @@ namespace ExtendedHotbar.Helper
     {
         internal string Path, Hash;
         internal Version Version;
+        internal ModLoaderProfile Loader;
         internal Dictionary<string, byte[]> Payload;
     }
 
@@ -22,7 +22,6 @@ namespace ExtendedHotbar.Helper
     {
         internal const string Manifest = "ExtendedHotbar.update.json";
         private const int MaxZip = 16 * 1024 * 1024;
-        private static readonly Regex Name = new Regex(@"\AExtended-Hotbar-([0-9]+\.[0-9]+\.[0-9]+)(?:-mit-Testspielstand)?(?: \([1-9][0-9]{0,2}\))?\.zip\z", RegexOptions.CultureInvariant);
         [DllImport("shell32.dll")]
         private static extern int SHGetKnownFolderPath(ref Guid id, uint flags, IntPtr token, out IntPtr path);
         internal static string Downloads()
@@ -32,21 +31,23 @@ namespace ExtendedHotbar.Helper
             try { Marshal.ThrowExceptionForHR(result); return Files.Root(Marshal.PtrToStringUni(pointer)); }
             finally { if (pointer != IntPtr.Zero) Marshal.FreeCoTaskMem(pointer); }
         }
-        internal static Version FileVersion(string path)
+        internal static Version FileVersion(string path, ModLoaderProfile loader = null)
         {
-            var match = Name.Match(System.IO.Path.GetFileName(path));
+            var match = (loader ?? ModLoaders.Melon).PackageName.Match(System.IO.Path.GetFileName(path));
             return match.Success ? Updates.ParseVersion(match.Groups[1].Value) : null;
         }
-        internal static Version Installed(string game)
+        internal static Version Installed(string game, ModLoaderProfile loader = null)
         {
-            var path = Files.Under(game, ReleaseInfo.Dll);
+            loader = loader ?? ModLoaders.Melon;
+            var path = Files.Under(game, loader.Dll);
             if (!File.Exists(path)) return Updates.ParseVersion("0.0.0");
             var identity = AssemblyName.GetAssemblyName(path); // Metadata only, never load DLL code.
-            if (identity.Name != "DungeonSettlers10Slots") throw new HelperFailure("errorForeign", "Foreign DLL in the hotbar slot.");
+            if (identity.Name != loader.Assembly) throw new HelperFailure("errorForeign", "Foreign DLL in the hotbar slot.");
             return Updates.ParseVersion(identity.Version.ToString(3));
         }
-        internal static LocalModPackage Scan(string downloads, Version installed, CancellationToken token, string publicKey = null)
+        internal static LocalModPackage Scan(string downloads, Version installed, CancellationToken token, string publicKey = null, ModLoaderProfile loader = null)
         {
+            loader = loader ?? ModLoaders.Melon;
             downloads = Files.Root(downloads);
             if (!Directory.Exists(downloads)) return null;
             var minimum = Updates.ParseVersion(ReleaseInfo.ModVersion);
@@ -56,14 +57,14 @@ namespace ExtendedHotbar.Helper
             {
                 token.ThrowIfCancellationRequested();
                 if (++count > 10000) throw new HelperFailure("errorLocalPackage", "Downloads exceeds the 10000-file search limit.");
-                var version = FileVersion(path);
+                var version = FileVersion(path, loader);
                 if (version != null && version >= minimum) candidates.Add(new KeyValuePair<string, Version>(path, version));
             }
             LocalModPackage best = null;
             foreach (var candidate in candidates.OrderByDescending(x => x.Value).ThenBy(x => x.Key, StringComparer.Ordinal))
             {
                 if (best != null && candidate.Value < best.Version) break;
-                var value = Read(candidate.Key, token, publicKey);
+                var value = Read(candidate.Key, token, publicKey, loader);
                 // Two equivalent downloads are harmless; conflicting release contents are not.
                 if (best != null && best.Payload.Any(x => Files.Hash(x.Value) != Files.Hash(value.Payload[x.Key])))
                     throw new HelperFailure("errorLocalPackage", "Conflicting local packages have the same mod version.");
@@ -71,20 +72,21 @@ namespace ExtendedHotbar.Helper
             }
             return best;
         }
-        internal static LocalModPackage Read(string path, CancellationToken token, string publicKey = null)
+        internal static LocalModPackage Read(string path, CancellationToken token, string publicKey = null, ModLoaderProfile loader = null)
         {
             try
             {
+                loader = loader ?? ModLoaders.Melon;
                 path = System.IO.Path.GetFullPath(path); Files.SafeAncestors(path);
-                var version = FileVersion(path);
+                var version = FileVersion(path, loader);
                 if (version == null) throw new FormatException("Not a supported mod ZIP filename.");
                 byte[] bytes;
                 using (var file = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read))
                     bytes = Updates.ReadBounded(file, MaxZip, token);
                 var hash = Files.Hash(bytes);
-                if (hash == ReleaseInfo.PackageHash && version == Updates.ParseVersion(ReleaseInfo.ModVersion))
-                    return new LocalModPackage { Path = path, Version = version, Hash = hash, Payload = ReleaseInfo.ReadPackage(bytes) };
-                var wanted = new[] { ReleaseInfo.Dll, ReleaseInfo.Asset, ReleaseInfo.Notice };
+                if (hash == loader.PackageHash && version == Updates.ParseVersion(ReleaseInfo.ModVersion))
+                    return new LocalModPackage { Loader = loader, Path = path, Version = version, Hash = hash, Payload = ReleaseInfo.ReadPackage(bytes, loader) };
+                var wanted = loader.Required;
                 var payload = new Dictionary<string, byte[]>(StringComparer.Ordinal);
                 byte[] envelope = null;
                 using (var memory = new MemoryStream(bytes))
@@ -112,12 +114,12 @@ namespace ExtendedHotbar.Helper
                 }
                 if (version == Updates.ParseVersion(ReleaseInfo.ModVersion) && payload.Count == 3)
                 {
-                    var bundled = ReleaseInfo.Package();
+                    var bundled = ReleaseInfo.Package(loader);
                     if (wanted.All(x => payload.ContainsKey(x) && Files.Hash(payload[x]) == Files.Hash(bundled[x])))
-                        return new LocalModPackage { Path = path, Version = version, Hash = hash, Payload = payload };
+                        return new LocalModPackage { Loader = loader, Path = path, Version = version, Hash = hash, Payload = payload };
                 }
                 var manifest = new LosslessJson(Files.Text(UpdateSignature.VerifyPayload(envelope, publicKey ?? UpdateSignature.PublicKey()))).Root;
-                if (manifest.Members.Count != 7 || manifest.Get("purpose").String != "ExtendedHotbar.Mod.v1" || manifest.Get("repository").String != Updates.Repository
+                if (manifest.Members.Count != 7 || manifest.Get("purpose").String != loader.Purpose || manifest.Get("repository").String != Updates.Repository
                     || manifest.Get("modVersion").String != version.ToString(3) || payload.Count != 3)
                     throw new FormatException("Signed mod identity is not bound to these files.");
                 // A new game build or save format still needs a reviewed helper. A local
@@ -128,7 +130,7 @@ namespace ExtendedHotbar.Helper
                 var hashes = manifest.Get("files");
                 if (hashes.Kind != "object" || hashes.Members.Count != 3 || wanted.Any(x => hashes.Get(x).String != Files.Hash(payload[x])))
                     throw new FormatException("Installed file hashes do not match the publisher signature.");
-                return new LocalModPackage { Path = path, Version = version, Hash = hash, Payload = payload };
+                return new LocalModPackage { Loader = loader, Path = path, Version = version, Hash = hash, Payload = payload };
             }
             catch (OperationCanceledException) { throw; }
             catch (HelperFailure ex) when (ex.Code == "errorLocalHelper") { throw; }
@@ -137,7 +139,7 @@ namespace ExtendedHotbar.Helper
         }
         internal static Dictionary<string, byte[]> Recheck(LocalModPackage offer, CancellationToken token, string publicKey = null)
         {
-            var current = Read(offer.Path, token, publicKey);
+            var current = Read(offer.Path, token, publicKey, offer.Loader);
             if (current.Hash != offer.Hash) throw new HelperFailure("errorLocalPackage", "Package changed after selection.");
             return current.Payload;
         }

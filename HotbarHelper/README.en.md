@@ -2,7 +2,11 @@
 
 [Deutsch](BITTE%20ZUERST%20LESEN.txt) | **English** | [Back to Extended Hotbar](../README.en.md)
 
-The optional Windows helper installs and updates Extended Hotbar. The mod and the optional demo save are included; the demo is never imported automatically.
+Helper 0.1.12 installs the matching Hotbar 0.3.8 edition for MelonLoader or the
+BepInEx 6 IL2CPP preview. Choose the already installed loader; never mix loaders.
+Installation preserves keys. Extra slots start unbound; apply a key profile only
+if wanted, through the separate button with conflict checks and backup.
+Only the MelonLoader package includes the optional demo save; no automatic import.
 
 ## Downloads and instructions
 
@@ -18,6 +22,6 @@ Mod installation and updates are a separate action. Automatic online updates are
 
 ## Returning to vanilla
 
-The helper creates an additional manual save **in the same campaign** and removes Extended Hotbar. The original save is preserved and backed up, but both saves share campaign autosaves. Keep your backup and follow the complete user guide before continuing. Other mods and MelonLoader remain installed.
+The helper creates an additional manual save **in the same campaign** and removes Extended Hotbar. The original save is preserved and backed up, but both saves share campaign autosaves. Keep your backup and follow the complete user guide before continuing. Other mods and the selected loader remain installed. Separate game copies normally share saves and settings.
 
 For building, tests and technical limitations, see the [developer documentation](README.md).

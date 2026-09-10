@@ -1,6 +1,6 @@
 # Updates veröffentlichen — Helper 0.1.5 und später
 
-**Aktueller Stand 0.1.11: Online-Updates sind fest deaktiviert.** Diese Anleitung
+**Aktueller Stand 0.1.12: Online-Updates sind fest deaktiviert.** Diese Anleitung
 beschreibt die vorbereitete spätere Online-Funktion, nicht die aktive Oberfläche.
 Aktuell gilt [LOCAL-UPDATES-PUBLISHING.md](LOCAL-UPDATES-PUBLISHING.md).
 `Package.ps1` signiert Online-Pakete nur mit dem expliziten Schalter

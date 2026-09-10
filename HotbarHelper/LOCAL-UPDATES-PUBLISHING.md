@@ -12,7 +12,7 @@ Downgrade wäre. Unbekannte Spielbuilds werden dabei nicht freigegeben.
 
 ## Bereits vorhandene Pakete
 
-Originale 0.3.7-ZIPs, mit oder ohne Demo-Spielstand, funktionieren ohne neue
+Die enthaltenen 0.3.8-ZIPs für den ausgewählten Loader funktionieren ohne neue
 Prüfdatei, solange ihre drei installierbaren Mod-Dateien exakt den eingebauten
 Dateien entsprechen. Demo-Spielstände und alle anderen ZIP-Dateien werden niemals
 automatisch importiert. Die originale ZIP und DLL werden nicht umgebaut.
@@ -30,7 +30,12 @@ automatisch importiert. Die originale ZIP und DLL werden nicht umgebaut.
 ./Prepare-LocalModUpdate.ps1 -PackagePath 'C:\Build\Extended-Hotbar-0.3.8.zip' -OutputPath 'C:\Freigabe\Extended-Hotbar-0.3.8.zip'
 ```
 
-Die Version 0.3.8 und Ordner sind Beispiele, keine hier veröffentlichte Version.
+Die Ordner sind Beispiele. Nichts wird durch dieses Skript veröffentlicht.
+Für BepInEx zusätzlich -Loader BepInEx übergeben; Dateiname:
+Extended-Hotbar-BepInEx-X.Y.Z-bepinex.N.zip. Sein Signaturzweck lautet
+ExtendedHotbar.Mod.BepInEx.v1 und seine drei Pfade liegen unter BepInEx/plugins/ExtendedHotbar.
+MelonLoader bleibt bei ExtendedHotbar.Mod.v1 und Mods/. Eine Signatur der
+anderen Loader-Ausgabe wird nicht akzeptiert.
 Das Skript verwendet ausschließlich den lokalen Veröffentlichungsschlüssel und
 übernimmt die geprüften Spiel-Fingerprints und Mindest-Helper-Version aus dem
 aktuellen Helper-Quellcode. Niemals diese Werte nur zum Umgehen einer Sperre ändern.
@@ -71,15 +76,15 @@ ZIP samt Version, Größe und Teststatus und ist maximal 180 Tage gültig. Eine 
 Uhr oder abgelaufene Freigabe verhindert den Start. Windows-Herausgeberwarnungen
 werden nicht unterdrückt. Dieser Ablauf verwendet keinen GitHub-Zugriff.
 
-Ab 0.1.8 steckt das vollständige Mod-Paket einschließlich optionalem Testspielstand
-in der Helper-EXE. Keine zusätzlichen Demo-Varianten veröffentlichen. Das äußere
+Ab 0.1.12 stecken beide loader-spezifischen Mod-Pakete in der Helper-EXE.
+Nur das MelonLoader-Paket enthält den optionalen Testspielstand. Keine zusätzlichen Demo-Varianten veröffentlichen. Das äußere
 Helper-ZIP behält exakt 21 Dateien, damit ältere Helper es weiterhin prüfen können.
-Der normale Mod-Download enthält ebenfalls den Testspielstand. Er wird niemals
+Der MelonLoader-Mod-Download enthält ebenfalls den Testspielstand. Er wird niemals
 automatisch importiert; der Helper kann das enthaltene ZIP auf Wunsch speichern.
 
 ## Online bleibt aus
 
-`Updates.OnlineEnabled` ist in 0.1.11 fest `false`; die Oberfläche hat keinen
+`Updates.OnlineEnabled` ist in 0.1.12 fest `false`; die Oberfläche hat keinen
 Online-Schalter und ruft keinen Netzwerk-Client auf. Auch ein direkter Aufruf des
 vorbereiteten Clients wird vor einer Verbindung abgelehnt. Alte Online-Einstellungen
 werden nicht verwendet. `Package.ps1` greift standardmäßig nicht auf den privaten

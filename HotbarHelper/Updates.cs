@@ -28,7 +28,7 @@ namespace ExtendedHotbar.Helper
     // from the embedded release key, separate from the GitHub account and digest.
     internal static class Updates
     {
-        internal const string HelperVersion = "0.1.11";
+        internal const string HelperVersion = "0.1.12";
         // Future activation requires a reviewed build, key recovery and live testing.
         // This is deliberately not configurable through downloaded files or settings.
         internal static readonly bool OnlineEnabled = false;

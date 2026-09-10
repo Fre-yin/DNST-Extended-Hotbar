@@ -88,26 +88,33 @@ namespace ExtendedHotbar.Helper
             return "[" + string.Join(",", rows) + "]";
         }
         internal static List<JsonNode> CharacterConflicts(string current, bool shift)
-        { return CharacterConflicts(new LosslessJson(current), CharacterDefaults(shift)); }
-        private static List<JsonNode> CharacterConflicts(LosslessJson current, string desired)
+        { return Conflicts(current, CharacterDefaults(shift), Character); }
+        internal static List<JsonNode> Conflicts(string json, string desired, Func<int, bool> scope)
         {
+            var current = new LosslessJson(json);
             var requested = new LosslessJson(desired).Root.Items.Where(x => x.Get("KeyCode").Integer != 0).ToArray();
-            return Bindings(current).Items.Where(other => !Character(other.Get("InputType").Integer)
+            return Bindings(current).Items.Where(other => !scope(other.Get("InputType").Integer)
                 && requested.Any(x => x.Get("KeyCode").Integer == other.Get("KeyCode").Integer && x.Get("ModifierKey").Integer == other.Get("ModifierKey").Integer)).ToList();
         }
         internal static string ConfigureCharacters(string current, bool shift, bool overwriteConflicts = false)
         {
-            var desired = CharacterDefaults(shift); var doc = new LosslessJson(current);
-            var conflicts = CharacterConflicts(doc, desired);
+            return Configure(current, CharacterDefaults(shift), Character, overwriteConflicts);
+        }
+        internal static string Configure(string current, string desired, Func<int, bool> scope, bool overwriteConflicts)
+        {
+            var doc = new LosslessJson(current);
+            var conflicts = Conflicts(current, desired, scope);
             if (conflicts.Count != 0 && !overwriteConflicts)
                 throw new HelperFailure("errorCharacterConflict", "Gewünschte Charaktertasten sind bereits durch andere Aktionen belegt.");
             if (conflicts.Count != 0)
                 current = doc.Apply(conflicts.SelectMany(row => new[] {
                     doc.Replace(row.Get("KeyCode"), "0"), doc.Replace(row.Get("ModifierKey"), "0")
                 }));
-            return MergeCharacters(current, desired);
+            return Merge(current, desired, scope);
         }
         internal static string RestoreCharacterBindings(string current, string before, string after)
+        { return RestoreBindingChanges(current, before, after, Character); }
+        internal static string RestoreBindingChanges(string current, string before, string after, Func<int, bool> affected)
         {
             var doc = new LosslessJson(current); var old = new LosslessJson(before); var applied = new LosslessJson(after);
             Func<JsonNode, string> identity = row => row.Get("InputType").Integer + ":" + row.Get("SlotIndex").Integer;
@@ -118,7 +125,7 @@ namespace ExtendedHotbar.Helper
             // Restore character rows plus exactly the foreign rows explicitly
             // cleared by the confirmed overwrite. Later unrelated edits survive.
             var scope = new HashSet<string>(originals.Keys.Concat(expected.Keys).Where(key =>
-                Character((originals.ContainsKey(key) ? originals[key] : expected[key]).Get("InputType").Integer)
+                affected((originals.ContainsKey(key) ? originals[key] : expected[key]).Get("InputType").Integer)
                 || value(originals, key) != value(expected, key)));
             if (scope.Any(key => value(present, key) != value(expected, key)))
                 throw new HelperFailure("errorConflict", "Betroffene Charaktertasten oder freigegebene Belegungen wurden inzwischen geändert.");
@@ -152,7 +159,7 @@ namespace ExtendedHotbar.Helper
             rows.Add(Row(60, 0, 121, 0)); rows.Add(Row(60, 1, 0, 0));
             return "[" + string.Join(",", rows) + "]";
         }
-        private static string Row(int type, int slot, int key, int modifier)
+        internal static string Row(int type, int slot, int key, int modifier)
         {
             return "{\"InputType\":" + type + ",\"SlotIndex\":" + slot + ",\"KeyCode\":" + key + ",\"IsKeyDown\":true,\"ModifierKey\":" + modifier + "}";
         }

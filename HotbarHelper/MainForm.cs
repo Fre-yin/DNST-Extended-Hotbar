@@ -10,8 +10,8 @@ using System.Windows.Forms;
 
 [assembly: System.Reflection.AssemblyTitle("Extended Hotbar Helper")]
 [assembly: System.Reflection.AssemblyProduct("Extended Hotbar Helper")]
-[assembly: System.Reflection.AssemblyVersion("0.1.11.0")]
-[assembly: System.Reflection.AssemblyFileVersion("0.1.11.0")]
+[assembly: System.Reflection.AssemblyVersion("0.1.12.0")]
+[assembly: System.Reflection.AssemblyFileVersion("0.1.12.0")]
 
 namespace ExtendedHotbar.Helper
 {
@@ -59,6 +59,8 @@ namespace ExtendedHotbar.Helper
         private readonly ComboBox game = new ComboBox { DropDownStyle = ComboBoxStyle.DropDown };
         private readonly TextBox profile = new TextBox(), report = new TextBox();
         private readonly ComboBox history = new ComboBox(), languages = new ComboBox();
+        private readonly ComboBox loaders = new ComboBox { DropDownStyle = ComboBoxStyle.DropDownList, Dock = DockStyle.Fill };
+        private ModLoaderProfile SelectedLoader { get { return loaders.SelectedItem as ModLoaderProfile ?? ModLoaders.Melon; } }
         private readonly Label loadStatus = new Label();
         private readonly System.Windows.Forms.Timer statusTimer = new System.Windows.Forms.Timer { Interval = 2000 };
         private readonly Dictionary<Control, string> captions = new Dictionary<Control, string>();
@@ -113,7 +115,7 @@ namespace ExtendedHotbar.Helper
             layout = new TableLayoutPanel { Dock = DockStyle.Top, AutoSize = true, Padding = new Padding(24), ColumnCount = 1 };
             layout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100)); scroll.Controls.Add(layout); Controls.Add(scroll);
             Add(new Label { Text = "Extended Hotbar", AutoSize = true, Font = new Font("Segoe UI", 23, FontStyle.Bold), Margin = new Padding(0, 0, 0, 6) });
-            Add(new Label { Text = "Mod 0.3.7 · DS_B.0.4.19 · MelonLoader 0.7.3", AutoSize = true, Margin = new Padding(0, 0, 0, 8) });
+            Add(new Label { Text = "Mod 0.3.8 · DS_B.0.4.19 · MelonLoader / BepInEx", AutoSize = true, Margin = new Padding(0, 0, 0, 8) });
             var toolbar = new FlowLayoutPanel { AutoSize = true, Dock = DockStyle.Fill, WrapContents = true, Margin = new Padding(0, 0, 0, 8) };
             toolbar.Controls.Add(Bind(new Label { AutoSize = true, Margin = new Padding(0, 7, 8, 0) }, "language"));
             languages.DropDownStyle = ComboBoxStyle.DropDownList; languages.Width = 180;
@@ -130,13 +132,17 @@ namespace ExtendedHotbar.Helper
             checkUpdates.Click += async (s, e) => { if (preview) return; if (updateCancellation != null) updateCancellation.Cancel(); else await CheckUpdates(); };
             toolbar.Controls.Add(checkUpdates); Add(toolbar);
             automaticUpdates.CheckedChanged += (s, e) => SaveUpdatePreferences();
-            Add(PathRow("game", game, true)); Add(Wrap("mainQuestion"));
+            Add(PathRow("game", game, true));
+            Add(Wrap("loader"));
+            loaders.Items.AddRange(ModLoaders.All); loaders.SelectedIndex = 0; Add(loaders);
+            Add(Wrap("loaderHint")); Add(Wrap("mainQuestion"));
             var install = ActionButton("updateAction", ChooseUpdateAction);
             install.BackColor = Color.FromArgb(32, 92, 144); install.ForeColor = Color.White; Add(install);
             wrappingLabels.Add(packageStatus); Add(packageStatus);
             var remove = ActionButton("export", Disable); remove.MinimumSize = new Size(0, 64); Add(remove);
             var warning = Wrap("exportHint"); warning.ForeColor = Color.FromArgb(140, 75, 0); Add(warning);
             Add(ActionButton("characters", ConfigureCharacters));
+            Add(ActionButton("hotbarKeys", ConfigureHotbarKeys));
             loadStatus.AutoSize = true; loadStatus.Margin = new Padding(0, 8, 0, 8); wrappingLabels.Add(loadStatus); Add(loadStatus);
             advancedToggle = Bind(new Button { AutoSize = true, Dock = DockStyle.Fill, MinimumSize = new Size(0, 34) }, "advancedOpen");
             advancedToggle.Click += (s, e) => SetAdvanced(!advancedOpen); Add(advancedToggle);
@@ -165,10 +171,17 @@ namespace ExtendedHotbar.Helper
             game.TextChanged += (s, e) =>
             {
                 gameRevision++; updateOffer = null; updateState = null; lastStatus = null;
+                DetectLoader();
                 if (reportError == null && (reportKey == "gameMany" || reportKey == "gameNone") && !string.IsNullOrWhiteSpace(game.Text))
                     SetReport("ready");
                 RenderUpdate();
             };
+            loaders.SelectedIndexChanged += (s, e) => {
+                gameRevision++; updateOffer = null; helperOffer = null; updateState = null; lastStatus = null;
+                inactiveNotice = false; offeredNativeKeys = false;
+                if (updateCancellation != null) updateCancellation.Cancel(); RenderUpdate(); RenderReport();
+            };
+            DetectLoader();
             game.Leave += (s, e) => { updateOffer = null; updateState = null; RenderUpdate(); lastStatus = null; RefreshHistory(); RenderReport(); };
             profile.Leave += (s, e) => RefreshHistory();
             if (!preview) { statusTimer.Tick += (s, e) => CheckLoad(); statusTimer.Start(); }
@@ -180,6 +193,12 @@ namespace ExtendedHotbar.Helper
             if (disposing) statusTimer.Dispose();
             base.Dispose(disposing);
             if (disposing) { foreach (var font in uiFonts.Values) font.Dispose(); uiFonts.Clear(); pathFont.Dispose(); }
+        }
+        private void DetectLoader()
+        {
+            if (preview || string.IsNullOrWhiteSpace(game.Text)) return;
+            try { var detected = ModLoaders.Detect(game.Text); if (detected != null) loaders.SelectedItem = detected; }
+            catch (Exception ex) when (ex is IOException || ex is ArgumentException || ex is HelperFailure || ex is UnauthorizedAccessException) { /* Partial typed paths are not selections. */ }
         }
         private void Add(Control control) { layout.Controls.Add(control, 0, layout.RowCount++); }
         private void AddAdvanced(Control control) { advanced.Controls.Add(control, 0, advanced.RowCount++); }
@@ -225,8 +244,10 @@ namespace ExtendedHotbar.Helper
         internal void ValidatePreview()
         {
             if (Font.Height <= 0) throw new InvalidOperationException("The active UI font must remain usable after language switching.");
-            if (actions.Count(x => x.Parent == layout) != 3 || !actions.Any(x => x.Parent == layout && captions[x] == "characters" && x.Visible))
-                throw new InvalidOperationException("Install, removal and character bindings must remain visible on the main screen.");
+            if (!loaders.Visible || loaders.Items.Count != 2 || !actions.Any(x => captions[x] == "hotbarKeys" && x.Parent == layout && x.Visible))
+                throw new InvalidOperationException("Loader choice and optional hotbar profile must be visible.");
+            if (actions.Count(x => x.Parent == layout) != 4 || !actions.Any(x => x.Parent == layout && captions[x] == "characters" && x.Visible))
+                throw new InvalidOperationException("Install, removal and optional bindings must remain visible on the main screen.");
             if (!automaticUpdates.Visible || !checkUpdates.Visible || automaticUpdates.Parent == advanced || checkUpdates.Parent == advanced)
                 throw new InvalidOperationException("Local update controls must remain visible outside the help area.");
             foreach (var pair in captions)
@@ -348,10 +369,10 @@ namespace ExtendedHotbar.Helper
         }
         private void Run(Action action)
         {
-            foreach (var button in actions) button.Enabled = false; languages.Enabled = false; UseWaitCursor = true;
+            foreach (var button in actions) button.Enabled = false; languages.Enabled = loaders.Enabled = false; UseWaitCursor = true;
             try { action(); }
             catch (Exception ex) { Error(ex); ShowText(report.Text, text["title"]); }
-            finally { UseWaitCursor = false; foreach (var button in actions) button.Enabled = true; languages.Enabled = true; RefreshHistory(); }
+            finally { UseWaitCursor = false; foreach (var button in actions) button.Enabled = true; languages.Enabled = loaders.Enabled = true; RefreshHistory(); }
         }
         private void ChooseUpdateAction()
         {
@@ -384,26 +405,26 @@ namespace ExtendedHotbar.Helper
             if (choice == DialogResult.No) { InstallBundled(); return; }
             if (choice != DialogResult.Yes) return;
             Run(() => {
-                if (LocalMods.Installed(game.Text) > offer.Version) throw new HelperFailure("errorLocalOlder", "A newer mod is already installed.");
+                if (LocalMods.Installed(game.Text, SelectedLoader) > offer.Version) throw new HelperFailure("errorLocalOlder", "A newer mod is already installed.");
                 var payload = LocalMods.Recheck(offer, CancellationToken.None);
-                var backup = operations.Install(game.Text, profile.Text, payload);
+                var backup = operations.Install(game.Text, profile.Text, payload, SelectedLoader);
                 Success(backup == null ? "alreadyCurrent" : "installDone", backup);
             });
         }
         private void InstallBundled()
         {
-            if (Confirm(text.Format("installAsk", game.Text)))
+            if (Confirm(SelectedLoader.Label + "\n\n" + text.Format("installAsk", game.Text)))
                 Run(() => {
-                    if (LocalMods.Installed(game.Text) > Updates.ParseVersion(ReleaseInfo.ModVersion))
+                    if (LocalMods.Installed(game.Text, SelectedLoader) > Updates.ParseVersion(ReleaseInfo.ModVersion))
                         throw new HelperFailure("errorLocalOlder", "Bundled mod would downgrade the installed mod.");
-                    var backup = operations.Install(game.Text, profile.Text, ReleaseInfo.Package());
+                    var backup = operations.Install(game.Text, profile.Text, ReleaseInfo.Package(SelectedLoader), SelectedLoader);
                     Success(backup == null ? "alreadyCurrent" : "installDone", backup);
                 });
         }
         private void RenderUpdate()
         {
             var notice = LocalUpdates.NoticeKey(updateState);
-            packageStatus.Text = text["embedded"] + (notice == null ? "" : "  ·  " + text[notice]);
+            packageStatus.Text = SelectedLoader.Label + " · " + text["embedded"] + (notice == null ? "" : "  ·  " + text[notice]);
             packageStatus.ForeColor = notice != null ? Color.FromArgb(25, 110, 50) : Color.Black;
             captions[checkUpdates] = updateCancellation == null ? "localCheck" : "cancel";
             checkUpdates.Text = text[captions[checkUpdates]]; UpdateWrap();
@@ -417,15 +438,15 @@ namespace ExtendedHotbar.Helper
         private async Task<bool> CheckUpdates(bool helperOnly = false)
         {
             if (updateCancellation != null || preview) return false;
-            var selectedGame = game.Text;
+            var selectedGame = game.Text; var selectedLoader = SelectedLoader; var revision = gameRevision;
             var cancellation = new CancellationTokenSource(TimeSpan.FromSeconds(30)); updateCancellation = cancellation;
             updateOffer = null; helperOffer = null; updateState = "localChecking"; RenderUpdate();
             try
             {
-                var result = await Task.Run(() => LocalUpdates.Scan(LocalMods.Downloads(), selectedGame, helperOnly, cancellation.Token));
+                var result = await Task.Run(() => LocalUpdates.Scan(LocalMods.Downloads(), selectedGame, helperOnly, cancellation.Token, loader: selectedLoader));
                 if (IsDisposed) return false;
                 cancellation.Token.ThrowIfCancellationRequested();
-                if (!helperOnly && game.Text != selectedGame) { updateState = null; return false; }
+                if (!helperOnly && (game.Text != selectedGame || gameRevision != revision || SelectedLoader != selectedLoader)) { updateState = null; return false; }
                 if (result.Helper != null) { helperOffer = result.Helper; updateState = "localHelperFound"; return true; }
                 updateOffer = result.Mod;
                 updateState = helperOnly ? "localHelperNone" : result.Mod == null ? "localNone" : result.Mod.Version > result.Baseline ? "updateAvailable" : "localFound";
@@ -460,7 +481,7 @@ namespace ExtendedHotbar.Helper
             var cancellation = new CancellationTokenSource(TimeSpan.FromMinutes(2)); updateCancellation = cancellation; preparingHelper = true;
             foreach (var button in actions) button.Enabled = false;
             foreach (var pair in captions.Where(x => x.Value == "browse")) pair.Key.Enabled = false;
-            languages.Enabled = game.Enabled = profile.Enabled = automaticUpdates.Enabled = findGame.Enabled = false;
+            loaders.Enabled = languages.Enabled = game.Enabled = profile.Enabled = automaticUpdates.Enabled = findGame.Enabled = false;
             updateState = "updateDownloading"; SetAdvanced(true); RenderUpdate();
             try {
                 var bytes = await Task.Run(() => LocalHelpers.ReadBytes(selected, cancellation.Token));
@@ -483,7 +504,7 @@ namespace ExtendedHotbar.Helper
                 if (!IsDisposed) {
                     foreach (var button in actions) button.Enabled = true;
                     foreach (var pair in captions.Where(x => x.Value == "browse")) pair.Key.Enabled = true;
-                    languages.Enabled = game.Enabled = profile.Enabled = automaticUpdates.Enabled = findGame.Enabled = true;
+                    loaders.Enabled = languages.Enabled = game.Enabled = profile.Enabled = automaticUpdates.Enabled = findGame.Enabled = true;
                     RenderUpdate(); RefreshHistory();
                 }
             }
@@ -491,10 +512,10 @@ namespace ExtendedHotbar.Helper
         private void SavePackage()
         {
             using (var dialog = new SaveFileDialog { Title = text["savePackage"], Filter = "ZIP|*.zip", DefaultExt = "zip", AddExtension = true,
-                FileName = "Extended-Hotbar-" + ReleaseInfo.ModVersion + ".zip", OverwritePrompt = false })
+                FileName = SelectedLoader.FileName, OverwritePrompt = false })
             {
                 if (dialog.ShowDialog(this) != DialogResult.OK) return;
-                Run(() => { ReleaseInfo.ExportPackage(dialog.FileName); SetReport("packageSaved"); });
+                Run(() => { ReleaseInfo.ExportPackage(dialog.FileName, SelectedLoader); SetReport("packageSaved"); });
             }
         }
         private void ConfigureCharacters()
@@ -510,6 +531,19 @@ namespace ExtendedHotbar.Helper
                     Choice(DialogResult.Yes, "charactersOverwrite"), Choice(DialogResult.Cancel, "cancel")) != DialogResult.Yes) return;
                 var backup = operations.ConfigureCharacterKeys(game.Text, profile.Text, choice == DialogResult.Yes, overwrite, expectedHash);
                 Success(backup == null ? "alreadyCurrent" : "charactersDone", backup);
+            });
+        }
+        private void ConfigureHotbarKeys()
+        {
+            if (Prompt(text["hotbarKeysAsk"], text["hotbarKeys"], Choice(DialogResult.OK, "ok"), Choice(DialogResult.Cancel, "cancel")) != DialogResult.OK) return;
+            Run(() => {
+                string expected;
+                var conflicts = operations.PreviewHotbarKeys(game.Text, profile.Text, out expected);
+                bool overwrite = conflicts.Count != 0;
+                if (overwrite && Prompt(text.Format("hotbarOverwriteAsk", string.Join("\n", conflicts.Select(text.CharacterConflict))), text["hotbarKeys"],
+                    Choice(DialogResult.Yes, "charactersOverwrite"), Choice(DialogResult.Cancel, "cancel")) != DialogResult.Yes) return;
+                var backup = operations.ConfigureHotbarKeys(game.Text, profile.Text, overwrite, expected);
+                Success(backup == null ? "alreadyCurrent" : "hotbarKeysDone", backup);
             });
         }
         private void Restore()
@@ -536,7 +570,7 @@ namespace ExtendedHotbar.Helper
         {
             if (updateCancellation != null || preparingHelper) return;
             if (string.IsNullOrWhiteSpace(game.Text)) return;
-            var state = LoadStatus.Read(game.Text); lastStatus = state;
+            var state = LoadStatus.Read(game.Text, SelectedLoader); lastStatus = state;
             loadStatus.Text = text.Format("status", text[state.ToString()]);
             if (state == HotbarStatus.Active) { inactiveNotice = false; offeredNativeKeys = false; }
             if (state == HotbarStatus.Inactive && !inactiveNotice)
@@ -554,7 +588,7 @@ namespace ExtendedHotbar.Helper
             using (var dialog = new RemovalDialog(text, Font, profile.Text))
             {
                 if (dialog.ShowDialog(this) != DialogResult.OK) return;
-                Run(() => { string target; var backup = operations.Disable(game.Text, profile.Text, dialog.SavePath, dialog.Bindings, out target, text["saveSuffix"]); Success("exportDone", backup, target); });
+                Run(() => { string target; var backup = operations.Disable(game.Text, profile.Text, dialog.SavePath, dialog.Bindings, out target, text["saveSuffix"], SelectedLoader); Success("exportDone", backup, target); });
             }
         }
         internal void PreviewStates(string path)
@@ -585,6 +619,12 @@ namespace ExtendedHotbar.Helper
             if (report.Text != completedReport || lastBackup != "preview-backup")
                 throw new InvalidOperationException("Path changes must preserve operation results and backup information.");
             SetReport("ready");
+            loaders.SelectedItem = ModLoaders.BepInEx; Application.DoEvents(); ValidatePreview();
+            if (!packageStatus.Text.Contains("BepInEx")) throw new InvalidOperationException("Stale loader package label.");
+            Snapshot(this, Path.Combine(Path.GetDirectoryName(path), Path.GetFileNameWithoutExtension(path) + "-bepinex.png"));
+            loaders.SelectedItem = ModLoaders.Melon;
+            PreviewPrompt(path, "hotbar-profile", text["hotbarKeysAsk"], Choice(DialogResult.OK, "ok"), Choice(DialogResult.Cancel, "cancel"));
+            PreviewPrompt(path, "hotbar-conflicts", text.Format("hotbarOverwriteAsk", text.Format("bindingConflictLine", "Q", text.Format("bindingOther", 999), 2)), Choice(DialogResult.Yes, "charactersOverwrite"), Choice(DialogResult.Cancel, "cancel"));
             PreviewPrompt(path, "update-choice", text["updateActionAsk"], Choice(DialogResult.Yes, "updateMod"), Choice(DialogResult.No, "helperOnly"), Choice(DialogResult.Cancel, "cancel"));
             SetAdvanced(true); Application.DoEvents(); ValidatePreview();
             Snapshot(this, Path.Combine(Path.GetDirectoryName(path), Path.GetFileNameWithoutExtension(path) + "-advanced.png"));
@@ -616,7 +656,7 @@ namespace ExtendedHotbar.Helper
         }
         private void PreviewPrompt(string path, string suffix, string body, params KeyValuePair<DialogResult, string>[] choices)
         {
-            using (var dialog = CreatePrompt(body, text[suffix == "update-choice" ? "updateAction" : suffix.Contains("confirm") ? "localCheck" : "characters"], choices))
+            using (var dialog = CreatePrompt(body, text[suffix.StartsWith("hotbar", StringComparison.Ordinal) ? "hotbarKeys" : suffix == "update-choice" ? "updateAction" : suffix.Contains("confirm") ? "localCheck" : "characters"], choices))
             {
                 if (dialog.AcceptButton != null || dialog.CancelButton == null) throw new InvalidOperationException("Character choices need explicit consent and cancellation.");
                 dialog.StartPosition = FormStartPosition.Manual; dialog.Location = new Point(-20000, -20000); dialog.Show(); Application.DoEvents();

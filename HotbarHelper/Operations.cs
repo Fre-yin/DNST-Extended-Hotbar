@@ -11,72 +11,6 @@ using System.Web.Script.Serialization;
 
 namespace ExtendedHotbar.Helper
 {
-    internal static class ReleaseInfo
-    {
-        internal const string ModVersion = "0.3.7";
-        internal const string GameHash = "B0CD8B641D551019B82C0AF3DDE1532D6FF7BA155B20B2D3936742924B42DB2A";
-        internal const string MetadataHash = "CE84EC266501C8DF4A23B31D50D8B413C82DAE49A062BC623B3440E8A3F5A23F";
-        internal const string PackageHash = "DA9C92F107298C211799DF678B5EFB267843F8755E84073DA6AB43CDAF6E30B1";
-        internal const string Dll = "Mods/DungeonSettlers10Slots.dll";
-        internal const string OldDll = "Mods/DungeonSettlers12Slots.dll";
-        internal const string Asset = "Mods/DungeonSettlers10SlotsAssets/SkillFrame__sharedassets0_mod_4898.png";
-        internal const string Notice = "Mods/DungeonSettlers10SlotsAssets/NOTICE.txt";
-        internal static readonly string[] Owned = { Dll, OldDll, Asset, Notice };
-        internal static Dictionary<string, byte[]> Package()
-        {
-            return ReadPackage(PackageBytes());
-        }
-        internal static byte[] PackageBytes()
-        {
-            using (var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("HotbarPackage.zip"))
-            {
-                if (stream == null) throw new HelperFailure("errorPackage", "Eingebautes Mod-Paket fehlt.");
-                using (var memory = new MemoryStream())
-                {
-                    stream.CopyTo(memory); var bytes = memory.ToArray();
-                    if (Files.Hash(bytes) != PackageHash) throw new HelperFailure("errorPackage", "Prüfsumme des Mod-Pakets stimmt nicht.");
-                    return bytes;
-                }
-            }
-        }
-        // Explicit export only: never extract or import saves, overwrite a file,
-        // or modify game/profile paths as a side effect of installation/startup.
-        internal static void ExportPackage(string path)
-        {
-            var folder = Files.Root(Path.GetDirectoryName(path));
-            var target = Files.Under(folder, Path.GetFileName(path));
-            if (!target.EndsWith(".zip", StringComparison.OrdinalIgnoreCase)) throw new HelperFailure("errorPath", "ZIP-Datei erwartet.");
-            if (File.Exists(target) || Directory.Exists(target)) throw new HelperFailure("errorExportExists", "Bitte einen neuen Dateinamen wählen.");
-            var bytes = PackageBytes();
-            var temporary = Files.Under(folder, ".eh-" + Guid.NewGuid().ToString("N") + ".tmp");
-            try
-            {
-                using (var file = new FileStream(temporary, FileMode.CreateNew, FileAccess.Write, FileShare.None))
-                { file.Write(bytes, 0, bytes.Length); file.Flush(true); }
-                Files.SafeAncestors(target);
-                File.Move(temporary, target); // Fails safely if the destination appeared meanwhile.
-            }
-            finally { if (File.Exists(temporary)) File.Delete(temporary); }
-        }
-        internal static Dictionary<string, byte[]> ReadPackage(byte[] bytes)
-        {
-            if (Files.Hash(bytes) != PackageHash) throw new HelperFailure("errorPackage", "Prüfsumme des Mod-Pakets stimmt nicht.");
-            using (var memory = new MemoryStream(bytes))
-            using (var zip = new ZipArchive(memory, ZipArchiveMode.Read))
-            {
-                var names = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-                var result = new Dictionary<string, byte[]>(StringComparer.Ordinal);
-                foreach (var entry in zip.Entries)
-                {
-                    if (!names.Add(entry.FullName) || entry.FullName.Contains("..") || entry.Length > 4 * 1024 * 1024) throw new HelperFailure("errorPackage", "Ungültiges ZIP.");
-                    if (!Owned.Contains(entry.FullName)) continue;
-                    using (var input = entry.Open()) using (var target = new MemoryStream()) { input.CopyTo(target); result.Add(entry.FullName, target.ToArray()); }
-                }
-                if (result.Count != 3 || !result.ContainsKey(Dll) || !result.ContainsKey(Asset) || !result.ContainsKey(Notice)) throw new HelperFailure("errorPackage", "Installierbare Hotbar-Dateien fehlen.");
-                return result;
-            }
-        }
-    }
 
     internal static class Files
     {
@@ -148,7 +82,7 @@ namespace ExtendedHotbar.Helper
         {
             if (!File.Exists(path) || !path.EndsWith(".dll", StringComparison.OrdinalIgnoreCase)) return;
             var name = AssemblyName.GetAssemblyName(path).Name;
-            if (name != "DungeonSettlers10Slots" && name != "DungeonSettlers12Slots") throw new HelperFailure("errorForeign", "Unter einem Hotbar-Dateinamen liegt eine fremde DLL. Abbruch: " + path);
+            if (name != Path.GetFileNameWithoutExtension(path) || !new[] { "DungeonSettlers10Slots", "DungeonSettlers12Slots", "DungeonSettlersHotbar.BepInEx" }.Contains(name)) throw new HelperFailure("errorForeign", "Unter einem Hotbar-Dateinamen liegt eine fremde DLL. Abbruch: " + path);
         }
     }
 
@@ -183,7 +117,7 @@ namespace ExtendedHotbar.Helper
         internal Action BeforeCommit { get; set; }
         private static string Resolve(string game, string profile, string area, string name)
         {
-            if (area == "game" && ReleaseInfo.Owned.Contains(name)) return Files.Under(game, name);
+            if (area == "game" && ModLoaders.Owns(name)) return Files.Under(game, name);
             if (area == "settings" && name == "UserSetting.json") return Files.Under(profile, name);
             if (area == "save" && !string.IsNullOrWhiteSpace(name) && name.Length <= 200 && name.EndsWith(".json", StringComparison.OrdinalIgnoreCase)
                 && name.IndexOfAny(Path.GetInvalidFileNameChars()) < 0 && Path.GetFileName(name) == name
@@ -195,37 +129,27 @@ namespace ExtendedHotbar.Helper
             Files.SafeAncestors(Store); Directory.CreateDirectory(Store);
             return new FileStream(Files.Under(Store, "operation.lock"), FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.None);
         }
-        internal string Install(string game, string profile, Dictionary<string, byte[]> payload)
+        internal string Install(string game, string profile, Dictionary<string, byte[]> payload, ModLoaderProfile loader = null)
         {
             policy.Stopped(); policy.Validate(game, true);
-            if (!File.Exists(Files.Under(game, "MelonLoader/net6/MelonLoader.dll"))) throw new HelperFailure("errorLoader", "Bitte zuerst MelonLoader 0.7.3 für dieses Spiel installieren.");
-            var files = ReleaseInfo.Owned.Select(x => new PlannedFile("game", x, payload.ContainsKey(x) ? payload[x] : null)).ToList();
-            if (payload.Count != 3 || !payload.ContainsKey(ReleaseInfo.Dll) || !payload.ContainsKey(ReleaseInfo.Asset) || !payload.ContainsKey(ReleaseInfo.Notice)) throw new HelperFailure("errorPackage", "Unvollständiges Mod-Paket.");
+            loader = loader ?? ModLoaders.Melon;
+            loader.ValidateSelection(game, true);
+            var files = loader.Owned.Select(x => new PlannedFile("game", x, payload.ContainsKey(x) ? payload[x] : null)).ToList();
+            if (payload.Count != 3 || loader.Required.Any(x => !payload.ContainsKey(x))) throw new HelperFailure("errorPackage", "Unvollständiges Mod-Paket.");
             var settings = Files.Read(Files.Under(profile, "UserSetting.json"));
             if (settings != null)
             {
                 Profiles.Bindings(new LosslessJson(Files.Text(settings)));
-                var restored = settings;
-                // 0.1.0 also recorded installs that changed no files. Those must not
-                // obscure the last actual change when restoring the Hotbar key profile.
-                var previous = History(game, profile).FirstOrDefault(x => x.Entries.Any(e => e.BeforeHash != e.AfterHash));
-                if (previous != null && previous.Status == "complete" && (previous.Action == "Ohne Hotbar vorbereiten" || previous.Action == "Originaltasten vorbereiten (ohne Spielstandänderung)"))
-                {
-                    int index = previous.Entries.FindIndex(x => x.Area == "settings");
-                    if (index >= 0)
-                    {
-                        var old = Payload(previous, index, true); var native = Payload(previous, index, false);
-                        if (old != null && native != null && Profiles.Same(Profiles.Selected(Files.Text(settings)), Profiles.Selected(Files.Text(native))))
-                            restored = Files.Utf8.GetBytes(Profiles.Merge(Files.Text(settings), Profiles.Selected(Files.Text(old))));
-                    }
-                }
-                files.Add(new PlannedFile("settings", "UserSetting.json", restored).Expect(settings));
+                // Installation never applies or resurrects a key profile, even after vanilla removal.
+                files.Add(new PlannedFile("settings", "UserSetting.json", settings).Expect(settings));
             }
             return Execute(game, profile, "Installieren / Aktualisieren", files);
         }
-        internal string Disable(string game, string profile, string sourceSave, string vanillaBindings, out string exported, string displaySuffix = "(ohne Hotbar)")
+        internal string Disable(string game, string profile, string sourceSave, string vanillaBindings, out string exported, string displaySuffix = "(ohne Hotbar)", ModLoaderProfile loader = null)
         {
             policy.Stopped(); policy.Validate(game, true);
+            loader = loader ?? ModLoaders.Melon;
+            loader.ValidateSelection(game, false);
             var source = Path.GetFullPath(sourceSave);
             if (!string.Equals(Path.GetDirectoryName(source), Files.Under(profile, "Saves"), StringComparison.OrdinalIgnoreCase)) throw new HelperFailure("errorSave", "Bitte einen Spielstand aus dem gewählten Saves-Ordner auswählen.");
             var sourceName = Path.GetFileName(source);
@@ -251,7 +175,7 @@ namespace ExtendedHotbar.Helper
                 new PlannedFile("save", name + ".json", Files.Utf8.GetBytes(converted)).Expect(null),
                 new PlannedFile("settings", "UserSetting.json", Files.Utf8.GetBytes(restored)).Expect(settings)
             };
-            files.AddRange(ReleaseInfo.Owned.Select(x => new PlannedFile("game", x, null)));
+            files.AddRange(loader.Owned.Select(x => new PlannedFile("game", x, null)));
             return Execute(game, profile, "Ohne Hotbar vorbereiten", files);
         }
         internal string PrepareNativeKeys(string game, string profile)
@@ -281,6 +205,32 @@ namespace ExtendedHotbar.Helper
             return Execute(game, profile, CharacterKeysAction, new List<PlannedFile> {
                 new PlannedFile("settings", "UserSetting.json", configured).Expect(current)
             });
+        }
+        internal List<JsonNode> PreviewHotbarKeys(string game, string profile, out string settingsHash)
+        {
+            policy.Stopped(); policy.Validate(game, true);
+            var current = Files.Read(Files.Under(profile, "UserSetting.json"));
+            if (current == null) throw new HelperFailure("errorSettings", "Benutzereinstellungen fehlen.");
+            settingsHash = Files.Hash(current);
+            return Profiles.Conflicts(Files.Text(current), HotbarKeyProfile.Bindings(), HotbarKeyProfile.Affected);
+        }
+        internal string ConfigureHotbarKeys(string game, string profile, bool overwriteConflicts, string expectedSettingsHash)
+        {
+            policy.Stopped(); policy.Validate(game, true);
+            var current = Files.Read(Files.Under(profile, "UserSetting.json"));
+            if (current == null) throw new HelperFailure("errorSettings", "Benutzereinstellungen fehlen.");
+            if (expectedSettingsHash == null || Files.Hash(current) != expectedSettingsHash)
+                throw new HelperFailure("errorConflict", "Die Belegung wurde seit der Vorschau geändert. Bitte erneut prüfen.");
+            var result = Profiles.Configure(Files.Text(current), HotbarKeyProfile.Bindings(), HotbarKeyProfile.Affected, overwriteConflicts);
+            return Execute(game, profile, HotbarKeyProfile.Action, new List<PlannedFile> {
+                new PlannedFile("settings", "UserSetting.json", Files.Utf8.GetBytes(result)).Expect(current)
+            });
+        }
+        private static bool HotbarKeysOnly(string action)
+        {
+            const string undo = "Wiederherstellen: ";
+            while (action != null && action.StartsWith(undo, StringComparison.Ordinal)) action = action.Substring(undo.Length);
+            return action == HotbarKeyProfile.Action;
         }
         private static bool CharacterKeysOnly(string action)
         {
@@ -417,7 +367,9 @@ namespace ExtendedHotbar.Helper
                 if (entry.Area == "settings")
                 {
                     if (current == null || before == null || after == null) throw new HelperFailure("errorConflict", "Tastensicherung fehlt.");
-                    if (CharacterKeysOnly(record.Action))
+                    if (HotbarKeysOnly(record.Action))
+                        before = Files.Utf8.GetBytes(Profiles.RestoreBindingChanges(Files.Text(current), Files.Text(before), Files.Text(after), HotbarKeyProfile.Affected));
+                    else if (CharacterKeysOnly(record.Action))
                         before = Files.Utf8.GetBytes(Profiles.RestoreCharacterBindings(Files.Text(current), Files.Text(before), Files.Text(after)));
                     else
                     {
@@ -426,6 +378,8 @@ namespace ExtendedHotbar.Helper
                     }
                 }
                 else if (Files.Hash(current) != entry.AfterHash) throw new HelperFailure("errorConflict", "Moddatei wurde seit dieser Sicherung geändert: " + entry.Name);
+                if (entry.Area == "game" && before != null)
+                    ModLoaders.All.Single(x => x.Owned.Contains(entry.Name)).ValidateSelection(game, false);
                 plan.Add(new PlannedFile(entry.Area, entry.Name, before).Expect(current));
             }
             // Old no-change transactions are valid; do not mislabel them as corrupt.

@@ -1,231 +1,125 @@
-# Extended Hotbar Helper — prerelease 0.1.11
+# Extended Hotbar Helper — prerelease 0.1.12
 
-0.1.11 labels the file picker “Select manually…” (German: “Manuell auswählen…”)
-in all ten languages, distinguishing it from automatic search and the discovered
-installation dropdown. Both game and profile pickers remain manual; their behavior,
-security checks and disabled states are unchanged. Mod remains 0.3.7.
+Helper 0.1.12 includes Hotbar 0.3.8 for MelonLoader and the separate BepInEx
+0.3.8-bepinex.1 preview. Select the game copy, check its loader, then confirm
+installation. A uniquely detected loader is preselected. Missing, wrong or mixed
+loaders are refused; the Helper never installs or removes a loader.
 
-0.1.10 dismisses the obsolete game-search prompt after selecting or entering a
-nonempty game path. It changes only that advisory message: actual errors,
-diagnostics, operation results and backup information remain visible. The UI
-preview regression covers dropdown selection, manual entry, whitespace-only
-input, missing-game prompts and preservation of existing errors/results.
+## Bindings
 
-0.1.9 detects Dungeon Settlers locally in the background at startup and through
-the game-folder Search button. It reads 32/64-bit Steam registry locations,
-Steam's libraryfolders.vdf and appmanifest_2798330.acf, including nonstandard
-library roots and install directory names. Known Steam folders on local drives
-and named game/test containers provide a fallback for standalone test copies.
-It does not query the network or recursively scan whole drives. Named backup/
-archive branches are skipped by the fallback search, not silently selected.
+Installation never changes keys or resurrects an old binding profile. The mod
+preserves the game's native defaults and adds unbound rows for skills 5–10 and
+items 2–3 in both columns. Existing saved bindings remain, including old
+conflicts: their intent cannot be inferred safely.
 
-One match fills an empty, untouched path field. Multiple matches appear in an
-editable dropdown with full paths; none is chosen automatically. A user's typed
-path, file-picker choice or update handoff is preserved. Searches are cancellable,
-do not block the window, and are cancelled before mutation actions. Late results
-cannot replace a manually edited path. Installation still requires confirmation
-and its unchanged game fingerprints; discovery never runs game executables.
+Players can bind their own keys in game options. The separate, optional Helper
+profile sets skills 1–0, characters Left Shift + 1–0, items Q/E/R, with additive
+selection unbound. It replaces both columns for those actions. Other occupied
+keys are listed and require a second, explicit overwrite confirmation. Cancelling
+makes no change. Preview consent is bound to the settings hash; backups and
+scoped undo retain unrelated later settings. The separate character-only profiles
+remain available. No command-line option in the mod rewrites user settings.
 
-Discovery bounds: 64 Steam libraries, 1 MiB per metadata file, 8192 KeyValues
-entries, nesting 16, 512 fallback folders and depth 3 inside each selected
-game/test container. Metadata/copy traversal has a five-second cooperative budget;
-individual local OS reads cannot be forcibly interrupted. UNC, device, relative,
-mapped-network and reparse-point paths are refused. Incomplete game folders and
-bad metadata are ignored; manual selection/text entry always remain available.
-This is deliberately not an exhaustive search of arbitrary disk locations.
+## Module boundaries
 
-0.1.8 separates the blue action into “Install / update mod” and “Update helper
-only”. Helper-only scans only helper ZIPs, needs no valid game/profile path and
-opens the new helper without --update-install. It has no mod-install fallback
-on missing packages, errors or cancellation. Mod operations retain their game
-and backup checks; signatures and the disabled online gate are unchanged.
+| Responsibility | Source |
+| --- | --- |
+| Loader layout, detection, file ownership, package names and signature purpose | ModLoaders.cs |
+| Release fingerprints, pinned embedded archives, safe package read/export | ReleaseInfo.cs |
+| Optional full Hotbar key map | HotbarKeyProfile.cs |
+| Lossless binding edits, conflict checks, scoped restoration | Profiles.cs |
+| Stopped-game guards, atomic file transactions, backup and rollback | Operations.cs |
+| Loader-specific local update selection and verification | LocalMods.cs |
+| Current-process activation evidence for each loader | LoadStatus.cs |
+| User choices and confirmations, no file-copy logic | MainForm.cs |
 
-Download controls are visible in the top toolbar; character bindings have their
-own visible main-screen button. The package line shows only
-the bundled version unless a newer mod/helper is found. The no-op status is just
-“Already up to date.” The German removal action uses the requested vanilla label;
-its visible hint retains the same-campaign copy information without the test
-sentence. The save conversion itself is unchanged.
-
-0.1.7 fixes installation and save-export failures when an otherwise valid target
-path became too long after appending a temporary-file suffix. Temporary files now
-use a short unique sibling name; atomic replacement, backups and rollback remain
-unchanged. The mod is still 0.3.7 and online updates remain disabled.
-
-Windows Forms helper with local Downloads-folder updates for Extended Hotbar 0.3.7 / DS_B.0.4.19 (25154317). Uses .NET Framework
-4.8 and Windows libraries only; no NuGet packages, loader or game assemblies
-are needed to compile the helper. The separately verified mod ZIP is embedded.
-Its code license does **not** license the game artwork inside that ZIP.
-
-This directory is separate from the game mod. The tested mod DLL and published
-release archives are not rebuilt or modified by helper development.
+Both mods link the same game logic in ../DungeonSettlers10Slots; their loader
+entry points stay separate. Do not copy a MelonLoader DLL into BepInEx or vice versa.
 
 ## Build and tests
 
-Requires Windows, the .NET Framework 4.8 Developer Pack, a .NET SDK containing
-Roslyn, and PowerShell. Supply the standard 0.3.7 package including its demo,
-created by `Prepare-StandardMod.ps1` under `dist/standard-0.3.7`. This verified
-documentation-only repack leaves the old release archives intact. It copies the
-tested DLL, artwork, demo and legal notices unchanged; only DE/EN instructions
-now describe one standard download. Its exact SHA256
-is `DA9C92F107298C211799DF678B5EFB267843F8755E84073DA6AB43CDAF6E30B1`.
-The hash is checked before embedding; no user-selected DLL is executed. Future
-mod builds also include the demo by default and no longer produce two variants.
+Requires Windows x64, .NET Framework 4.8 Developer Pack, a .NET SDK with Roslyn,
+and PowerShell. The Helper itself needs no game assemblies or NuGet packages.
+Build the two verified mod packages first, then:
 
 ```powershell
-./Build.ps1 -PackagePath 'C:\Downloads\Extended-Hotbar-0.3.7.zip'
+./Build.ps1 -OutputDirectory ./bin-0.1.12
 ```
 
-This compiles the helper and runs isolated tests against the authored synthetic
-JSON fixture. For additional real-save coverage, supply a COPY with
-`-TestSavePath 'C:\Tests\10SlotsTestfile.json'`. Optionally use
-`-ReadOnlyGameCheck 'C:\Games\Dungeon Settlers'` to verify actual fingerprints
-and read the running game's load status, without changing that installation.
-Test files are created only below the selected output directory's `test-runs`.
-Tests do not use your live save/settings directory. A directory-junction test
-creates its junction only inside that test directory. Test outputs are retained.
+Default inputs:
+- ../DungeonSettlers10Slots/dist/Extended-Hotbar-0.3.8.zip
+- ../DungeonSettlersHotbar.BepInEx/dist/Extended-Hotbar-BepInEx-0.3.8-bepinex.1.zip
+
+Use -PackagePath and -BepInExPackagePath to supply those exact archives elsewhere.
+Build.ps1 and the runtime both check their pinned SHA256 values. A new release
+must update both pins deliberately; do not disable verification to accept a ZIP.
+Prepare-StandardMod.ps1 is a historical 0.3.7 repack utility, not the current build.
+
+Tests create isolated synthetic game/profile/backup folders under the output
+directory. Use a short output path to keep the tests' nested fixtures below
+Windows path limits. Tests do not operate on your live profile. Optional
+-ReadOnlyGameCheck validates actual game fingerprints without modifying a game.
+
+`Extended-Hotbar-Helper.exe --preview-all <output-directory>` renders read-only
+off-screen UI states in ten languages, including loader choice, optional profiles,
+conflict confirmation, removal and updates. Native-speaker translation review and
+interactive gameplay tests remain useful beyond automated checks.
 
 ## Safety model and limitations
 
-- Four fixed owned game paths; no recursive game-folder deletion or loader edits.
-- Local absolute paths only; reparse-point targets and ambiguous paths refused.
-- Per-file atomic replacement, verified before/after backups, conflict checks,
-  operation lock, compensating rollback and persistent interrupted-operation state.
-- All DungeonSettlers processes must be closed for mutations, including test copies.
-  Checks repeat at each write; they are not an OS-level guarantee against an
-  independently launched process racing a filesystem operation. A detected start
-  stops mutation/recovery until the game is closed.
-- A strict, bounded lossless JSON editor changes selected spans only, retaining
-  unrelated numeric precision, serializer metadata and fields verbatim.
-- Key profiles are scoped to native selection/hotbar bindings and mod-owned IDs.
-  No whole-settings rollback when returning after playing; changed hotkeys refuse
-  automatic restoration. Unrelated preferences remain current.
-- Export creates an additional manual save in the same campaign, retaining both
-  header/clan campaign GUIDs verbatim and learned skills/inventory. Original files
-  are backed up, never overwritten. Campaign autosaves are shared; this is stated
-  before confirmation. Unexpected references, schemas and Ironmode refuse.
-- The user reported a successful in-game save-conversion test. The main hint
-  no longer labels it a test. Automated checks do not establish full campaign,
-  load/save/reload or unrelated-mod compatibility.
-- Load detection validates path, process start/log freshness and explicit activation
-  evidence. Monitoring only runs while this helper is open. It never kills/restarts
-  the game. Confirmed failure leads to an offer of native bindings after game exit.
-- Online connections are disabled at the transport boundary and absent from the GUI.
-  Local mod ZIPs are read without running scripts or importing demo saves.
-  New packages require a publisher-signed manifest; unknown game builds stay blocked.
-
-## Languages
-
-The helper supports all ten selectable game languages: English, Korean, French,
-German, Russian, Simplified Chinese, Traditional Chinese, Japanese, Spanish and
-Brazilian Portuguese. Initial language comes from the game's saved settings,
-then the Windows UI language, then English. The selector only changes the helper
-for this session. It never writes the game's language settings.
-
-All 145 entries per language cover controls, confirmations, status, guarded-error
-explanations, built-in help and export display suffixes. Original technical
-diagnostics remain separately available. Native Windows file pickers follow the
-Windows language. These translations are authored here; native-speaker review
-is still welcome.
-
-Tests verify complete key sets, placeholders, all ten game language values,
-culture fallback, error rendering and localized export preservation. The optional
-`--preview-all <directory>` command renders all languages off-screen with actions
-disabled, exercises repeated switching and checks labels/buttons for clipping.
-It renders 120 images: main, multiple-game list, selected game, troubleshooting, removal, character keys, explicit
-overwrite confirmation, available-update status, mod-update consent and local
-helper-update consent, mod/helper choice and helper-only consent for each language.
-Default and minimum window sizes are checked. Removal-choice tests verify that
-a save must be chosen, optional custom keys require a backup, and selecting
-choices never performs file operations. Enter is not an implicit removal default.
-
-User instructions: [Deutsch](BITTE%20ZUERST%20LESEN.txt) /
-[English](READ%20FIRST%20-%20ENGLISH.txt). Built-in help is available in all ten
-languages; the longer external guides are German and English.
+- Supported game: DS_B.0.4.19 / Steam build 25154317, exact game-code and metadata
+  hashes. Loaders: MelonLoader 0.7.3 or BepInEx 6 Unity IL2CPP x64, tested be.788.
+  BepInEx 5 and Mono are not supported.
+- Separate game copies normally share the same real save/settings profile.
+  Never run both copies together. A game copy is not a save backup.
+- Installation touches only the selected loader's three Hotbar payload files
+  (plus removal of the known legacy DLL for MelonLoader). Other mods are retained.
+- No recursive game deletion; no arbitrary archive extraction, script execution,
+  loader switch, network request, administrator request or automatic game launch.
+- Local paths, reparse-point refusal, verified backups, optimistic conflict checks,
+  transaction locking and compensating rollback remain mandatory.
+- All game processes must be closed. Checks repeat before writes. These checks
+  cannot atomically prevent an independent process launch racing a filesystem write.
+- Undo never rolls back campaign progress. Changed owned files or affected keys
+  block restoration; interrupted operations must be recovered first.
+- Vanilla export remains experimental: a new manual save in the SAME campaign,
+  original retained, shared autosaves. Ironmode and unknown schemas are refused.
+- BepInEx activation requires an exact process ID/start-time/game-path marker and
+  successful lifecycle attachment. Old plugins lacking the marker stay Unknown.
+  The known BepInEx Class::Init warning is not suppressed.
 
 ## Package
 
-Run `./Package.ps1` to rebuild, test and create a new local test package under
-`../output/Extended-Hotbar-Helper-0.1.11-test`. Existing output is never overwritten.
-The package contains the helper, DE/EN guides, ten short language guides, and
-unchanged license/artwork notices from the verified embedded mod ZIP. No game,
-loader or test executable is distributed with the helper.
+`./Package.ps1` builds/tests and creates a new output/Extended-Hotbar-Helper-0.1.12-test
+folder and ZIP. Existing release outputs are never overwritten. It uses the
+separate bin-0.1.12 build directory, leaving older helper executables intact.
 
-There is one standard mod package with the optional demo save, not separate
-with/without-save downloads. The same verified complete ZIP is embedded in the
-helper EXE; only the three owned mod files are installed. The troubleshooting
-action “Save mod package with demo save” writes that ZIP to a user-chosen new file
-without extraction or save import. Existing destinations are refused. The user
-extracts and imports the demo manually using the instructions inside the ZIP.
-The demo is the unchanged DS_B.0.4.17 snapshot, not a fresh 0.4.19 campaign.
-Keeping the helper ZIP's existing 21-file layout allows 0.1.6/0.1.7 clients to
-validate the new package; the entire archive still needs its signed sidecar.
+The outer ZIP retains the 21-file update layout understood by older helpers.
+Both editions' legal notices are included in the existing notice files. No game,
+loader, private keys or test executables are distributed. Only the MelonLoader
+embedded ZIP contains the optional unchanged DS_B.0.4.17 demo save; BepInEx does
+not. Export saves the selected loader's ZIP to a new user-chosen file and never
+imports a save. Game artwork is not covered by the code's MIT license.
 
+## Local updates
 
-## Helper 0.1.8: local updates, online disabled
+Scans only the top-level Windows Downloads folder. Selection is loader-specific;
+the other loader's ZIP is not an update candidate. Same-version installs are
+allowed, downgrades are refused. Future packages need a verified publisher-signed
+manifest; the current bundled payload can also be recognized by exact hashes.
+MelonLoader signatures use ExtendedHotbar.Mod.v1, BepInEx signatures use
+ExtendedHotbar.Mod.BepInEx.v1. Signatures bind the expected three paths/hashes,
+numeric mod version, repository, minimum Helper and game fingerprints.
 
-The mod choice scans the Windows Downloads known folder again before installation.
-Startup scanning can be disabled separately; it does not download, install or launch
-anything. Only top-level, completed Extended-Hotbar-X.Y.Z[-mit-Testspielstand].zip
-files are considered (browser duplicate suffixes such as " (1)" are accepted).
-Selection is numeric, not based on file dates. Reinstalling the same version is
-possible; installing an older version over a newer DLL is refused. Bundled 0.3.7
-remains available when there is no local package and no newer installed version.
+Archive size/count/path/link limits, duplicate checks and confirmation-time
+revalidation stay enforced. A game or loader selection change invalidates an
+in-flight scan. Helper-only updates remain independent of mod/game selection.
 
-Original 0.3.7 packages are accepted only when their three installable files match
-the embedded release exactly. Future packages need ExtendedHotbar.update.json
-inside the ZIP. Its RSA-4096/SHA256 signature binds purpose, repository, mod version,
-minimum helper, the known game fingerprints and the three installed file hashes.
-Other ZIP entries are never installed or executed. A new game build or save format
-still needs a reviewed helper: downloaded metadata cannot override compatibility.
+Online updates remain disabled. Package.ps1 does not use the private signing key
+unless -SignUpdatePackage is explicitly supplied. The local unsigned package can
+be extracted and started manually; old helpers need its valid signed sidecar for
+self-update. See [publishing instructions](LOCAL-UPDATES-PUBLISHING.md).
 
-Reads are bounded (16 MiB ZIP, 128 entries, 4 MiB per entry, 32 MiB declared expansion);
-unsafe paths, links, duplicate entries and conflicting same-version payloads fail.
-Only the top-level Downloads folder is scanned, with a 10000-file limit. The exact
-ZIP and signature are rechecked after confirmation. No extraction to game paths
-occurs before the existing transactional installer performs its checks and backups.
-The selected game may not change during an asynchronous scan.
-
-The dormant GitHub implementation remains for future work, but OnlineEnabled=false
-rejects requests before URI parsing or socket creation. There is no user option or
-downloaded setting that enables it. TLS targeting was corrected via FrameworkTarget.cs:
-direct Roslyn builds previously omitted .NET Framework 4.8 metadata, triggering old
-TLS defaults. The new regression test failed before the fix and passes afterwards.
-
-Package.ps1 does not read the private publisher key by default. -SignUpdatePackage
-is an explicit publisher-only option for signed local helper packages. No secret is bundled.
-See LOCAL-UPDATES-PUBLISHING.md for preparing future signed mod ZIPs. Hardware-key
-migration, key recovery and public online-update testing remain deferred.
-
-## Local self-updates
-
-LocalHelpers scans the same folder for newer helper ZIPs, with priority over mod
-ZIPs. It requires the matching ZIPNAME.zip.update.json alongside the ZIP. Both are
-read locally; URLs in the reconstructed identity are never requested. The original
-publisher-signature, expiry, complete package hash/size/layout, EXE identity/version
-and pre-launch file verification remain enforced. Missing/invalid signatures refuse.
-The new helper is staged side by side and launched only after confirmation, with
-Windows attachment checks retained. For the mod choice, the game must be closed;
-selected folders are passed as bounded data and the new helper asks again before
-mod installation. Helper-only opens normally without that handoff and never
-installs the mod. Its update does not require the game to be installed or closed.
-Existing shortcuts and the old helper are not replaced. A ZIP alone cannot authorize
-execution. Historical helper variants named `-mit-Testspielstand` are not update
-inputs; the new standard helper embeds the demo without changing its ZIP layout.
-OnlineEnabled remains
-false throughout. Unit tests suppress execution. The optional integration probe
-starts the actual signed helper in its read-only preview mode and installs the
-local mod into an isolated fixture with real game-build checks. Interactive
-update consent, restart handoff and in-game play remain separate acceptance steps.
-
-The optional probe is test-only (not shipped in the user ZIP):
-
-```powershell
-./bin/Helper.Tests.exe --smoke-local-updates <signed-package-folder> <read-only-source-game> <test-output-root> <save-fixture-json>
-```
-
-It creates a unique test directory, copies only four game/loader files needed for
-validation and a save fixture, and never launches the game or modifies the source
-installation/profile. Windows attachment prompts must not be bypassed. The helper
-process is given a 30-second preview deadline; a pending Windows prompt needs manual
-inspection. Outputs are retained for inspection, not included in release archives.
+User guides: [Deutsch](BITTE%20ZUERST%20LESEN.txt) /
+[English](READ%20FIRST%20-%20ENGLISH.txt). Instructions and built-in help cover all
+ten game languages. GitHub uploads and commits remain manual.

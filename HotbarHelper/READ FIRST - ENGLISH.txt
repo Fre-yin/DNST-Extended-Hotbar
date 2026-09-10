@@ -1,4 +1,4 @@
-EXTENDED HOTBAR – HELPER 0.1.11 (LOCAL TEST VERSION)
+EXTENDED HOTBAR – HELPER 0.1.12 (LOCAL TEST VERSION)
 
 The game folder is detected automatically. If several copies are found, select
 the correct full path from the list. Search repeats detection; Select manually and manual
@@ -10,8 +10,8 @@ Automatic online updates are planned for a future release. Until then, the helpe
 Place the helper ZIP and matching .zip.update.json together in Downloads. Choose “Update helper only” from the blue button. The new helper opens without installing the mod; the old EXE and shortcuts remain.
 
 Separate actions let you update the mod, update only the helper, or return a save to vanilla.
-Extended Hotbar 0.3.7 is included. No manual DLL copying is needed.
-The mod package includes the optional demo save. Save the package in the
+Extended Hotbar 0.3.8 is included. No manual DLL copying is needed.
+Only the MelonLoader package includes the optional demo save. Save the package in the
 troubleshooting section, then extract it and import the demo manually if wanted,
 using its included instructions. It is never imported automatically and remains
 the unchanged DS_B.0.4.17 snapshot.
@@ -20,7 +20,10 @@ GET STARTED
 
 The helper requires Windows x64 with .NET Framework 4.8. Mod operations also
 require Dungeon Settlers DS_B.0.4.19
-(Steam build 25154317) and separately installed MelonLoader 0.7.3.
+(Steam build 25154317) and a separately installed matching loader:
+MelonLoader 0.7.3 or BepInEx 6 Unity IL2CPP x64 (tested: be.788).
+BepInEx 5 / Mono is not supported. Never mix loaders in the same game copy.
+Separate copies normally share the same saves and settings!
 Updating only the helper does not require an installed or closed game.
 The helper does not install the loader or connect to the internet.
 New mod ZIPs can be installed from Downloads. Unknown game builds
@@ -31,7 +34,8 @@ stay blocked until a compatible helper/mod version is available.
 3. Open Extended-Hotbar-Helper.exe. Check the detected game folder or choose
    the correct path from the list if several copies were found:
    it must contain DungeonSettlers.exe. Use Select manually to change it if needed.
-4. Choose an action. Changes require your confirmation.
+4. Check the loader selection; an unambiguous detected loader is preselected.
+   Then choose an action. Changes require your confirmation.
 
 INSTALL / UPDATE EXTENDED HOTBAR
 
@@ -40,7 +44,8 @@ Existing hotbar files are backed up before replacement. The legacy
 DungeonSettlers12Slots.dll is also backed up and removed to avoid duplicates.
 Other mods, MelonLoader and saves are retained.
 An unchanged installation reports “Already up to date” without another backup.
-Start the game yourself through Steam afterwards.
+Start the selected game copy yourself afterwards. Use its launcher for BepInEx;
+starting through Steam may open the original copy instead.
 
 LOCAL MOD UPDATES
 
@@ -82,6 +87,16 @@ saves. Progress is never merged; continuing either save can replace the shared
 campaign autosaves. Each operation creates a new manual file without overwriting
 existing files. Campaign copies created by older helpers are not merged or deleted.
 
+OPTIONAL HOTBAR KEY PROFILE
+
+Extra skill and item bindings start empty. Native and existing saved bindings
+remain unchanged, including old conflicts. Bind keys in game options yourself,
+or explicitly choose the optional Helper profile: skills 1–0, characters Left
+Shift + 1–0, items Q/E/R. Both columns of these actions are replaced and additive
+selection is unbound. Other conflicts are listed separately; cancelling the
+overwrite confirmation changes nothing. Key changes are backed up and reversible.
+Installation alone never applies this profile.
+
 CONFIGURE CHARACTER KEYS
 
 Click Configure character keys in the main window.
@@ -117,8 +132,8 @@ This section starts collapsed. It contains:
   or a failed activation. Restores only affected keys to Q/E/R/T, Y and 1–0.
   This neither removes the mod nor converts a save. Previous keys are backed up.
 
-To switch back, install the mod again. If the original keys written by the
-helper remain unchanged, it can restore your earlier hotbar bindings.
+To switch back, install the matching mod again. This NEVER restores a prior
+key profile implicitly. Your current bindings are kept.
 
 BACKUPS AND LOAD STATUS
 
@@ -146,4 +161,4 @@ does not request administrator rights or send data online.
 Own code and instructions: MIT (LICENSE). The embedded edited original game
 artwork is expressly NOT MIT-licensed. Keep LICENSING.txt,
 THIRD_PARTY_NOTICES.txt, Assets/NOTICE.txt and Licenses.
-The game and MelonLoader are not bundled.
+The game and modloaders are not bundled.

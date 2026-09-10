@@ -19,16 +19,16 @@ namespace ExtendedHotbar.Helper
     }
     internal static class LocalUpdates
     {
-        internal static LocalUpdateResult Scan(string folder, string game, bool helperOnly, CancellationToken token, string publicKey = null, Version current = null)
+        internal static LocalUpdateResult Scan(string folder, string game, bool helperOnly, CancellationToken token, string publicKey = null, Version current = null, ModLoaderProfile loader = null)
         {
             var result = new LocalUpdateResult { Helper = LocalHelpers.Scan(folder, token, publicKey, current) };
             // A helper-only request must not depend on a valid game, its installed
             // DLL or any mod archive (including damaged or incompatible archives).
             if (helperOnly || result.Helper != null) return result;
-            var installed = string.IsNullOrWhiteSpace(game) ? Updates.ParseVersion("0.0.0") : LocalMods.Installed(game);
+            var installed = string.IsNullOrWhiteSpace(game) ? Updates.ParseVersion("0.0.0") : LocalMods.Installed(game, loader);
             result.Baseline = Updates.ParseVersion(ReleaseInfo.ModVersion);
             if (installed > result.Baseline) result.Baseline = installed;
-            result.Mod = LocalMods.Scan(folder, installed, token, publicKey);
+            result.Mod = LocalMods.Scan(folder, installed, token, publicKey, loader);
             return result;
         }
         internal static string StartArguments(bool helperOnly, string game, string profile)

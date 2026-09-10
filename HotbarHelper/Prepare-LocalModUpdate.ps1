@@ -2,6 +2,7 @@
 param(
     [Parameter(Mandatory=$true)][string] $PackagePath,
     [Parameter(Mandatory=$true)][string] $OutputPath,
+    [ValidateSet('MelonLoader','BepInEx')][string] $Loader = 'MelonLoader',
     [string] $KeyPath = (Join-Path ([Environment]::GetFolderPath('LocalApplicationData')) 'ExtendedHotbarHelper\PublisherKeys\release-signing.dpapi'),
     [string] $PublicKeyPath = (Join-Path $PSScriptRoot 'UpdateTrust.xml')
 )
@@ -10,13 +11,18 @@ $ErrorActionPreference = 'Stop'
 Add-Type -AssemblyName System.IO.Compression.FileSystem
 $taskInput = [IO.Path]::GetFullPath($PackagePath)
 $taskOutput = [IO.Path]::GetFullPath($OutputPath)
-if ([IO.Path]::GetFileName($taskInput) -notmatch '^Extended-Hotbar-((?:0|[1-9][0-9]{0,4})\.(?:0|[1-9][0-9]{0,4})\.(?:0|[1-9][0-9]{0,4}))(?:-mit-Testspielstand)?\.zip$') { throw 'Use an original versioned mod ZIP, not a helper or source archive.' }
+$taskPrefix = if ($Loader -eq 'BepInEx') { 'Extended-Hotbar-BepInEx-' } else { 'Extended-Hotbar-' }
+$taskSuffix = if ($Loader -eq 'BepInEx') { '-bepinex\.[1-9][0-9]*' } else { '(?:-mit-Testspielstand)?' }
+if ([IO.Path]::GetFileName($taskInput) -notmatch ('^' + $taskPrefix + '((?:0|[1-9][0-9]{0,4})\.(?:0|[1-9][0-9]{0,4})\.(?:0|[1-9][0-9]{0,4}))' + $taskSuffix + '\.zip$')) { throw 'Use an original versioned mod ZIP, not a helper or source archive.' }
 $taskVersion = $Matches[1]
 if ([IO.Path]::GetFileName($taskOutput) -cne [IO.Path]::GetFileName($taskInput)) { throw 'Keep the mod ZIP filename; choose another existing output folder.' }
 if (Test-Path -LiteralPath $taskOutput) { throw 'Output exists. Never overwrite a release archive.' }
 if (-not [IO.Directory]::Exists([IO.Path]::GetDirectoryName($taskOutput))) { throw 'Create a separate output folder first.' }
 if ((Get-Item -LiteralPath $taskInput).Length -gt 16777216) { throw 'Mod ZIP exceeds 16 MiB.' }
-$taskOwned = @('Mods/DungeonSettlers10Slots.dll','Mods/DungeonSettlers10SlotsAssets/SkillFrame__sharedassets0_mod_4898.png','Mods/DungeonSettlers10SlotsAssets/NOTICE.txt')
+$taskRoot = if ($Loader -eq 'BepInEx') { 'BepInEx/plugins/ExtendedHotbar' } else { 'Mods' }
+$taskAssembly = if ($Loader -eq 'BepInEx') { 'DungeonSettlersHotbar.BepInEx' } else { 'DungeonSettlers10Slots' }
+$taskPurpose = if ($Loader -eq 'BepInEx') { 'ExtendedHotbar.Mod.BepInEx.v1' } else { 'ExtendedHotbar.Mod.v1' }
+$taskOwned = @("$taskRoot/$taskAssembly.dll", "$taskRoot/DungeonSettlers10SlotsAssets/SkillFrame__sharedassets0_mod_4898.png", "$taskRoot/DungeonSettlers10SlotsAssets/NOTICE.txt")
 $taskArchive = [IO.Compression.ZipFile]::OpenRead($taskInput)
 $taskPrivate = $null; $taskRsa = $null
 try {
@@ -35,13 +41,13 @@ try {
     }
     if ($taskFiles.Count -ne 3) { throw 'Expected three installable hotbar files.' }
     # These are reviewed helper build inputs, not values supplied by downloaded data.
-    $taskSource = [IO.File]::ReadAllText((Join-Path $PSScriptRoot 'Operations.cs'))
+    $taskSource = [IO.File]::ReadAllText((Join-Path $PSScriptRoot 'ReleaseInfo.cs'))
     $taskGameHash = [regex]::Match($taskSource, 'const string GameHash = "([A-F0-9]{64})"').Groups[1].Value
     $taskMetadataHash = [regex]::Match($taskSource, 'const string MetadataHash = "([A-F0-9]{64})"').Groups[1].Value
     $taskHelperSource = [IO.File]::ReadAllText((Join-Path $PSScriptRoot 'Updates.cs'))
     $taskMinimum = [regex]::Match($taskHelperSource, 'const string HelperVersion = "([0-9]+\.[0-9]+\.[0-9]+)"').Groups[1].Value
     if ($taskGameHash.Length -ne 64 -or $taskMetadataHash.Length -ne 64 -or $taskMinimum.Length -eq 0) { throw 'Missing reviewed compatibility metadata.' }
-    $taskPayload = [ordered]@{ purpose='ExtendedHotbar.Mod.v1'; repository='Fre-yin/DNST-Extended-Hotbar'; modVersion=$taskVersion; minimumHelper=$taskMinimum; gameHash=$taskGameHash; metadataHash=$taskMetadataHash; files=$taskFiles }
+    $taskPayload = [ordered]@{ purpose=$taskPurpose; repository='Fre-yin/DNST-Extended-Hotbar'; modVersion=$taskVersion; minimumHelper=$taskMinimum; gameHash=$taskGameHash; metadataHash=$taskMetadataHash; files=$taskFiles }
     $taskBytes = [Text.Encoding]::UTF8.GetBytes(($taskPayload | ConvertTo-Json -Depth 5 -Compress))
     $taskPrivate = [Security.Cryptography.ProtectedData]::Unprotect([IO.File]::ReadAllBytes([IO.Path]::GetFullPath($KeyPath)), $null, [Security.Cryptography.DataProtectionScope]::CurrentUser)
     $taskRsa = [Security.Cryptography.RSACryptoServiceProvider]::new([Security.Cryptography.CspParameters]::new(24)); $taskRsa.PersistKeyInCsp = $false

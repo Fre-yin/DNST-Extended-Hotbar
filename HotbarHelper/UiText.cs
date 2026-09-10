@@ -87,6 +87,7 @@ namespace ExtendedHotbar.Helper
                 case "Installieren / Aktualisieren": return this["install"];
                 case "Ohne Hotbar vorbereiten": return this["export"].Replace("\n", " ");
                 case "Originaltasten vorbereiten (ohne Spielstandänderung)": return this["native"];
+                case HotbarKeyProfile.Action: return this["hotbarKeys"];
                 case Operations.CharacterKeysAction: return this["characters"];
                 default: return this["change"];
             }
