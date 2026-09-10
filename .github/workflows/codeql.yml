@@ -72,13 +72,18 @@ jobs:
       - name: Download the pinned helper resource
         run: |
           $ErrorActionPreference = 'Stop'
-          $package = Join-Path $env:RUNNER_TEMP 'Extended-Hotbar-0.3.7.zip'
-          Invoke-WebRequest -Uri 'https://github.com/Fre-yin/DNST-Extended-Hotbar/releases/download/helper-v0.1.11/Extended-Hotbar-0.3.7.zip' -OutFile $package -TimeoutSec 120
-          $expected = 'DA9C92F107298C211799DF678B5EFB267843F8755E84073DA6AB43CDAF6E30B1'
+          $package = Join-Path $env:RUNNER_TEMP 'Extended-Hotbar-0.3.8.zip'
+          Invoke-WebRequest -Uri 'https://github.com/Fre-yin/DNST-Extended-Hotbar/releases/download/helper-v0.1.12/Extended-Hotbar-0.3.8.zip' -OutFile $package -TimeoutSec 120
+          $expected = 'D7824BD6B31E3760EBC803111261B75EC5ADF60FAE87B7AAC444DF9B2993F544'
           if ((Get-FileHash -LiteralPath $package -Algorithm SHA256).Hash -ne $expected) {
             throw 'Unexpected mod resource; refusing the helper build.'
           }
-          # Embedded by the existing build; never installed or launched.
+          $bepPackage = Join-Path $env:RUNNER_TEMP 'Extended-Hotbar-BepInEx-0.3.8-bepinex.1.zip'
+          Invoke-WebRequest -Uri 'https://github.com/Fre-yin/DNST-Extended-Hotbar/releases/download/helper-v0.1.12/Extended-Hotbar-BepInEx-0.3.8-bepinex.1.zip' -OutFile $bepPackage -TimeoutSec 120
+          if ((Get-FileHash -LiteralPath $bepPackage -Algorithm SHA256).Hash -ne '77193451CD045D03A50E24A80F2D0582E178F335D90926EDF9AAF9E6B3880547') {
+            throw 'Unexpected BepInEx resource; refusing the helper build.'
+          }
+          # Both packages are embedded only; never installed or launched.
 
       - name: Initialize CodeQL
         uses: github/codeql-action/init@cdf488f595d80d6e07e03d4674febd5ab45fa938 # v4
@@ -89,9 +94,10 @@ jobs:
       - name: Build the real helper and run its isolated tests
         run: |
           $ErrorActionPreference = 'Stop'
-          $package = Join-Path $env:RUNNER_TEMP 'Extended-Hotbar-0.3.7.zip'
+          $package = Join-Path $env:RUNNER_TEMP 'Extended-Hotbar-0.3.8.zip'
           $output = Join-Path $env:RUNNER_TEMP 'cql-h'
-          & .\HotbarHelper\Build.ps1 -PackagePath $package -OutputDirectory $output
+          $bepPackage = Join-Path $env:RUNNER_TEMP 'Extended-Hotbar-BepInEx-0.3.8-bepinex.1.zip'
+          & .\HotbarHelper\Build.ps1 -PackagePath $package -BepInExPackagePath $bepPackage -OutputDirectory $output
 
       - name: Rebuild the game-independent core tests
         run: |
