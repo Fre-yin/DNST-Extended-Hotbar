@@ -1,7 +1,14 @@
+#if BEPINEX
+using global::Refactor.Main;
+using global::Refactor.Main.Event;
+using global::Refactor.Main.InputModule;
+using global::Refactor.Setting;
+#else
 using Il2CppRefactor.Main;
 using Il2CppRefactor.Main.Event;
 using Il2CppRefactor.Main.InputModule;
 using Il2CppRefactor.Setting;
+#endif
 using UnityEngine;
 
 namespace DungeonSettlers10Slots;
@@ -56,7 +63,7 @@ internal static class ItemSlotChecks
         for (var slot = 0; slot < 3; slot++)
         {
             var type = ItemSlotInput.Key(slot);
-            Require(settings.TryGetBinding(type, 0, out var binding) && binding.KeyCode == new[] { KeyCode.Q, KeyCode.E, KeyCode.R }[slot], "QER defaults " + slot);
+            Require(settings.TryGetBinding(type, 0, out var binding) && binding.KeyCode == new[] { KeyCode.Y, KeyCode.None, KeyCode.None }[slot], "native/unbound defaults " + slot);
             var evt = factory.ConvertKeyInputToEventData(type);
             Require(evt?.TryCast<UseItemQuickSlotRequested>() != null && ItemSlotInput.Take(evt.Cast<Il2CppSystem.Object>()) == slot, "native key event and routing " + slot);
             settings.BindKey(type, 0, KeyCode.L);
@@ -74,7 +81,7 @@ internal static class ItemSlotChecks
             Require(evt?.TryCast<UnsetItemQuickSlotRequested>()?.UnitGuid.Equals(first) == true
                 && ItemSlotInput.Take(evt.Cast<Il2CppSystem.Object>()) == slot, "native GUID-specific remove event " + slot);
         }
-        DungeonSettlers10SlotsMod.Log.Msg("Item-slot isolated checks PASS: three assignments, GUID isolation, skill preservation, scoped read/write/remove/reset, JSON + native storage round trip, unknown-version preservation, Q/E/R + arbitrary rebinds, key and menu routing.");
+        DungeonSettlers10SlotsMod.Log.Msg("Item-slot isolated checks PASS: three assignments, GUID isolation, skill preservation, scoped read/write/remove/reset, JSON + native storage round trip, unknown-version preservation, native/unbound defaults + arbitrary rebinds, key and menu routing.");
     }
 
     static void Require(bool value, string name)

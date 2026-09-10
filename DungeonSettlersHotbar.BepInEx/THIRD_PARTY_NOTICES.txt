@@ -1,0 +1,35 @@
+EXTENDED HOTBAR — BEPINEX PREVIEW
+
+Original mod code and original instructions: MIT; see LICENSE.
+The edited game frame is NOT covered by MIT; preserve the adjacent asset
+NOTICE.txt. Rights in Dungeon Settlers, Unity, fonts, artwork and other game
+content remain with their respective owners. No rights to the game or its
+content are granted by the mod-code license. This is an unofficial community
+project, not an official CanOpener or publisher product.
+
+This plugin-only package does not contain the game, BepInEx, Unity, generated
+interop assemblies, runtime libraries or a saved campaign. Separate loader
+and game installations retain their own licenses and notices. Nothing here
+restricts the rights granted by those components' licenses.
+
+Referenced components (not bundled or modified by this plugin):
+
+BepInEx 6.0.0-be.788, commit 5b766a3b7f6c164d4798924a93f3acf4db769d06
+https://github.com/BepInEx/BepInEx/tree/5b766a3b7f6c164d4798924a93f3acf4db769d06
+https://builds.bepinex.dev/projects/bepinex_be
+
+Il2CppInterop — runtime supplied by BepInEx
+https://github.com/BepInEx/Il2CppInterop
+https://github.com/BepInEx/Il2CppInterop/blob/master/LICENSE
+
+HarmonyX — runtime supplied by BepInEx
+https://github.com/BepInEx/HarmonyX
+https://github.com/BepInEx/HarmonyX/blob/master/LICENSE
+
+Newtonsoft.Json / Json.NET — generated interface to the game's library
+https://github.com/JamesNK/Newtonsoft.Json
+https://github.com/JamesNK/Newtonsoft.Json/blob/master/LICENSE.md
+
+Dungeon Settlers / Unity / TextMeshPro — game-owned runtime and interfaces
+The specially identified edited frame is game-derived artwork, not a freely
+relicensed asset. No general redistribution permission is asserted here.

@@ -1,7 +1,15 @@
 using HarmonyLib;
+#if BEPINEX
+using global::Refactor.Main;
+#else
 using Il2CppRefactor.Main;
+#endif
 using Guid = Il2CppSystem.Guid;
+#if BEPINEX
+using SaveDictionary = Il2CppSystem.Collections.Generic.Dictionary<Il2CppSystem.Guid, global::Refactor.Main.QuickSlotSaveData>;
+#else
 using SaveDictionary = Il2CppSystem.Collections.Generic.Dictionary<Il2CppSystem.Guid, Il2CppRefactor.Main.QuickSlotSaveData>;
+#endif
 
 namespace DungeonSettlers10Slots;
 

@@ -1,10 +1,17 @@
 using System.Reflection;
 using HarmonyLib;
 using Il2CppInterop.Runtime.InteropTypes.Arrays;
+#if BEPINEX
+using global::Refactor;
+using global::Refactor.Main;
+using global::Refactor.Main.InputModule;
+using global::Refactor.UI;
+#else
 using Il2CppRefactor;
 using Il2CppRefactor.Main;
 using Il2CppRefactor.Main.InputModule;
 using Il2CppRefactor.UI;
+#endif
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -80,7 +87,7 @@ internal static class ContainerSlotsSaved
         while (entries.MoveNext())
         {
             var entry = entries.Current;
-            result.Add(entry.Key, entry.Value.Serialize());
+            NativeSaveDictionary.Add(result, entry.Key, entry.Value.Serialize());
         }
         __result = result;
         ItemSlotStorage.Remember(result, ItemSlotStorage.State(__instance));

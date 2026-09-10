@@ -1,21 +1,28 @@
 using System.Security.Cryptography;
 using HarmonyLib;
+#if BEPINEX
+using global::Refactor.Main;
+using global::Refactor.Main.Event;
+using global::Refactor.Main.InputModule;
+using global::Refactor.UI;
+#else
 using Il2CppRefactor.Main;
 using Il2CppRefactor.Main.Event;
 using Il2CppRefactor.Main.InputModule;
 using Il2CppRefactor.UI;
-using MelonLoader;
+#endif
 using UnityEngine;
-
-[assembly: MelonInfo(typeof(DungeonSettlers10Slots.DungeonSettlers10SlotsMod), "Extended Hotbar", "0.3.7", "Danny/Codex")]
-[assembly: MelonGame(null, "DungeonSettlers")]
-[assembly: HarmonyDontPatchAll]
 
 namespace DungeonSettlers10Slots;
 
-public sealed class DungeonSettlers10SlotsMod : MelonMod
+// Shared gameplay runtime. Loader entry points only supply logging, Harmony
+// ownership and lifecycle callbacks; slot IDs and save formats stay identical.
+public sealed partial class DungeonSettlers10SlotsMod
 {
-    internal static MelonLogger.Instance Log;
+    internal static HotbarLog Log;
+    private HarmonyLib.Harmony runtimeHarmony;
+    private bool stopped;
+    internal bool IsReady => ready;
     internal static int FirstExtra;
     internal const int Capacity = 10;
     internal static int ExtraCount => Capacity - FirstExtra;
@@ -31,14 +38,16 @@ public sealed class DungeonSettlers10SlotsMod : MelonMod
     private const string SupportedHash = "B0CD8B641D551019B82C0AF3DDE1532D6FF7BA155B20B2D3936742924B42DB2A";
     private const string SupportedMetadataHash = "CE84EC266501C8DF4A23B31D50D8B413C82DAE49A062BC623B3440E8A3F5A23F";
 
-    public override void OnInitializeMelon()
+    internal void StartRuntime(HotbarLog logger, HarmonyLib.Harmony harmony)
     {
-        Log = LoggerInstance;
+        Log = logger;
+        runtimeHarmony = harmony;
+        stopped = false;
         try { Initialize(); }
         catch (Exception ex)
         {
             ready = false;
-            HarmonyInstance.UnpatchSelf();
+            runtimeHarmony.UnpatchSelf();
             Log.Error("10-Slot-Erweiterung sicher deaktiviert: Initialisierung/Selbsttest fehlgeschlagen. " + ex);
         }
     }
@@ -53,6 +62,10 @@ public sealed class DungeonSettlers10SlotsMod : MelonMod
             return;
         }
         Log.Msg("Compatibility fingerprints PASS: DS_B.0.4.19 / Steam 25154317; native binary and metadata match.");
+#if BEPINEX
+        NativeSaveDictionary.VerifyInterop();
+        Log.Msg("BepInEx save dictionary interop PASS: boxed native save record roundtrip before patching.");
+#endif
         // Resolve the native offset: basic attack must not consume an extra active-skill slot.
         FirstExtra = QuickSlotData.MAX_SLOT;
         Log.Msg($"Native slot layout: MAX_SLOT={FirstExtra}, target={Capacity}");
@@ -78,7 +91,7 @@ public sealed class DungeonSettlers10SlotsMod : MelonMod
         foreach (var type in patchTypes)
         {
             Log.Msg("Installing native patch: " + type.Name);
-            HarmonyInstance.CreateClassProcessor(type).Patch();
+            runtimeHarmony.CreateClassProcessor(type).Patch();
         }
         if (RunAudits)
         {
@@ -88,12 +101,12 @@ public sealed class DungeonSettlers10SlotsMod : MelonMod
         foreach (var type in new[] { typeof(ContainerSlotMutation), typeof(ContainerSlotCreated), typeof(ContainerSlotsLoaded), typeof(ContainerSlotsSaved) })
         {
             Log.Msg("Installing native patch: " + type.Name);
-            HarmonyInstance.CreateClassProcessor(type).Patch();
+            runtimeHarmony.CreateClassProcessor(type).Patch();
         }
         foreach (var type in new[] { typeof(ExtraRemoveInteraction), typeof(ExtraAutoInteraction), typeof(ExtraInteractionEvents), typeof(ExtraInteractionInputGate) })
         {
             Log.Msg("Installing native patch: " + type.Name);
-            HarmonyInstance.CreateClassProcessor(type).Patch();
+            runtimeHarmony.CreateClassProcessor(type).Patch();
         }
         if (RunAudits)
         {
@@ -108,16 +121,15 @@ public sealed class DungeonSettlers10SlotsMod : MelonMod
             }
             finally { ItemSlotStorage.ClearAll(); }
         }
-        CombatBindingPreset.ApplyRequestedProfile();
         screenWidth = Screen.width;
         screenHeight = Screen.height;
         ready = true;
-        Log.Msg("10-slot release patches loaded; skills 1-0, units Shift+1-0. Hotbar layout and labels update only on relevant events; no periodic Unity object scans or read-path storage guards.");
+        Log.Msg("10-slot release patches loaded; native bindings preserved, extra bindings initially unbound. Hotbar layout and labels update only on relevant events; no periodic Unity object scans or read-path storage guards.");
         if (NativeLayoutComparison.Enabled)
             Log.Warning("PRESENTATION A/B TEST B: original frame/layout; all ten slots, bindings and save handling retained. Extra fields may overlap other HUD controls. Restart without " + NativeLayoutComparison.Argument + " to restore the custom presentation.");
     }
 
-    public override void OnUpdate()
+    internal void Tick()
     {
         if (!ready) return;
         NativeLocalizationChecks.RunIfRequested();
@@ -131,8 +143,9 @@ public sealed class DungeonSettlers10SlotsMod : MelonMod
         HotbarFrameLayout.UpdatePending();
     }
 
-    public override void OnSceneWasLoaded(int buildIndex, string sceneName)
+    internal void SceneChanged()
     {
+        if (!ready) return;
         // Additive scenes may leave the registered HUD alive. Keep its reader so
         // later rebinding continues to update labels on that same hotbar.
         HotbarKeyLabels.Prune();
@@ -142,13 +155,19 @@ public sealed class DungeonSettlers10SlotsMod : MelonMod
         ItemSlotUI.Prune();
     }
 
-    public override void OnDeinitializeMelon()
+    internal void StopRuntime()
     {
+        if (stopped) return;
+        stopped = true;
         ready = false;
-        ItemSlotStorage.ClearAll();
-        HotbarKeyLabels.Clear();
-        HotbarGapAlignment.Clear();
-        HotbarFrameLayout.Dispose();
+        try
+        {
+            ItemSlotStorage.ClearAll();
+            HotbarKeyLabels.Clear();
+            HotbarGapAlignment.Clear();
+            HotbarFrameLayout.Dispose();
+        }
+        finally { runtimeHarmony?.UnpatchSelf(); }
     }
 
     private static string FileHash(string path)

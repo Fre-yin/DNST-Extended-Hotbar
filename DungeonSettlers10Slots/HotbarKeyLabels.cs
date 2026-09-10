@@ -1,8 +1,15 @@
 using HarmonyLib;
+#if BEPINEX
+using global::Refactor.Main.InputModule;
+using global::Refactor.Setting;
+using global::Refactor.UI;
+using global::TMPro;
+#else
 using Il2CppRefactor.Main.InputModule;
 using Il2CppRefactor.Setting;
 using Il2CppRefactor.UI;
 using Il2CppTMPro;
+#endif
 using UnityEngine;
 
 namespace DungeonSettlers10Slots;

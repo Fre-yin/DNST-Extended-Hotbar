@@ -1,7 +1,14 @@
+#if BEPINEX
+using global::Refactor.Main.InputModule;
+using global::Refactor.Setting;
+using global::Refactor.UI;
+using global::TMPro;
+#else
 using Il2CppRefactor.Main.InputModule;
 using Il2CppRefactor.Setting;
 using Il2CppRefactor.UI;
 using Il2CppTMPro;
+#endif
 using UnityEngine;
 
 namespace DungeonSettlers10Slots;
@@ -87,8 +94,8 @@ internal static class HotbarLabelChecks
             HotbarKeyLabels.Apply(clone, reader);
             for (var extra = 0; extra < DungeonSettlers10SlotsMod.ExtraCount; extra++)
                 Require(clone._skillSlots[DungeonSettlers10SlotsMod.FirstExtra + extra + 1]._txtInputKey.GetText()
-                    == HotbarKeyLabels.Display(CombatBindingPreset.Digit(extra + 4)), "reset restores number for extra " + extra);
-            var defaults = new[] { "1", "2", "3", "4" };
+                    == "", "reset leaves extra unbound " + extra);
+            var defaults = new[] { "Q", "E", "R", "T" };
             for (var i = 0; i < defaults.Length; i++) Require(clone._skillSlots[i + 1]._txtInputKey.GetText() == defaults[i], "original skill default " + i);
             Require(TextOf(clone._skillSlots[0]) == originalTexts[0], "basic attack untouched");
             for (var i = 0; i < originalTexts.Length; i++) Require(TextOf(source._skillSlots[i]) == originalTexts[i], "live UI untouched " + i);

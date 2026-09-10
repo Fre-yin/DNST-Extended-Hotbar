@@ -1,9 +1,16 @@
 using System.Globalization;
 using HarmonyLib;
+#if BEPINEX
+using global::Refactor.Main.InputModule;
+using global::Refactor.Setting;
+using global::Refactor.UI;
+using global::Refactor.Util;
+#else
 using Il2CppRefactor.Main.InputModule;
 using Il2CppRefactor.Setting;
 using Il2CppRefactor.UI;
 using Il2CppRefactor.Util;
+#endif
 
 namespace DungeonSettlers10Slots;
 

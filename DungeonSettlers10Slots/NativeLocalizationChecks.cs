@@ -1,9 +1,18 @@
+#if BEPINEX
+using global::Refactor.Main.InputModule;
+using global::Refactor.Setting;
+using global::Refactor.UI;
+using global::Refactor.UI.Util;
+using global::Refactor.Util;
+using global::TMPro;
+#else
 using Il2CppRefactor.Main.InputModule;
 using Il2CppRefactor.Setting;
 using Il2CppRefactor.UI;
 using Il2CppRefactor.UI.Util;
 using Il2CppRefactor.Util;
 using Il2CppTMPro;
+#endif
 using UnityEngine;
 
 namespace DungeonSettlers10Slots;

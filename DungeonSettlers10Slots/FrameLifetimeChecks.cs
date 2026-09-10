@@ -1,4 +1,8 @@
+#if BEPINEX
+using global::Refactor.Util;
+#else
 using Il2CppRefactor.Util;
+#endif
 using UnityEngine;
 
 namespace DungeonSettlers10Slots;

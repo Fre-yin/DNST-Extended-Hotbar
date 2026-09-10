@@ -1,0 +1,39 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <DefineConstants>$(DefineConstants);BEPINEX</DefineConstants>
+    <Nullable>disable</Nullable>
+    <AssemblyName>DungeonSettlersHotbar.BepInEx</AssemblyName>
+    <RootNamespace>DungeonSettlers10Slots</RootNamespace>
+    <Version>0.3.8-bepinex.1</Version>
+    <AssemblyTitle>Extended Hotbar (BepInEx preview)</AssemblyTitle>
+    <Product>Extended Hotbar</Product>
+    <Deterministic>true</Deterministic>
+    <CheckEolTargetFramework>false</CheckEolTargetFramework>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="../DungeonSettlers10Slots/*.cs" Exclude="../DungeonSettlers10Slots/MelonEntry.cs" Link="Shared/%(Filename)%(Extension)" />
+    <Content Include="../DungeonSettlers10Slots/Assets/SkillFrame__sharedassets0_mod_4898.png" Link="DungeonSettlers10SlotsAssets/SkillFrame__sharedassets0_mod_4898.png" CopyToOutputDirectory="PreserveNewest" Condition="Exists('../DungeonSettlers10Slots/Assets/SkillFrame__sharedassets0_mod_4898.png')" />
+    <Reference Include="BepInEx.Core"><HintPath>$(GameDir)/BepInEx/core/BepInEx.Core.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="BepInEx.Unity.IL2CPP"><HintPath>$(GameDir)/BepInEx/core/BepInEx.Unity.IL2CPP.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="0Harmony"><HintPath>$(GameDir)/BepInEx/core/0Harmony.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="Il2CppInterop.Runtime"><HintPath>$(GameDir)/BepInEx/core/Il2CppInterop.Runtime.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="Assembly-CSharp"><HintPath>$(GameDir)/BepInEx/interop/Assembly-CSharp.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="Il2Cppmscorlib"><HintPath>$(GameDir)/BepInEx/interop/Il2Cppmscorlib.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="Il2CppSystem.Core"><HintPath>$(GameDir)/BepInEx/interop/Il2CppSystem.Core.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="Newtonsoft.Json"><HintPath>$(GameDir)/BepInEx/interop/Newtonsoft.Json.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="UnityEngine"><HintPath>$(GameDir)/BepInEx/interop/UnityEngine.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="UnityEngine.CoreModule"><HintPath>$(GameDir)/BepInEx/interop/UnityEngine.CoreModule.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="UnityEngine.IMGUIModule"><HintPath>$(GameDir)/BepInEx/interop/UnityEngine.IMGUIModule.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="UnityEngine.InputLegacyModule"><HintPath>$(GameDir)/BepInEx/interop/UnityEngine.InputLegacyModule.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="UnityEngine.ImageConversionModule"><HintPath>$(GameDir)/BepInEx/interop/UnityEngine.ImageConversionModule.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="UnityEngine.UIModule"><HintPath>$(GameDir)/BepInEx/interop/UnityEngine.UIModule.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="UnityEngine.UI"><HintPath>$(GameDir)/BepInEx/interop/UnityEngine.UI.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="Unity.TextMeshPro"><HintPath>$(GameDir)/BepInEx/interop/Unity.TextMeshPro.dll</HintPath><Private>false</Private></Reference>
+  </ItemGroup>
+  <Target Name="ValidateBepInExReferences" BeforeTargets="ResolveAssemblyReferences">
+    <Error Condition="'$(GameDir)' == ''" Text="Supply -p:GameDir=... for a separate BepInEx Unity IL2CPP x64 game copy. Initialize BepInEx there first." />
+    <Error Condition="'%(Reference.HintPath)' != '' And !Exists('%(Reference.HintPath)')" Text="Missing BepInEx reference: %(Reference.HintPath). Do not substitute MelonLoader-generated assemblies." />
+  </Target>
+</Project>

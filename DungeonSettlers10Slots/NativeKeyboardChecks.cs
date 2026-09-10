@@ -1,4 +1,13 @@
 using Il2CppInterop.Runtime;
+#if BEPINEX
+using global::Refactor.Main;
+using global::Refactor.Main.Event;
+using global::Refactor.Main.InputModule;
+using global::Refactor.Map;
+using global::Refactor.Setting;
+using global::Refactor.UI;
+using global::Refactor.View;
+#else
 using Il2CppRefactor.Main;
 using Il2CppRefactor.Main.Event;
 using Il2CppRefactor.Main.InputModule;
@@ -6,6 +15,7 @@ using Il2CppRefactor.Map;
 using Il2CppRefactor.Setting;
 using Il2CppRefactor.UI;
 using Il2CppRefactor.View;
+#endif
 using UnityEngine;
 
 namespace DungeonSettlers10Slots;
@@ -195,7 +205,7 @@ internal static class NativeKeyboardChecks
             foreach (var key in spareCodes) { ConvertKey(key); ExpectSkill(uiIndex, "binding round trip " + key); }
             reloaded.ResetDefaultSetting();
             dispatcher.UpdateKeySetting(binding._keySetting);
-            CombatBindingPreset.Verify(reloaded.Cast<IKeySettingReader>());
+            CombatBindingPreset.VerifyDefaults(reloaded.Cast<IKeySettingReader>());
             foreach (var key in spareCodes) { ConvertKey(key); Require(events.Count == 0, "reset key inactive " + key); }
             binding._keySetting = reader;
             dispatcher.UpdateKeySetting(reader);
@@ -217,6 +227,11 @@ internal static class NativeKeyboardChecks
         // Full default keymap, not a hand-picked subset: Shift must select exactly
         // one unit, while the same bare digit invokes exactly one matching skill.
         var combat = new KeySetting();
+        CombatBindingPreset.VerifyDefaults(combat.Cast<IKeySettingReader>());
+        var explicitProfile = combat.GetKeySettingData();
+        CombatBindingPreset.Apply(explicitProfile.Bindings);
+        CombatBindingPreset.ApplyItems(explicitProfile.Bindings);
+        combat.SetKeySettingData(explicitProfile);
         CombatBindingPreset.Verify(combat.Cast<IKeySettingReader>());
         foreach (var original in CombatBindingPreset.OriginalDefaults.Where(value => !CombatBindingPreset.IsTarget(value.InputType)))
         {
@@ -304,6 +319,12 @@ internal static class NativeKeyboardChecks
         }
         CheckCombatRoutes();
         combat.ResetDefaultSetting();
+        CombatBindingPreset.VerifyDefaults(combat.Cast<IKeySettingReader>());
+        // Reset must NOT reapply a preset. Apply it only to this disposable audit object.
+        var requested = combat.GetKeySettingData();
+        CombatBindingPreset.Apply(requested.Bindings);
+        CombatBindingPreset.ApplyItems(requested.Bindings);
+        combat.SetKeySettingData(requested);
         dispatcher.UpdateKeySetting(binding._keySetting);
         CheckCombatRoutes();
         // Rebinding a modified unit key must not resurrect the hidden Shift key.

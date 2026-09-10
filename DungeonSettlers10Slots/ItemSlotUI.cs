@@ -1,7 +1,13 @@
 using HarmonyLib;
+#if BEPINEX
+using global::Refactor.Main.InputModule;
+using global::Refactor.Setting;
+using global::Refactor.UI;
+#else
 using Il2CppRefactor.Main.InputModule;
 using Il2CppRefactor.Setting;
 using Il2CppRefactor.UI;
+#endif
 using UnityEngine;
 using UnityEngine.UI;
 

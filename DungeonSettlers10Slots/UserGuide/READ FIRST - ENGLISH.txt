@@ -2,11 +2,13 @@ EXTENDED HOTBAR – FOR DUNGEON SETTLERS
 
 This mod gives you ten skill slots and three item slots, plus the normal
 basic attack. Your character panel and familiar game menus remain in place.
-Mod version 0.3.7, for Dungeon Settlers DS_B.0.4.19 (Steam build 25154317) on Windows.
+Mod version 0.3.8, for Dungeon Settlers DS_B.0.4.19 (Steam build 25154317) on Windows.
 This is still a test release. Please back up your saves.
 
-This update adapts Extended Hotbar to the new game build.
-Ten skills, three item slots and existing bindings are retained.
+This update preserves native defaults and leaves extra skill/item bindings empty.
+Choose keys yourself in the game options, or explicitly apply the optional
+Hotbar Helper 0.1.12 profile with conflict checks. Existing saved bindings are
+preserved, including old conflicts: these are not silently erased on startup.
 The file stays named DungeonSettlers10Slots.dll to keep updates simple.
 
 Artwork and the optional demo save are unchanged. The demo was saved with
@@ -14,8 +16,8 @@ DS_B.0.4.17; keep a backup when loading it in the newer game.
 
 OTHER MODS AND LOADERS
 
-This release targets MelonLoader 0.7.3. No BepInEx edition is currently
-provided. Running it together with BepInEx mods such as Reroll Helper has
+This package targets MelonLoader 0.7.3. A separate BepInEx 6 IL2CPP preview
+package is available. Helper 0.1.12 selects the matching package. Running it together with BepInEx mods such as Reroll Helper has
 not been verified. Do not simply install both loaders over one another.
 Moving a DLL to the other loader's folder does not make it compatible.
 Compatibility with other MelonLoader mods is not guaranteed either.
@@ -45,7 +47,7 @@ This update is initially a local test. Once published, find it under Releases,
 then scroll to Assets at the bottom:
 https://github.com/Fre-yin/DNST-Extended-Hotbar/releases
 
-Extended-Hotbar-0.3.7.zip includes the mod and the optional demo save.
+Extended-Hotbar-0.3.8.zip includes the mod and the optional demo save.
 Import the demo manually using its instructions only if you want it.
 It is never imported automatically. No separate demo variant is needed.
 

@@ -1,15 +1,21 @@
 using HarmonyLib;
+#if BEPINEX
+using global::Refactor;
+using global::Refactor.Main.InputModule;
+using global::Refactor.Setting;
+using global::Refactor.UI;
+#else
 using Il2CppRefactor;
 using Il2CppRefactor.Main.InputModule;
 using Il2CppRefactor.Setting;
 using Il2CppRefactor.UI;
+#endif
 using UnityEngine;
 
 namespace DungeonSettlers10Slots;
 
 internal static class CombatBindingPreset
 {
-    internal const string ApplyArgument = "--ds-apply-number-bindings";
     internal static KeyBindingData[] OriginalDefaults { get; private set; }
     internal static KeyCode Digit(int index) => index == 9 ? KeyCode.Alpha0 : KeyCode.Alpha1 + index;
     internal static KeyInputType Skill(int index) => index < 4 ? KeyInputType.UseSkill_1 + index : ExtraBindings.TypeAt(index - 4);
@@ -22,8 +28,31 @@ internal static class CombatBindingPreset
     internal static void ApplyDefaults(Il2CppSystem.Collections.Generic.List<KeyBindingData> bindings)
     {
         OriginalDefaults ??= bindings.ToArray();
-        Apply(bindings);
-        ApplyItems(bindings);
+        // Extend the native schema, never replace a native or user-selected key.
+        // Binding profiles belong to the Helper's explicit, backed-up operation.
+        var extra = Enumerable.Range(0, DungeonSettlers10SlotsMod.ExtraCount).Select(ExtraBindings.TypeAt)
+            .Concat(Enumerable.Range(1, 2).Select(ItemSlotInput.Key));
+        foreach (var type in extra)
+            for (var column = 0; column < 2; column++)
+                if (!bindings.ToArray().Any(b => b.InputType == type && b.SlotIndex == column))
+                    bindings.Add(new KeyBindingData(type, column, KeyCode.None));
+    }
+
+    internal static void VerifyDefaults(IKeySettingReader reader)
+    {
+        foreach (var type in Enumerable.Range(0, DungeonSettlers10SlotsMod.ExtraCount).Select(ExtraBindings.TypeAt)
+            .Concat(Enumerable.Range(1, 2).Select(ItemSlotInput.Key)))
+            for (var column = 0; column < 2; column++)
+                Require(reader.TryGetBinding(type, column, out var binding) && binding.KeyCode == KeyCode.None,
+                    "extra default unbound: " + type + "/" + column);
+        foreach (var original in OriginalDefaults)
+        {
+            // The game itself filters its internal developer actions.
+            if ((int)original.InputType >= 65 && (int)original.InputType <= 70) continue;
+            Require(reader.TryGetBinding(original.InputType, original.SlotIndex, out var kept)
+                && kept.KeyCode == original.KeyCode && kept.ModifierKey == original.ModifierKey
+                && kept.IsKeyDown == original.IsKeyDown, "native default retained: " + original.InputType);
+        }
     }
 
     internal static void Apply(Il2CppSystem.Collections.Generic.List<KeyBindingData> bindings)
@@ -77,38 +106,6 @@ internal static class CombatBindingPreset
             for (var column = 0; column < 2; column++)
                 Require(!reader.TryGetBinding(KeyInputType.AddSelectUnit_1 + index, column, out var add) || add.KeyCode == KeyCode.None,
                     "no hidden additive-selection collision " + index);
-        }
-    }
-
-    // Explicit, one-launch opt-in only. Never overwrite a later manual rebind at
-    // normal startup. The game owns the serialization and the options file.
-    internal static void ApplyRequestedProfile()
-    {
-        var numbers = Environment.GetCommandLineArgs().Contains(ApplyArgument);
-        var items = Environment.GetCommandLineArgs().Contains("--ds-apply-item-bindings");
-        if (!numbers && !items) return;
-        var path = Path.Combine(Application.persistentDataPath, "UserSetting.json");
-        if (!File.Exists(path)) throw new InvalidOperationException("Existing user settings required for one-time preset application.");
-        var backup = path + ".before-number-bindings-" + DateTime.UtcNow.ToString("yyyyMMdd-HHmmss-fffffff") + ".bak";
-        File.Copy(path, backup, false);
-        try
-        {
-            var data = SaveLoadHelper.GetUserSettingSaveData();
-            var settings = new KeySetting(data.KeySettingData);
-            var keys = settings.GetKeySettingData();
-            if (numbers) Apply(keys.Bindings);
-            if (items) ApplyItems(keys.Bindings);
-            settings.SetKeySettingData(keys);
-            if (numbers) Verify(settings.Cast<IKeySettingReader>());
-            data.KeySettingData = settings.GetKeySettingData();
-            SaveLoadHelper.SaveUserSettingFile(data);
-            if (numbers) Verify(new KeySetting(SaveLoadHelper.GetUserSettingSaveData().KeySettingData).Cast<IKeySettingReader>());
-            DungeonSettlers10SlotsMod.Log.Msg($"Requested binding preset saved once through native settings (numbers={numbers}, items Q/E/R={items}). Backup: " + backup);
-        }
-        catch
-        {
-            File.Copy(backup, path, true);
-            throw;
         }
     }
 

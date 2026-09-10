@@ -1,6 +1,12 @@
+#if BEPINEX
+using global::Refactor.Main.InputModule;
+using global::Refactor.Main.Event;
+using global::Refactor.UI;
+#else
 using Il2CppRefactor.Main.InputModule;
 using Il2CppRefactor.Main.Event;
 using Il2CppRefactor.UI;
+#endif
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;

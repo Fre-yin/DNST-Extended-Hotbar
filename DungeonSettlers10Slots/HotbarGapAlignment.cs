@@ -1,7 +1,12 @@
 using HarmonyLib;
 using Il2CppInterop.Runtime.InteropTypes.Arrays;
+#if BEPINEX
+using global::Refactor;
+using global::Refactor.UI;
+#else
 using Il2CppRefactor;
 using Il2CppRefactor.UI;
+#endif
 using UnityEngine;
 
 namespace DungeonSettlers10Slots;

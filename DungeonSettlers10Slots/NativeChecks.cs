@@ -1,7 +1,14 @@
+#if BEPINEX
+using global::Refactor.Main;
+using global::Refactor.Main.Event;
+using global::Refactor.Main.InputModule;
+using global::Refactor.Setting;
+#else
 using Il2CppRefactor.Main;
 using Il2CppRefactor.Main.Event;
 using Il2CppRefactor.Main.InputModule;
 using Il2CppRefactor.Setting;
+#endif
 using UnityEngine;
 
 namespace DungeonSettlers10Slots;
@@ -38,7 +45,7 @@ internal static class NativeChecks
         reloaded.RemoveAt(last);
         Require(string.IsNullOrEmpty(reloaded.GetSlot(last)), "last slot clear");
         var settings = new KeySetting();
-        CombatBindingPreset.Verify(settings.Cast<IKeySettingReader>());
+        CombatBindingPreset.VerifyDefaults(settings.Cast<IKeySettingReader>());
         var originalKeys = new[] { KeyInputType.UseSkill_1, KeyInputType.UseSkill_2, KeyInputType.UseSkill_3, KeyInputType.UseSkill_4 }
             .Select(settings.GetKeyCodeByType).ToArray();
         Require(DungeonSettlers10SlotsMod.Capacity == 10 && DungeonSettlers10SlotsMod.ExtraCount == 6, "ten active slots, six extra bindings");
@@ -107,7 +114,7 @@ internal static class NativeChecks
         settings.BindKey(type, 0, KeyCode.Alpha1);
         Require(HotbarKeyLabels.Read(settings.Cast<IKeySettingReader>(), type) == "1", "primary label preferred");
         settings.ResetDefaultSetting();
-        Require(HotbarKeyLabels.Read(settings.Cast<IKeySettingReader>(), type) == "0", "reset restores skill ten digit label");
+        Require(HotbarKeyLabels.Read(settings.Cast<IKeySettingReader>(), type) == "", "reset leaves skill ten unbound");
         DungeonSettlers10SlotsMod.Log.Msg("Native key-label checks PASS: Alpha0-9 -> 0-9; original formatter; unbound, secondary-only, primary and reset labels; no campaign settings changed.");
     }
 
@@ -148,7 +155,7 @@ internal static class NativeChecks
         // Exercise a legacy four-slot save independently of the data deserializer hooks.
         var legacy = new UnitQuickSlotContainer();
         var legacyData = new Il2CppSystem.Collections.Generic.Dictionary<Il2CppSystem.Guid, QuickSlotSaveData>();
-        legacyData.Add(first, new QuickSlotSaveData { QuickSlots = new Il2CppInterop.Runtime.InteropTypes.Arrays.Il2CppStringArray(new[] { "old", "", "", "" }), ItemQuickSlotKey = "old_item" });
+        NativeSaveDictionary.Add(legacyData, first, new QuickSlotSaveData { QuickSlots = new Il2CppInterop.Runtime.InteropTypes.Arrays.Il2CppStringArray(new[] { "old", "", "", "" }), ItemQuickSlotKey = "old_item" });
         legacy.Deserialize(legacyData);
         Require(legacy.GetAll(first).Length == 10 && legacy.GetSkillAt(first, 0) == "old" && legacy.GetItemQuickSlotKey(first) == "old_item", "legacy container load preserves data");
         DungeonSettlers10SlotsMod.Log.Msg("Native container regression PASS: ten slots, GUID separation, save/load, first/last swap operations, removal, reset, legacy four-slot load.");

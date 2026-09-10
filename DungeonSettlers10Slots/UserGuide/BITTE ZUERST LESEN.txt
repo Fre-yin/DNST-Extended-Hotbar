@@ -4,11 +4,14 @@ Mit dieser Mod bekommst du zehn Plätze für Fähigkeiten und drei Plätze
 für Gegenstände. Der normale Angriff bleibt zusätzlich erhalten.
 Dein Charakterfenster und das gewohnte Spielmenü bleiben bestehen.
 
-Mod-Version 0.3.7, für Dungeon Settlers DS_B.0.4.19 (Steam-Build 25154317) unter Windows.
+Mod-Version 0.3.8, für Dungeon Settlers DS_B.0.4.19 (Steam-Build 25154317) unter Windows.
 Dies ist weiterhin eine Testversion. Bitte sichere deine Spielstände.
 
-Dieses Update passt Extended Hotbar an den neuen Spielbuild an.
-Zehn Fähigkeiten, drei Gegenstandsplätze und bestehende Belegungen bleiben erhalten.
+Dieses Update lässt die Originalbelegung unverändert und zusätzliche Skill-/
+Item-Tasten unbelegt. Selbst in den Spieloptionen zuweisen oder ausdrücklich
+im Helper 0.1.12 das optionale Profil mit Konfliktprüfung anwenden. Bereits
+vorhandene Belegungen bleiben erhalten, auch alte Konflikte; kein ungefragtes
+Löschen gespeicherter Tasten beim Start.
 Für einfache Updates bleibt der Dateiname DungeonSettlers10Slots.dll gleich.
 
 Grafik und optionaler Testspielstand sind unverändert. Der Testspielstand wurde
@@ -16,8 +19,8 @@ mit DS_B.0.4.17 gespeichert; behalte beim Laden mit dem neuen Spiel eine Sicheru
 
 WICHTIG ZU ANDEREN MODS
 
-Diese Ausgabe ist für MelonLoader 0.7.3. Eine BepInEx-Ausgabe gibt es derzeit
-nicht. Das gemeinsame Laden mit BepInEx-Mods wie Reroll Helper ist nicht
+Dieses Paket ist für MelonLoader 0.7.3. Eine eigene BepInEx-6-IL2CPP-Vorschau
+ist separat verfügbar. Im Helper 0.1.12 den passenden Loader auswählen. Das gemeinsame Laden mit BepInEx-Mods wie Reroll Helper ist nicht
 bestätigt. Installiere deshalb nicht einfach beide Loader übereinander.
 Eine Mod-DLL wird durch Kopieren in den anderen Mod-Ordner nicht kompatibel.
 Andere MelonLoader-Mods sind ebenfalls nicht pauschal als kompatibel geprüft.
@@ -51,7 +54,7 @@ Dieses Update wird zunächst lokal getestet. Sobald es veröffentlicht ist,
 findest du es unter "Releases", unten bei "Assets":
 https://github.com/Fre-yin/DNST-Extended-Hotbar/releases
 
-Extended-Hotbar-0.3.7.zip enthält die Mod und den optionalen Testspielstand.
+Extended-Hotbar-0.3.8.zip enthält die Mod und den optionalen Testspielstand.
 Du entscheidest selbst, ob du den Spielstand nach seiner Anleitung importierst.
 Er wird nicht automatisch eingebunden. Eine getrennte Variante ist nicht nötig.
 

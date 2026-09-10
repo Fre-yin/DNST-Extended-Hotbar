@@ -1,5 +1,9 @@
 using HarmonyLib;
+#if BEPINEX
+using global::Refactor;
+#else
 using Il2CppRefactor;
+#endif
 
 namespace DungeonSettlers10Slots;
 

@@ -1,0 +1,23 @@
+EXTENDED HOTBAR — BEPINEX PREVIEW: LICENSE SCOPE
+
+The independently authored mod code, build scripts and original instructions
+are covered by the MIT License in LICENSE. Preserve its copyright and license
+notice. This does not license Dungeon Settlers, game code, artwork, fonts,
+trademarks or other third-party content.
+
+SkillFrame__sharedassets0_mod_4898.png is original Dungeon Settlers artwork
+edited by Danny, NOT a wholly original MIT-licensed asset. Preserve its
+adjacent NOTICE.txt. Original rights remain with CanOpener or the respective
+rights holders; this package grants no separate permission to reuse or
+redistribute those game-derived materials as free assets.
+
+This is an unofficial community mod for a separately obtained game and a
+separately installed BepInEx loader. The plugin-only package does not contain
+game binaries, loader binaries, generated interfaces or saved campaigns.
+Third-party components retain their own licenses and conditions; see
+THIRD_PARTY_NOTICES.txt and the separate loader distribution's notices.
+
+Deutsch: Eigener Code und eigene Anleitungen stehen unter MIT. Spielinhalte
+und insbesondere der bearbeitete Originalrahmen sind davon ausgenommen.
+Dieses Paket erteilt keine eigenstaendigen Rechte an fremden Inhalten.
+Spiel und BepInEx werden separat installiert, nicht mit diesem Paket verteilt.
