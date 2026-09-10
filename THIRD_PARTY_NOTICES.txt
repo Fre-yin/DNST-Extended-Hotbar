@@ -74,3 +74,5 @@ MelonLoader or a replacement for the notices in its distribution.
 Reroll Helper and BepInEx were considered only for compatibility review.
 Neither their mod code nor their loaders are included. Extended Hotbar
 currently targets MelonLoader 0.7.3 only; mixed-loader use is unverified.
+
+BepInEx edition (0.3.8-bepinex.1): see DungeonSettlersHotbar.BepInEx/THIRD_PARTY_NOTICES.txt and LICENSING.txt in that folder. No loader/game assemblies are distributed with the source.

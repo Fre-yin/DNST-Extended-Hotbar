@@ -51,26 +51,44 @@ Neue Pakete enthalten den optionalen Demo-Spielstand immer. Lege ihn gezielt unt
 
 Die Ausschlüsse in `.gitignore` gelten für Git, nicht für manuelle Browser-Uploads. Lade erzeugte Build-Ordner, lokal ergänzte Grafiken und Spielstände daher nicht zusammen mit dem Quellcode über die GitHub-Webseite hoch.
 
-Der Quellcode steht bei Version **0.3.7** und prüft weiterhin die Fingerabdrücke des unterstützten Spielbuilds. Ändere diese Prüfung nicht einfach, um ein unbekanntes Spielupdate freizuschalten; dafür müssen die Schnittstellen und das Verhalten erneut geprüft werden.
+Der Quellcode steht bei Version **0.3.8** und prüft weiterhin die Fingerabdrücke des unterstützten Spielbuilds. Ändere diese Prüfung nicht einfach, um ein unbekanntes Spielupdate freizuschalten; dafür müssen die Schnittstellen und das Verhalten erneut geprüft werden.
 
-## Optional: Helfer 0.1.11 bauen
+## Optional: Helfer 0.1.12 bauen
 
 Verwende einen kurzen Projektpfad, beispielsweise `C:\Dev\ExtendedHotbar`. Die isolierten Tests erzeugen verschachtelte Ordner; sehr lange Ausgangspfade können an der Windows/.NET-Framework-Pfadlängengrenze scheitern. Für `Build.ps1` lässt sich auch ein kurzer `-OutputDirectory` angeben. `Package.ps1` baut intern unter `HotbarHelper/bin`; dafür den gesamten Quellcode kurz ablegen.
 
 Der Helfer ist ein separates Windows-Programm. Zum Bauen brauchst du ein .NET SDK mit Roslyn, PowerShell und das **.NET Framework 4.8 Developer Pack**. Zum Ausführen genügt die .NET-Framework-4.8-Laufzeit. Spiel- oder Loader-DLLs und NuGet-Pakete werden für diesen Build nicht benötigt.
 
-Lade zusätzlich **Extended-Hotbar-0.3.7.zip** aus dem Release **helper-v0.1.11** herunter. Dieses Standardpaket enthält den optionalen Demo-Spielstand und hat SHA256 `DA9C92F107298C211799DF678B5EFB267843F8755E84073DA6AB43CDAF6E30B1`. Ältere, gleich benannte ZIPs können andere Inhalte haben. Der Helfer prüft den exakten Hash; selbst neu packen ist kein Ersatz. Die ZIP-Datei gehört nicht in den Quellcode-Upload.
+Lade zusätzlich **Extended-Hotbar-0.3.8.zip** aus dem Release **helper-v0.1.12** herunter. Dieses Standardpaket enthält den optionalen Demo-Spielstand und hat SHA256 `D7824BD6B31E3760EBC803111261B75EC5ADF60FAE87B7AAC444DF9B2993F544`. Ältere, gleich benannte ZIPs können andere Inhalte haben. Der Helfer prüft den exakten Hash; selbst neu packen ist kein Ersatz. Die ZIP-Datei gehört nicht in den Quellcode-Upload.
 
 ```powershell
-pwsh -File .\HotbarHelper\Build.ps1 -PackagePath "C:\Downloads\Extended-Hotbar-0.3.7.zip"
+pwsh -File .\HotbarHelper\Build.ps1 -PackagePath "C:\Downloads\Extended-Hotbar-0.3.8.zip" -BepInExPackagePath "C:\Downloads\Extended-Hotbar-BepInEx-0.3.8-bepinex.1.zip"
 ```
 
 Ergebnis: `HotbarHelper/bin/Extended-Hotbar-Helper.exe`. Der Build führt automatisch die isolierten Helfertests mit der selbst verfassten `SyntheticSave.json` aus. Das ist kein spielbarer Kampagnenspielstand. Persönliche Spiel-/Speicherordner werden nicht verändert. Testausgaben bleiben unter `HotbarHelper/bin/test-runs` erhalten.
 
 ```powershell
-pwsh -File .\HotbarHelper\Package.ps1 -PackagePath "C:\Downloads\Extended-Hotbar-0.3.7.zip"
+pwsh -File .\HotbarHelper\Package.ps1 -PackagePath "C:\Downloads\Extended-Hotbar-0.3.8.zip" -BepInExPackagePath "C:\Downloads\Extended-Hotbar-BepInEx-0.3.8-bepinex.1.zip"
 ```
 
 Das erstellt zusätzlich ein Helfer-ZIP mit Anleitungen in zehn Sprachen und Lizenzhinweisen. Vorhandene Pakete werden nicht überschrieben; bei Wiederholung einen neuen `-OutputDirectory` angeben. Einzelheiten, optionale Prüfungen und Grenzen: [HotbarHelper/README.md](HotbarHelper/README.md).
 
-Der Nutzer hat einen erfolgreichen Spieltest der Spielstandsumwandlung gemeldet. Automatisierte Tests belegen dennoch keine vollständige Kampagnen-/Langzeitkompatibilität. Helper 0.1.11 wird als Vorabversion vorbereitet; Online-Updates bleiben deaktiviert.
+Der Nutzer hat einen erfolgreichen Spieltest der Spielstandsumwandlung gemeldet. Automatisierte Tests belegen dennoch keine vollständige Kampagnen-/Langzeitkompatibilität. Helper 0.1.12 wird als Vorabversion vorbereitet; Online-Updates bleiben deaktiviert.
+
+## BepInEx 0.3.8-bepinex.1 / Helper 0.1.12
+
+Der Helper benötigt beide unveränderten Mod-ZIPs aus helper-v0.1.12. / The Helper requires both unchanged mod ZIPs from helper-v0.1.12.
+Zusätzliches BepInEx-Paket / Additional BepInEx package: `Extended-Hotbar-BepInEx-0.3.8-bepinex.1.zip`, SHA256 `77193451CD045D03A50E24A80F2D0582E178F335D90926EDF9AAF9E6B3880547`.
+Vor Veröffentlichung dieses Releases stehen die neuen Downloadquellen noch nicht bereit. / These download resources become available when that release is published.
+
+Die BepInEx-Ausgabe benötigt eine eigene initialisierte BepInEx 6 Unity IL2CPP x64 Spielkopie (getestet: 6.0.0-be.788+5b766a3), keine MelonLoader-Referenzen. / The BepInEx edition requires its own initialized BepInEx 6 Unity IL2CPP x64 game copy (tested: 6.0.0-be.788+5b766a3), not MelonLoader references.
+
+```powershell
+dotnet build .\DungeonSettlersHotbar.BepInEx\DungeonSettlersHotbar.BepInEx.csproj -c Release "-p:GameDir=C:\Games\DungeonSettlers-BepInEx"
+pwsh -File .\DungeonSettlersHotbar.BepInEx\Build-Package.ps1 -GameDir "C:\Games\DungeonSettlers-BepInEx"
+```
+
+Für das BepInEx-Paket wird dieselbe berechtigt verwendbare lokale Rahmengrafik unter DungeonSettlers10Slots/Assets benötigt, aber kein Demo-Spielstand. / BepInEx packaging requires the same authorized local frame image under DungeonSettlers10Slots/Assets, but no demo save.
+Gemeinsamer Quellcode bleibt unter DungeonSettlers10Slots und wird verlinkt. / Shared sources remain in DungeonSettlers10Slots and are linked.
+
+Aktueller Teststand / Current validation: siehe / see [README](README.md#prüfstand-und-grenzen) / [English](README.en.md#validation-and-limitations).

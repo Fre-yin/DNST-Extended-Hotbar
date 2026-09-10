@@ -1,3 +1,5 @@
+> Update for Helper 0.1.12: the manual job now requires both pinned mod packages from helper-v0.1.12 (MelonLoader 0.3.8 and BepInEx 0.3.8-bepinex.1). Until the release is published, its download step fails closed. Rerun the workflow manually after publication. The all-source job remains independent and retains its documented limitations. Counts and local test results below describe the earlier preparation, not the current source inventory.
+
 # CodeQL analysis boundaries
 
 ## Why a successful scan reported low quality
