@@ -24,7 +24,7 @@ if ((Get-FileHash -LiteralPath $taskBepPackage -Algorithm SHA256).Hash -ne '7719
 $taskResources = @(('/resource:' + $taskPackage + ',HotbarPackage.zip'), ('/resource:' + $taskBepPackage + ',BepInExPackage.zip'))
 $taskRefs = @('mscorlib','System','System.Core','System.Drawing','System.Windows.Forms','System.Web.Extensions','System.IO.Compression','System.IO.Compression.FileSystem','System.Xml') | ForEach-Object { '/reference:' + (Join-Path $taskFramework ($_ + '.dll')) }
 $taskCommon = @('/nologo','/noconfig','/nostdlib+','/langversion:latest','/warnaserror+','/optimize+','/platform:x64') + $taskRefs
-$taskCore = @('FrameworkTarget.cs', ... 'LocalHelpers.cs','LocalOnlyChecks.cs','GameDiscovery.cs')
+$taskCore = @('FrameworkTarget.cs','LosslessJson.cs','Profiles.cs','HotbarKeyProfile.cs','ReleaseInfo.cs','ModLoaders.cs','Operations.cs','LoadStatus.cs','UiText.cs','Updates.cs','UpdateSignature.cs','LocalMods.cs','LocalHelpers.cs','GameDiscovery.cs') | ForEach-Object { Join-Path $PSScriptRoot $_ }
 $taskLanguages = @('en','ko','fr','de','ru','zh-Hans','zh-Hant','ja','es','pt-BR') | ForEach-Object { '/resource:' + (Join-Path $PSScriptRoot ('Languages\' + $_ + '.json')) + ',Language.' + $_ + '.json' }
 $taskTrustPath = Join-Path $PSScriptRoot 'UpdateTrust.xml'
 if (-not (Test-Path -LiteralPath $taskTrustPath)) { throw 'Pinned public update key missing. Initialize publisher signing first.' }
@@ -36,7 +36,7 @@ $taskExe = Join-Path $taskOut 'Extended-Hotbar-Helper.exe'
 if ($LASTEXITCODE -ne 0) { throw 'Helper build failed.' }
 if (-not $SkipTests) {
     $taskTests = Join-Path $taskOut 'Helper.Tests.exe'
-    & dotnet $taskCompiler @taskCommon @taskLanguages '/target:exe' ('/out:' + $taskTests) @taskResources @taskCore (Join-Path $PSScriptRoot 'Tests.cs') (Join-Path $PSScriptRoot 'DualLoaderTests.cs') (Join-Path $PSScriptRoot 'UpdateTests.cs') (Join-Path $PSScriptRoot 'LocalModTests.cs') (Join-Path $PSScriptRoot 'LocalUpdateSmokeTests.cs') (Join-Path $PSScriptRoot 'GameDiscoveryTests.cs')
+    & dotnet $taskCompiler @taskCommon @taskLanguages '/target:exe' ('/out:' + $taskTests) @taskResources @taskCore (Join-Path $PSScriptRoot 'Tests.cs') (Join-Path $PSScriptRoot 'DualLoaderTests.cs') (Join-Path $PSScriptRoot 'UpdateTests.cs') (Join-Path $PSScriptRoot 'LocalModTests.cs') (Join-Path $PSScriptRoot 'LocalUpdateSmokeTests.cs') (Join-Path $PSScriptRoot 'GameDiscoveryTests.cs') (Join-Path $PSScriptRoot 'LocalOnlyChecks.cs')
     if ($LASTEXITCODE -ne 0) { throw 'Test build failed.' }
     & $taskTests ([IO.Path]::GetFullPath($TestSavePath)) (Join-Path $taskOut 'test-runs') $ReadOnlyGameCheck
     if ($LASTEXITCODE -ne 0) { throw 'Helper tests failed.' }
