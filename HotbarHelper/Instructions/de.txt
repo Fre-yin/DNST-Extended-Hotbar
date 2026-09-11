@@ -1,5 +1,3 @@
-Extended Hotbar · Helfer 0.1.12 (Testversion)
-
 Modloader dieser Spielkopie
 Passenden Loader wählen. Er muss bereits installiert sein; keine Mischung in derselben Kopie.
 
@@ -15,7 +13,7 @@ Ersetzt beide Belegungen dieser Aktionen. Zusätzliche Charakterauswahl bleibt d
 
 Der Spielordner wird automatisch gesucht. Bei mehreren Treffern den passenden Pfad wählen. Die manuelle Auswahl bleibt möglich.
 
-Automatische Online-Updates sind für ein späteres Update geplant. Bis dahin nutzt der Helper Updatepakete aus deinem Downloadordner.
+Dieser Helper arbeitet ausschließlich lokal. Er stellt keine Internetverbindung her und lädt keine Dateien herunter. Beziehe Pakete selbst über deine gewählte Mod-Plattform und lege sie in Downloads ab.
 
 Nur das MelonLoader-Paket enthält den optionalen Testspielstand. BepInEx enthält keinen. Kein automatischer Import.
 

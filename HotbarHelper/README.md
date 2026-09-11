@@ -1,6 +1,6 @@
-# Extended Hotbar Helper — prerelease 0.1.12
+# Extended Hotbar Helper — prerelease 0.1.13
 
-Helper 0.1.12 includes Hotbar 0.3.8 for MelonLoader and the separate BepInEx
+Helper 0.1.13 includes Hotbar 0.3.8 for MelonLoader and the separate BepInEx
 0.3.8-bepinex.1 preview. Select the game copy, check its loader, then confirm
 installation. A uniquely detected loader is preselected. Missing, wrong or mixed
 loaders are refused; the Helper never installs or removes a loader.
@@ -31,6 +31,7 @@ remain available. No command-line option in the mod rewrites user settings.
 | Stopped-game guards, atomic file transactions, backup and rollback | Operations.cs |
 | Loader-specific local update selection and verification | LocalMods.cs |
 | Current-process activation evidence for each loader | LoadStatus.cs |
+| Local Downloads-scan preference; no online settings | LocalUpdatePreferences.cs |
 | User choices and confirmations, no file-copy logic | MainForm.cs |
 
 Both mods link the same game logic in ../DungeonSettlers10Slots; their loader
@@ -43,7 +44,7 @@ and PowerShell. The Helper itself needs no game assemblies or NuGet packages.
 Build the two verified mod packages first, then:
 
 ```powershell
-./Build.ps1 -OutputDirectory ./bin-0.1.12
+./Build.ps1 -OutputDirectory ./bin-0.1.13
 ```
 
 Default inputs:
@@ -90,9 +91,9 @@ interactive gameplay tests remain useful beyond automated checks.
 
 ## Package
 
-`./Package.ps1` builds/tests and creates a new output/Extended-Hotbar-Helper-0.1.12-test
+`./Package.ps1` builds/tests and creates a new output/Extended-Hotbar-Helper-0.1.13-test
 folder and ZIP. Existing release outputs are never overwritten. It uses the
-separate bin-0.1.12 build directory, leaving older helper executables intact.
+separate bin-0.1.13 build directory, leaving older helper executables intact.
 
 The outer ZIP retains the 21-file update layout understood by older helpers.
 Both editions' legal notices are included in the existing notice files. No game,
@@ -115,7 +116,16 @@ Archive size/count/path/link limits, duplicate checks and confirmation-time
 revalidation stay enforced. A game or loader selection change invalidates an
 in-flight scan. Helper-only updates remain independent of mod/game selection.
 
-Online updates remain disabled. Package.ps1 does not use the private signing key
+Online updates have been removed in 0.1.13: no HTTP transport, release-feed parser,
+download client, remote URLs in package offers, or online settings. Obtain files
+externally from your chosen mod platform. The repository string remains only a
+signed product identifier, not an endpoint. Tests inspect the built executable's
+CLR signatures and IL for network API references. This audit is a regression
+check, not an antivirus or platform approval. The local self-update keeps its
+signature, archive/identity checks and Windows Internet-zone marking; it no longer
+invents a GitHub HostUrl for a local file. Windows security checks remain intact.
+
+Package.ps1 does not use the private signing key
 unless -SignUpdatePackage is explicitly supplied. The local unsigned package can
 be extracted and started manually; old helpers need its valid signed sidecar for
 self-update. See [publishing instructions](LOCAL-UPDATES-PUBLISHING.md).

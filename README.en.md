@@ -4,18 +4,17 @@
 
 Ten active skill slots, a separate basic attack and three item slots for Dungeon Settlers. The optional Helper handles installation, local updates and optional key profiles.
 
-**Prerelease: Helper 0.1.12 · MelonLoader mod 0.3.8 · BepInEx mod 0.3.8-bepinex.1**
+**Prepared prerelease: Helper 0.1.13 · MelonLoader mod 0.3.8 · BepInEx mod 0.3.8-bepinex.1**
 
 ## Downloads
 
-Open [Releases](https://github.com/Fre-yin/DNST-Extended-Hotbar/releases) and select assets for **helper-v0.1.12**. Until it is published, only older packages are available there. Source-code archives are not installable packages.
+Open [Releases](https://github.com/Fre-yin/DNST-Extended-Hotbar/releases) and check the files offered under **Assets**. Helper 0.1.13 is prepared for publication; until its package is offered there, only earlier Helper versions are available. Both mod packages remain unchanged. Source-code archives are not installable packages.
 
 | Purpose | File |
 | --- | --- |
-| Helper-assisted installation; includes both mod editions | **Extended-Hotbar-Helper-0.1.12-test.zip** |
+| Prepared Helper package; includes both mod editions | **Extended-Hotbar-Helper-0.1.13-test.zip** |
 | Manual MelonLoader installation | **Extended-Hotbar-0.3.8.zip** |
 | Manual BepInEx installation | **Extended-Hotbar-BepInEx-0.3.8-bepinex.1.zip** |
-| Also required for local self-update through an older Helper | **Extended-Hotbar-Helper-0.1.12-test.zip.update.json** |
 | Optional checksums | **SHA256SUMS.txt** |
 
 Choose the Helper ZIP or the mod ZIP matching your loader. Only the MelonLoader mod package contains the optional DS_B.0.4.17 demo save. The Helper can export the selected embedded package. No save is imported automatically.
@@ -41,13 +40,19 @@ Bind keys in game options or explicitly apply the Helper profile: skills **1–0
 
 ## Local updates
 
-Download packages yourself; online updates remain disabled. To self-update through an older Helper, place the new Helper ZIP and matching signed `.zip.update.json` together in Windows Downloads. Helper-only updates do not install a mod. The new EXE is stored under `%LOCALAPPDATA%\ExtendedHotbarHelper\Updates`; previous EXEs and shortcuts remain. BepInEx requires Helper 0.1.12.
+Helper 0.1.13 works locally only. The HTTP client, release feed and online update functions have been removed. Download packages yourself through your chosen mod platform. Optional scanning for packages already present in Windows Downloads remains available.
+
+A local self-update requires the new Helper ZIP and a valid, exactly matching signed `.zip.update.json` together in Windows Downloads. No such signature file has been created for the prepared 0.1.13 package yet. Instead, extract the entire ZIP manually to its own folder once it is available, and start the Helper there. A signature file from an older package is not a replacement.
+
+Helper-only updates do not install a mod. For a validly signed local self-update, the new EXE is stored under `%LOCALAPPDATA%\ExtendedHotbarHelper\Updates`; previous EXEs and shortcuts remain. BepInEx support has been included since Helper 0.1.12.
 
 Checksums are not a signature replacement. Package signing is not Windows Authenticode; Windows launch warnings may still appear.
 
 ## Validation and limitations
 
-Development reports 224 passing Helper tests, 33 mod tests including the supplied save fixture, both loader builds without warnings/errors, and 150 UI previews across ten languages. On 2026-09-10 Danny also confirmed successful key configuration in the Steam version and other functions. This does not establish full campaign, long-session or third-party-mod compatibility. The unchanged ZIP instructions partly reflect the earlier, more conservative test status.
+The complete Helper 0.1.13 source was rebuilt and packaged locally on 2026-09-11: 221 tests passed, 0 failed. Package preparation on 2026-09-10 also documents 150 UI previews across ten languages. Tests cover local package selection, signatures, settings and removal of the former network components, among other checks. This is not approval by antivirus scanners or mod platforms, or the result of a new GitHub check of 0.1.13.
+
+Earlier validation of the unchanged mod packages documents 33 mod tests including the supplied save fixture and both loader builds without warnings/errors. Danny's successful Steam key-configuration and other-function tests on 2026-09-10 used the previous Helper 0.1.12; no new in-game test of 0.1.13 was performed. This does not establish full campaign, long-session or third-party-mod compatibility. The unchanged ZIP instructions partly reflect the earlier, more conservative test status.
 
 The BepInEx message `Class::Init signatures have been exhausted, using a substitute!` remains visible; documented tests pass despite it. Unknown game builds remain blocked.
 

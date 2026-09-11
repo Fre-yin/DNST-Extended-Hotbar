@@ -82,16 +82,39 @@ Helper-ZIP behält exakt 21 Dateien, damit ältere Helper es weiterhin prüfen k
 Der MelonLoader-Mod-Download enthält ebenfalls den Testspielstand. Er wird niemals
 automatisch importiert; der Helper kann das enthaltene ZIP auf Wunsch speichern.
 
-## Online bleibt aus
+## Ausschließlich lokal ab 0.1.13
 
-`Updates.OnlineEnabled` ist in 0.1.12 fest `false`; die Oberfläche hat keinen
-Online-Schalter und ruft keinen Netzwerk-Client auf. Auch ein direkter Aufruf des
-vorbereiteten Clients wird vor einer Verbindung abgelehnt. Alte Online-Einstellungen
-werden nicht verwendet. `Package.ps1` greift standardmäßig nicht auf den privaten
-Schlüssel zu; die optionale Paket-Signierung ist ein separater Entwickler-Schritt.
+HTTP-Transport, GitHub-Release-Abfrage und Download-Client sind aus dem Helper
+entfernt, nicht nur deaktiviert. Es gibt keine Online-Einstellungen und keine
+zugesagte spätere Online-Funktion. Pakete werden außerhalb des Helpers über die
+gewählte Mod-Plattform verteilt und vom Nutzer selbst heruntergeladen.
 
-Hardware-Schlüssel, Wiederherstellungsplan und vollständiger GitHub-Test folgen
-erst später. Ein FIDO-Anmeldeschlüssel ersetzt nicht automatisch den RSA-Schlüssel
-für diese Mod-Freigaben. Bereits ausgelieferte öffentliche Prüfschlüssel erfordern
-bei einem Wechsel eine geplante Migration. Keine Sichtbarkeit oder Veröffentlichung
-wurde durch diese Arbeit geändert.
+Lokale ZIP-/Signaturprüfung, Einstellungs-Sicherungen und Windows-Schutz bleiben
+unverändert erforderlich. Die lokale Update-Vorbereitung behält ZoneId=3 für
+Windows-Sicherheitsprüfungen bei; eine erfundene GitHub-HostUrl wird nicht mehr
+geschrieben. Keine Sicherheitssoftware deaktivieren und keine Warnmarkierung
+entfernen. Die signierte Repository-Kennung bleibt als Produktidentität erhalten;
+sie führt zu keinem GitHub-Zugriff.
+
+`Package.ps1` greift nur mit ausdrücklichem `-SignUpdatePackage` auf den privaten
+Schlüssel zu. Der historische Schalteralias SignOnlineUpdate ist entfernt.
+Keine vorhandenen Ausgaben überschreiben. Ein unsigniertes Paket kann manuell
+entpackt/geöffnet werden; der lokale Selbstupdateweg aus älteren Helpern braucht
+weiterhin die zum unveränderten ZIP passende signierte Sidecar-Datei.
+
+Eine Änderung des öffentlichen Prüfschlüssels benötigt eine geplante Migration.
+Private Schlüssel, Wiederherstellungsdateien und echte Spielstände bleiben lokal.
+Keine Veröffentlichung oder Änderung der Repository-Sichtbarkeit erfolgt durch
+Build, Tests oder Signierung.
+
+## Plattform-Prüfungen
+
+Ein lokales Programm ist nicht automatisch von einer Mod-Plattform freigegeben.
+Die Helper-EXE enthält weiterhin beide Mod-Pakete als Ressourcen; das ist kein
+gewöhnlicher Mod-DLL-Download. Eine Quarantänemeldung allein beweist weder einen
+Virus noch den Zusammenhang mit dem entfernten Online-Code. Konkreten
+Scannerbefund prüfen und die reguläre Moderationsprüfung mit Quellcode und
+Build-Anleitung nutzen. Nicht durch Umbenennen, Verschleiern, Passwortschutz
+oder wiederholte Uploads eine Quarantäne umgehen.
+
+Für Nexus siehe die [offiziellen Quarantäne-Hinweise](https://help.nexusmods.com/article/117-why-has-my-mod-been-quarantined).

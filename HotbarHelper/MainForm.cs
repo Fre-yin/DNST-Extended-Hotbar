@@ -10,8 +10,8 @@ using System.Windows.Forms;
 
 [assembly: System.Reflection.AssemblyTitle("Extended Hotbar Helper")]
 [assembly: System.Reflection.AssemblyProduct("Extended Hotbar Helper")]
-[assembly: System.Reflection.AssemblyVersion("0.1.12.0")]
-[assembly: System.Reflection.AssemblyFileVersion("0.1.12.0")]
+[assembly: System.Reflection.AssemblyVersion("0.1.13.0")]
+[assembly: System.Reflection.AssemblyFileVersion("0.1.13.0")]
 
 namespace ExtendedHotbar.Helper
 {
@@ -124,14 +124,14 @@ namespace ExtendedHotbar.Helper
             help.Click += (s, e) => ShowText(text["helpText"], text["help"]); toolbar.Controls.Add(help);
             details = Bind(new Button { AutoSize = true, Enabled = false }, "diagnostics");
             details.Click += (s, e) => ShowText(diagnostic ?? "", text["diagnostics"]); toolbar.Controls.Add(details);
-            var preferences = preview ? new UpdatePreferences() : UpdatePreferences.Load(preferencesPath);
+            var preferences = preview ? new LocalUpdatePreferences() : LocalUpdatePreferences.Load(preferencesPath);
             automaticUpdates.Checked = preferences.Automatic;
             automaticUpdates.Margin = new Padding(8, 8, 3, 3);
             toolbar.Controls.Add(Bind(automaticUpdates, "localAutomatic"));
             checkUpdates = Bind(new Button { AutoSize = true, MinimumSize = new Size(0, 30) }, "localCheck");
             checkUpdates.Click += async (s, e) => { if (preview) return; if (updateCancellation != null) updateCancellation.Cancel(); else await CheckUpdates(); };
             toolbar.Controls.Add(checkUpdates); Add(toolbar);
-            automaticUpdates.CheckedChanged += (s, e) => SaveUpdatePreferences();
+            automaticUpdates.CheckedChanged += (s, e) => SaveLocalUpdatePreferences();
             Add(PathRow("game", game, true));
             Add(Wrap("loader"));
             loaders.Items.AddRange(ModLoaders.All); loaders.SelectedIndex = 0; Add(loaders);
@@ -429,10 +429,10 @@ namespace ExtendedHotbar.Helper
             captions[checkUpdates] = updateCancellation == null ? "localCheck" : "cancel";
             checkUpdates.Text = text[captions[checkUpdates]]; UpdateWrap();
         }
-        private void SaveUpdatePreferences()
+        private void SaveLocalUpdatePreferences()
         {
             if (preview) return;
-            try { new UpdatePreferences { Automatic = automaticUpdates.Checked, IncludeTests = false }.Save(preferencesPath); }
+            try { new LocalUpdatePreferences { Automatic = automaticUpdates.Checked }.Save(preferencesPath); }
             catch (Exception ex) { Error(ex); }
         }
         private async Task<bool> CheckUpdates(bool helperOnly = false)
@@ -482,7 +482,7 @@ namespace ExtendedHotbar.Helper
             foreach (var button in actions) button.Enabled = false;
             foreach (var pair in captions.Where(x => x.Value == "browse")) pair.Key.Enabled = false;
             loaders.Enabled = languages.Enabled = game.Enabled = profile.Enabled = automaticUpdates.Enabled = findGame.Enabled = false;
-            updateState = "updateDownloading"; SetAdvanced(true); RenderUpdate();
+            updateState = "localPreparing"; SetAdvanced(true); RenderUpdate();
             try {
                 var bytes = await Task.Run(() => LocalHelpers.ReadBytes(selected, cancellation.Token));
                 string store = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "ExtendedHotbarHelper", "Updates");
@@ -636,10 +636,10 @@ namespace ExtendedHotbar.Helper
             updateState = "updateAvailable"; RenderUpdate(); Application.DoEvents(); ValidatePreview();
             Snapshot(this, Path.Combine(Path.GetDirectoryName(path), Path.GetFileNameWithoutExtension(path) + "-update.png"));
             PreviewPrompt(path, "update-confirm", text.Format("localAsk", "0.3.8", @"C:\Users\Player\Downloads\Extended-Hotbar-0.3.8.zip", game.Text), Choice(DialogResult.Yes, "localInstall"), Choice(DialogResult.No, "updateUseIncluded"), Choice(DialogResult.Cancel, "cancel"));
-            PreviewPrompt(path, "helper-confirm", text.Format("localHelperAsk", "0.1.12", @"C:\Users\Player\Downloads\Extended-Hotbar-Helper-0.1.12-test.zip"), Choice(DialogResult.Yes, "localHelperOpen"), Choice(DialogResult.No, "updateUseIncluded"), Choice(DialogResult.Cancel, "cancel"));
+            PreviewPrompt(path, "helper-confirm", text.Format("localHelperAsk", "0.1.13", @"C:\Users\Player\Downloads\Extended-Hotbar-Helper-0.1.13-test.zip"), Choice(DialogResult.Yes, "localHelperOpen"), Choice(DialogResult.No, "updateUseIncluded"), Choice(DialogResult.Cancel, "cancel"));
             if (HelperUpdateChoices(true).Any(x => x.Key == DialogResult.No || x.Value == "updateUseIncluded"))
                 throw new InvalidOperationException("Helper-only confirmation must not offer a mod fallback.");
-            PreviewPrompt(path, "helper-only-confirm", text.Format("localHelperOnlyAsk", "0.1.12", @"C:\Users\Player\Downloads\Extended-Hotbar-Helper-0.1.12-test.zip"), HelperUpdateChoices(true));
+            PreviewPrompt(path, "helper-only-confirm", text.Format("localHelperOnlyAsk", "0.1.13", @"C:\Users\Player\Downloads\Extended-Hotbar-Helper-0.1.13-test.zip"), HelperUpdateChoices(true));
             updateState = null; RenderUpdate();
             using (var dialog = new RemovalDialog(text, Font, profile.Text, true))
             {

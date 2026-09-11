@@ -1,5 +1,3 @@
-Extended Hotbar · Helper 0.1.12 (test build)
-
 Modloader for this game copy
 Choose the matching, already installed loader. Never mix loaders in one copy.
 
@@ -15,7 +13,7 @@ Replaces both bindings for these actions. Additive character selection is unboun
 
 The game folder is detected automatically. If several copies are found, choose the correct path. Manual selection remains available.
 
-Automatic online updates are planned for a future release. Until then, the helper uses update packages in your Downloads folder.
+This helper works locally only. It does not contact the internet or download files. Obtain packages yourself from your chosen mod platform and place them in Downloads.
 
 Only the MelonLoader package contains the optional demo save. The BepInEx package does not. No automatic import.
 

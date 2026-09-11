@@ -1,11 +1,11 @@
-EXTENDED HOTBAR – HELFER 0.1.12 (LOKALE TESTVERSION)
+EXTENDED HOTBAR – HELFER 0.1.13 (LOKALE TESTVERSION)
 
 Der Spielordner wird automatisch gesucht. Bei mehreren Treffern den passenden
 Pfad aus der Liste wählen. Über „Suchen“ kannst du erneut suchen; „Manuell auswählen…“
 und die manuelle Pfadeingabe bleiben möglich. Sicherungs-/Archivordner werden
 bei der ergänzenden Suche ausgelassen. Nicht gefundene Kopien manuell auswählen.
 
-Automatische Online-Updates sind für ein späteres Update geplant. Bis dahin nutzt der Helper Updatepakete aus deinem Downloadordner.
+Dieser Helper arbeitet ausschließlich lokal. Er stellt keine Internetverbindung her und lädt keine Dateien herunter. Beziehe Pakete selbst über deine gewählte Mod-Plattform und lege sie in Downloads ab.
 
 Helper-ZIP und passende .zip.update.json gemeinsam in Downloads ablegen. Im blauen Knopf „Nur Helper aktualisieren“ wählen. Der neue Helper öffnet sich ohne Mod-Installation; die alte EXE und Verknüpfungen bleiben erhalten.
 
@@ -57,7 +57,7 @@ Launcher verwenden; ein Steam-Start kann sonst die Originalkopie öffnen.
 LOKALE MOD-UPDATES
 
 Mod-ZIP in Downloads ablegen und „Mod installieren / aktualisieren“ wählen.
-Automatische Online-Updates sind für später geplant. Testspielstände werden nicht importiert.
+Der Helper lädt nichts herunter. Testspielstände werden nicht importiert.
 
 WIEDER OHNE EXTENDED HOTBAR SPIELEN
 

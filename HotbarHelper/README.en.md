@@ -2,7 +2,7 @@
 
 [Deutsch](BITTE%20ZUERST%20LESEN.txt) | **English** | [Back to Extended Hotbar](../README.en.md)
 
-Helper 0.1.12 installs the matching Hotbar 0.3.8 edition for MelonLoader or the
+Helper 0.1.13 installs the matching Hotbar 0.3.8 edition for MelonLoader or the
 BepInEx 6 IL2CPP preview. Choose the already installed loader; never mix loaders.
 Installation preserves keys. Extra slots start unbound; apply a key profile only
 if wanted, through the separate button with conflict checks and backup.
@@ -18,7 +18,9 @@ Only the MelonLoader package includes the optional demo save; no automatic impor
 
 Place the new helper ZIP and its matching **.zip.update.json** together in your Windows Downloads folder. Choose **Update helper only** to open the newer helper without installing the mod. Old helper executables and shortcuts remain unchanged.
 
-Mod installation and updates are a separate action. Automatic online updates are planned for later and remain disabled.
+Mod installation and updates are a separate action. The helper works locally only:
+no internet connection, release-feed check or download client. Obtain the packages
+yourself through your chosen mod platform. Local package and signature checks remain.
 
 ## Returning to vanilla
 

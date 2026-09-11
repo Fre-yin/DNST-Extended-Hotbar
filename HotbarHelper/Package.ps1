@@ -1,16 +1,16 @@
 [CmdletBinding()]
 param(
-    [string] $OutputDirectory = (Join-Path $PSScriptRoot '..\output\Extended-Hotbar-Helper-0.1.12-test'),
+    [string] $OutputDirectory = (Join-Path $PSScriptRoot '..\output\Extended-Hotbar-Helper-0.1.13-test'),
     [string] $PackagePath = (Join-Path $PSScriptRoot '..\DungeonSettlers10Slots\dist\Extended-Hotbar-0.3.8.zip'),
     [string] $BepInExPackagePath = (Join-Path $PSScriptRoot '..\DungeonSettlersHotbar.BepInEx\dist\Extended-Hotbar-BepInEx-0.3.8-bepinex.1.zip'),
     [string] $TestSavePath = (Join-Path $PSScriptRoot 'SyntheticSave.json'),
-    [Alias('SignOnlineUpdate')][switch] $SignUpdatePackage
+    [switch] $SignUpdatePackage
 )
 $ErrorActionPreference = 'Stop'
 $taskStage = [IO.Path]::GetFullPath($OutputDirectory)
 $taskZipPath = $taskStage + '.zip'
 if ((Test-Path -LiteralPath $taskStage) -or (Test-Path -LiteralPath $taskZipPath)) { throw 'Choose new output paths. Existing packages are never overwritten.' }
-& (Join-Path $PSScriptRoot 'Build.ps1') -OutputDirectory (Join-Path $PSScriptRoot 'bin-0.1.12') -PackagePath $PackagePath -BepInExPackagePath $BepInExPackagePath -TestSavePath $TestSavePath
+& (Join-Path $PSScriptRoot 'Build.ps1') -OutputDirectory (Join-Path $PSScriptRoot 'bin-0.1.13') -PackagePath $PackagePath -BepInExPackagePath $BepInExPackagePath -TestSavePath $TestSavePath
 Add-Type -AssemblyName System.IO.Compression.FileSystem
 $taskManifest = [ordered]@{
     'LICENSE' = 'LICENSE'
@@ -24,7 +24,7 @@ $taskManifest = [ordered]@{
 }
 New-Item -ItemType Directory -Path $taskStage | Out-Null
 foreach ($taskName in @('Extended-Hotbar-Helper.exe','BITTE ZUERST LESEN.txt','READ FIRST - ENGLISH.txt')) {
-    $taskSource = if ($taskName.EndsWith('.exe')) { Join-Path $PSScriptRoot ('bin-0.1.12\' + $taskName) } else { Join-Path $PSScriptRoot $taskName }
+    $taskSource = if ($taskName.EndsWith('.exe')) { Join-Path $PSScriptRoot ('bin-0.1.13\' + $taskName) } else { Join-Path $PSScriptRoot $taskName }
     Copy-Item -LiteralPath $taskSource -Destination (Join-Path $taskStage $taskName)
 }
 $taskRelease = [IO.Compression.ZipFile]::OpenRead([IO.Path]::GetFullPath($PackagePath))

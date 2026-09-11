@@ -21,11 +21,6 @@ namespace ExtendedHotbar.Helper
                 signer.PersistKeyInCsp = false; var publicKey = signer.ToXmlString(false);
                 var zero = Updates.ParseVersion("0.0.0"); var version = Updates.ParseVersion("0.3.9");
                 Func<string, byte[]> archive = v => Package(signer, v);
-                test("offline build rejects network before parsing any address", () => {
-                    Check(!Updates.OnlineEnabled);
-                    try { new GitHubTransport().Get("not even a URI", 10, CancellationToken.None); throw new Exception("Network gate missing."); }
-                    catch (HelperFailure ex) { Check(ex.Message.Contains("No connection attempted")); }
-                });
                 test("local filenames ignore helpers source archives and partial downloads", () => {
                     foreach (var file in new[] { "DNST-Extended-Hotbar-main.zip", "Extended-Hotbar-Helper-0.1.6-test.zip", "Extended-Hotbar-0.3.9.zip.part", "Extended-Hotbar-0.3.9.zip.crdownload" }) Check(LocalMods.FileVersion(file) == null);
                     Check(LocalMods.FileVersion("Extended-Hotbar-0.3.9 (1).zip") == version);

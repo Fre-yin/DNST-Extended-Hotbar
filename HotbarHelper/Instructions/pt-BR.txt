@@ -1,5 +1,3 @@
-Extended Hotbar · Assistente 0.1.12 (teste)
-
 Carregador desta cópia do jogo
 Escolha o carregador já instalado. Nunca misture carregadores na mesma cópia.
 
@@ -15,7 +13,7 @@ Substitui as duas atribuições dessas ações e desativa a seleção aditiva. O
 
 A pasta do jogo é detectada automaticamente. Se houver várias cópias, escolha o caminho correto. A seleção manual continua disponível.
 
-Atualizações automáticas online estão planejadas para uma versão futura. Até lá, o assistente usa os pacotes da pasta Downloads.
+Este assistente funciona apenas localmente. Ele não se conecta à internet nem baixa arquivos. Obtenha os pacotes na plataforma de mods de sua escolha e coloque-os em Downloads.
 
 Somente o pacote MelonLoader contém o save de teste opcional. BepInEx não o inclui. Não há importação automática.
 

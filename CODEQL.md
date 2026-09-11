@@ -1,4 +1,4 @@
-> Update for Helper 0.1.12: the manual job now requires both pinned mod packages from helper-v0.1.12 (MelonLoader 0.3.8 and BepInEx 0.3.8-bepinex.1). Until the release is published, its download step fails closed. Rerun the workflow manually after publication. The all-source job remains independent and retains its documented limitations. Counts and local test results below describe the earlier preparation, not the current source inventory.
+> Helper 0.1.13 source update: the manual job still requires both unchanged pinned mod packages from helper-v0.1.12 (MelonLoader 0.3.8 and BepInEx 0.3.8-bepinex.1). The workflow and its package hashes are unchanged. A missing or altered asset stops the build. The all-source job remains independent and retains its documented limitations. Historical counts and local results below describe the original workflow preparation, not the current source inventory or a new hosted scan.
 
 # CodeQL analysis boundaries
 
@@ -45,20 +45,27 @@ There are no path exclusions, suppressed quality diagnostics or lowered
 thresholds. A good score in the second job is not proof that the first job's
 dependency gaps were fixed. Check both configurations after uploading.
 
-At the reviewed commit, the manual commands compile 26 of the 48 tracked C#
-files: all 18 helper files, three core test files and five linked mod files
+At the original reviewed commit, the manual commands compiled 26 of the 48
+tracked C# files: all 18 helper files, three core test files and five linked mod files
 (`ItemSlotState`, `ItemSlotSaveCodec`, `BoundedSnapshotCache`, `SlotText`,
-`NativeLocalization`). The other 22 mod files retain no-build coverage only.
-`NativeLocalization` uses the test doubles in this compilation, not real game
-bindings. These are build-input counts; actual extraction coverage must be
+`NativeLocalization`). The other 22 mod files retained no-build coverage only.
+`NativeLocalization` used the test doubles in this compilation, not real game
+bindings. These historical figures are build-input counts; actual extraction coverage must be
 checked in CodeQL's output.
 
-The manual job uses the unchanged `HotbarHelper/Build.ps1`, including its
-resource verification and tests. It downloads only the pinned mod ZIP from
-`helper-v0.1.11`, checks its SHA256 before the build, and keeps it outside the
-checkout. It does not execute or install that mod, import demo saves, use a
-signing key, modify releases or enable the helper's online updater. The public
-release asset must remain accessible; a missing or changed asset fails closed.
+The manual job invokes the repository's `HotbarHelper/Build.ps1`, including its
+resource verification and tests. It downloads the two pinned mod ZIPs from
+`helper-v0.1.12`, checks both SHA256 hashes before the build, and keeps them
+outside the checkout. It does not execute or install either mod, import demo
+saves, use a private signing key or modify releases. The public release assets
+must remain accessible; a missing or changed asset stops the build.
+
+Helper 0.1.13 removes the program's HTTP client and release-feed functions.
+This does not remove the workflow's resource downloads. The helper retains
+local package and signature validation. `LocalOnlyChecks.cs` belongs only to
+the test executable and checks the built helper for the former online components
+and network API references. These checks do not establish antivirus approval
+or improve CodeQL analysis-quality percentages by themselves.
 
 The Windows runner supplies .NET Framework 4.8 reference assemblies. SDK 6 is
 installed for the existing `net6.0` target; SDK 10 supplies the compiler.
@@ -67,7 +74,12 @@ and shared compilation so CodeQL can observe the compiler. Helper test output
 uses a short temporary path because .NET Framework tests create nested folders.
 Only compiler/test executables run, not the GUI helper or the game.
 
-## Manual activation and acceptance
+## Initial activation and ongoing acceptance
+
+The activation instructions below describe the original workflow setup. For
+the Helper 0.1.13 source update, preserve the existing advanced workflow and
+check the new run for the complete source commit; do not repeat setup or
+disable scanning just to upload updated helper files.
 
 1. Prepare both repository files, preserving `.github/workflows/codeql.yml`.
 2. In repository **Settings > Advanced Security > CodeQL analysis**, use
@@ -96,14 +108,17 @@ environment with legally available, initialized game references, following
 public build artifacts, add fictitious API stubs to inflate coverage, or expose a
 personal gaming PC as a public pull-request runner.
 
-## Local preparation checks
+## Historical local preparation checks
 
-On Windows, the unmodified helper build passed all 207 isolated checks and the
-core project passed all 32 tests. The proposed workflow passed actionlint 1.7.12.
+During the original workflow preparation on Windows, the helper build passed
+all 207 isolated checks and the core project passed all 32 tests. The proposed
+workflow passed actionlint 1.7.12.
 The native mod's reference-validation target failed as expected without
 `GameDir`, confirming that merely selecting `autobuild` is insufficient.
 No local CodeQL CLI database or new GitHub analysis was run during preparation;
-neither improved percentages nor successful hosted extraction are claimed yet.
+neither improved percentages nor successful hosted extraction were established
+by those preparation checks. The current Helper package's documented test
+status is maintained in [README](README.en.md#validation-and-limitations).
 
 ## Deutsch – Kurzfassung
 
@@ -112,7 +127,9 @@ isolierten Tests und den spielunabhängigen Modtests kompiliert und analysiert.
 Die Warnung des Gesamtscans kann wegen fehlender Spiel-DLLs weiterhin erscheinen.
 Der zusätzliche Scan darf nicht als vollständige Analyse der nativen Mod gelten.
 Es werden keine Spielfunktionen, Sicherheitsprüfungen oder Release-Dateien geändert.
-GitHub-Upload, Commit und Umschalten auf „Advanced“ bleiben manuelle Schritte.
+Für den Helper-0.1.13-Quellabgleich bleibt der bestehende Advanced-Workflow
+erhalten. Entscheidend ist der neue Lauf für den vollständigen Quellstand;
+die historischen Zahlen in diesem Dokument sind kein aktuelles Prüfergebnis.
 
 ## References
 

@@ -53,13 +53,20 @@ The exclusions in `.gitignore` apply to Git, not manual browser uploads. Do not 
 
 The source is at version **0.3.8** and still checks the supported game build's fingerprints. Do not simply change that check to enable an unknown game update: interfaces and behavior must be verified again first.
 
-## Optional: build Helper 0.1.12
+## Optional: build Helper 0.1.13
 
-Use a short checkout path, such as `C:\Dev\ExtendedHotbar`. Isolated tests create nested folders; long base paths may hit the Windows/.NET Framework path-length limit. `Build.ps1` also accepts a short `-OutputDirectory`. `Package.ps1` builds internally under `HotbarHelper/bin`, so use a short checkout for packaging.
+Use a short checkout path, such as `C:\Dev\ExtendedHotbar`. Isolated tests create nested folders; long base paths may hit the Windows/.NET Framework path-length limit. `Build.ps1` also accepts a short `-OutputDirectory`. `Package.ps1` builds internally under `HotbarHelper/bin-0.1.13`, so use a short checkout for packaging. If `PathTooLongException` occurs, shorten the paths and rerun the same tests.
 
 The helper is a separate Windows application. Building requires a .NET SDK with Roslyn, PowerShell and the **.NET Framework 4.8 Developer Pack**. Running it only requires the .NET Framework 4.8 runtime. Game/loader assemblies and NuGet packages are not needed for this build.
 
-Also download **Extended-Hotbar-0.3.8.zip** from release **helper-v0.1.12**. This standard package includes the optional demo and has SHA256 `D7824BD6B31E3760EBC803111261B75EC5ADF60FAE87B7AAC444DF9B2993F544`. Older ZIPs with the same filename may have different contents. The helper requires the exact hash; repacking is not a replacement. Do not include the ZIP in a source upload.
+Also download both unchanged mod packages from [Releases](https://github.com/Fre-yin/DNST-Extended-Hotbar/releases). They were already used with **helper-v0.1.12** and are also required for Helper 0.1.13:
+
+| File | SHA256 |
+| --- | --- |
+| `Extended-Hotbar-0.3.8.zip` | `D7824BD6B31E3760EBC803111261B75EC5ADF60FAE87B7AAC444DF9B2993F544` |
+| `Extended-Hotbar-BepInEx-0.3.8-bepinex.1.zip` | `77193451CD045D03A50E24A80F2D0582E178F335D90926EDF9AAF9E6B3880547` |
+
+Only the MelonLoader package includes the optional demo save. Older ZIPs with the same filename may have different contents. The Helper requires the exact hashes; repacking is not a replacement. Do not include the ZIPs in a source upload.
 
 ```powershell
 pwsh -File .\HotbarHelper\Build.ps1 -PackagePath "C:\Downloads\Extended-Hotbar-0.3.8.zip" -BepInExPackagePath "C:\Downloads\Extended-Hotbar-BepInEx-0.3.8-bepinex.1.zip"
@@ -73,22 +80,21 @@ pwsh -File .\HotbarHelper\Package.ps1 -PackagePath "C:\Downloads\Extended-Hotbar
 
 This also creates a helper ZIP with instructions in ten languages and licensing notices. Existing packages are never overwritten; select a new `-OutputDirectory` when repeating. Details, optional checks and limitations: [HotbarHelper/README.md](HotbarHelper/README.md).
 
-The user reported a successful in-game save-conversion test. Automated checks still do not establish complete campaign/long-session compatibility. Helper 0.1.12 is prepared as a prerelease; online updates remain disabled.
+By default, packaging does not create a signed `.zip.update.json` for local self-updates. `Package.ps1` provides an explicit `-SignUpdatePackage` option for this; the command above does not enable it. No such file exists for the prepared 0.1.13 package yet; manual distribution by extracting the entire package is supported. Self-update from an older Helper must only be offered with a valid signature file matching that exact package. The normal build uses the existing public `UpdateTrust.xml`, not a private publishing key.
 
-## BepInEx 0.3.8-bepinex.1 / Helper 0.1.12
+Helper 0.1.13 is prepared as a prerelease. The HTTP client, release feed and online update functions have been removed; optional scanning for existing local packages and their signature checks remain. The complete source list in `Build.ps1` includes `LocalUpdatePreferences.cs` for the program and `LocalOnlyChecks.cs` for tests only.
 
-Der Helper benötigt beide unveränderten Mod-ZIPs aus helper-v0.1.12. / The Helper requires both unchanged mod ZIPs from helper-v0.1.12.
-Zusätzliches BepInEx-Paket / Additional BepInEx package: `Extended-Hotbar-BepInEx-0.3.8-bepinex.1.zip`, SHA256 `77193451CD045D03A50E24A80F2D0582E178F335D90926EDF9AAF9E6B3880547`.
-Vor Veröffentlichung dieses Releases stehen die neuen Downloadquellen noch nicht bereit. / These download resources become available when that release is published.
+Earlier reported in-game tests apply to the previous Helper version. No new in-game test was performed for 0.1.13. Automated checks do not establish complete campaign/long-session compatibility; see the documented validation in the [project description](README.en.md#validation-and-limitations).
 
-Die BepInEx-Ausgabe benötigt eine eigene initialisierte BepInEx 6 Unity IL2CPP x64 Spielkopie (getestet: 6.0.0-be.788+5b766a3), keine MelonLoader-Referenzen. / The BepInEx edition requires its own initialized BepInEx 6 Unity IL2CPP x64 game copy (tested: 6.0.0-be.788+5b766a3), not MelonLoader references.
+## BepInEx 0.3.8-bepinex.1
+
+The BepInEx edition remains unchanged for Helper 0.1.13. Its build requires its own initialized BepInEx 6 Unity IL2CPP x64 game copy (tested: 6.0.0-be.788+5b766a3), not MelonLoader references.
 
 ```powershell
 dotnet build .\DungeonSettlersHotbar.BepInEx\DungeonSettlersHotbar.BepInEx.csproj -c Release "-p:GameDir=C:\Games\DungeonSettlers-BepInEx"
 pwsh -File .\DungeonSettlersHotbar.BepInEx\Build-Package.ps1 -GameDir "C:\Games\DungeonSettlers-BepInEx"
 ```
 
-Für das BepInEx-Paket wird dieselbe berechtigt verwendbare lokale Rahmengrafik unter DungeonSettlers10Slots/Assets benötigt, aber kein Demo-Spielstand. / BepInEx packaging requires the same authorized local frame image under DungeonSettlers10Slots/Assets, but no demo save.
-Gemeinsamer Quellcode bleibt unter DungeonSettlers10Slots und wird verlinkt. / Shared sources remain in DungeonSettlers10Slots and are linked.
+BepInEx packaging requires the same authorized local frame image under `DungeonSettlers10Slots/Assets`, but no demo save. Shared sources remain in `DungeonSettlers10Slots` and are linked.
 
-Aktueller Teststand / Current validation: siehe / see [README](README.md#prüfstand-und-grenzen) / [English](README.en.md#validation-and-limitations).
+Current validation: see [README](README.en.md#validation-and-limitations).

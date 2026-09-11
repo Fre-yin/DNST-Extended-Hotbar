@@ -117,7 +117,7 @@ namespace ExtendedHotbar.Helper
                 Check(Files.FileHash(Files.Under(sourceGame, name)) == sourceHashes[name], "source game file unchanged: " + name);
             Check(Files.FileHash(selected.Path) == sourcePackageHash && Files.FileHash(selected.Path + ".update.json") == signatureHash
                 && Files.FileHash(modPath) == modHash, "input packages and signature remain unchanged");
-            Check(!Updates.OnlineEnabled, "online update gate remains disabled");
+            LocalOnlyChecks.Verify(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, Updates.ExeName));
             Console.WriteLine("PASS local integration smoke. Actual helper process: read-only preview. Installation: isolated fixture only. Interactive consent, restart handoff and in-game play remain separate acceptance tests.");
         }
     }

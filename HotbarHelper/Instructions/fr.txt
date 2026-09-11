@@ -1,5 +1,3 @@
-Extended Hotbar · Assistant 0.1.12 (version test)
-
 Chargeur de cette copie du jeu
 Choisissez le chargeur déjà installé. Ne mélangez jamais les chargeurs.
 
@@ -15,7 +13,7 @@ Remplace les deux affectations de ces actions et désactive la sélection additi
 
 Le dossier du jeu est détecté automatiquement. Si plusieurs copies sont trouvées, choisissez le bon chemin. La sélection manuelle reste disponible.
 
-Les mises à jour automatiques en ligne sont prévues pour une prochaine version. En attendant, l’assistant utilise les paquets du dossier Téléchargements.
+Cet assistant fonctionne uniquement en local. Il ne contacte pas Internet et ne télécharge aucun fichier. Récupérez vous-même les paquets sur la plateforme de mods de votre choix et placez-les dans Téléchargements.
 
 Seul le paquet MelonLoader contient la sauvegarde de démonstration facultative. BepInEx n’en contient pas. Aucun import automatique.
 

@@ -82,11 +82,8 @@ namespace ExtendedHotbar.Helper
                     || fields.Get("prerelease").Kind != "bool" || (fields.Get("prerelease").Text == "true") != match.Groups[2].Success
                     || fields.Get("size").Integer <= 0 || fields.Get("size").Integer > Updates.MaxPackage)
                     throw new FormatException("Local helper filename/channel/size does not match its signed metadata.");
-                var tag = "helper-v" + version.ToString(3);
-                // Identity data only: neither this URL nor any other URL is requested.
-                var url = "https://github.com/" + Updates.Repository + "/releases/download/" + tag + "/" + filename;
-                var offer = new UpdateOffer(version, filename, fields.Get("sha256").String, url, tag, fields.Get("size").Integer,
-                    match.Groups[2].Success, url + ".update.json", Files.Hash(signature), signature.Length) { SignedMetadata = signature };
+                var offer = new UpdateOffer(version, filename, fields.Get("sha256").String, fields.Get("size").Integer,
+                    match.Groups[2].Success, Files.Hash(signature), signature.Length) { SignedMetadata = signature };
                 UpdateSignature.Verify(offer, signature, publicKey ?? UpdateSignature.PublicKey(), DateTime.UtcNow);
                 var result = new LocalHelperPackage { Path = path, Offer = offer };
                 ReadBytes(result, token, publicKey); return result;
