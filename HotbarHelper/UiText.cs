@@ -71,10 +71,10 @@ namespace ExtendedHotbar.Helper
         internal string CharacterConflict(JsonNode row)
         {
             int type = row.Get("InputType").Integer;
-            var action = type >= 34 && type <= 37 ? Format("bindingSkill", type - 33)
-                : type >= 12005 && type <= 12012 ? Format("bindingSkill", type - 12000)
-                : type == 60 ? Format("bindingItem", 1)
-                : type == 12101 || type == 12102 ? Format("bindingItem", type - 12099)
+            var action = Profiles.Skill(type) ? Format("bindingSkill", type - (Profiles.SkillStart - 1))
+                : type >= Profiles.ExtraProfileStart && type <= Profiles.ExtraProfileEnd ? Format("bindingSkill", type - (Profiles.ProfileSkillStart - 1))
+                : type == Profiles.ItemActionType ? Format("bindingItem", 1)
+                : type == Profiles.ProfileItemUseType || type == Profiles.ProfileItemUnsetType ? Format("bindingItem", type - 12099)
                 : Format("bindingOther", type);
             return Format("bindingConflictLine", (row.Get("ModifierKey").Integer == 304 ? "Shift + " : "") + (char)row.Get("KeyCode").Integer, action, row.Get("SlotIndex").Integer + 1);
         }

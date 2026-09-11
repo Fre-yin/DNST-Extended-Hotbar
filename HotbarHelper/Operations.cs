@@ -165,7 +165,7 @@ namespace ExtendedHotbar.Helper
             if (settings == null) throw new HelperFailure("errorSettings", "Benutzereinstellungen fehlen. Bitte das Spiel einmal normal einrichten.");
             var selected = new LosslessJson(vanillaBindings).Root;
             if (selected.Kind != "array" || selected.Items.Any(x => Profiles.Extra(x.Get("InputType").Integer))) throw new HelperFailure("errorKeys", "Das gewählte Tastenprofil enthält noch Hotbar-Zusatztasten.");
-            var required = Enumerable.Range(4, 20).Concat(Enumerable.Range(34, 4)).Concat(new[] { 60 });
+            var required = Enumerable.Range(Profiles.CharacterStart, Profiles.CharacterRowCount * 2).Concat(Enumerable.Range(Profiles.SkillStart, Profiles.SkillRowCount)).Concat(new[] { Profiles.ItemActionType });
             if (required.Any(type => !selected.Items.Any(x => x.Get("InputType").Integer == type && x.Get("SlotIndex").Integer == 0))) throw new HelperFailure("errorKeys", "Die Original-Sicherung enthält nicht alle benötigten Tasten. Bitte eine vollständige Sicherung oder den Originalstandard wählen.");
             var restored = Profiles.Merge(Files.Text(settings), vanillaBindings);
             exported = Files.Under(profile, "Saves/" + name + ".json");

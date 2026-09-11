@@ -13,6 +13,12 @@ namespace ExtendedHotbar.Helper
         private static Dictionary<string, byte[]> package;
         private static void Main(string[] args)
         {
+            if (args.Length == 2 && args[0] == "--verify-local-only")
+            {
+                try { LocalOnlyChecks.Verify(args[1]); Console.WriteLine("PASS built helper has no online components or network API references. No code executed."); }
+                catch (Exception ex) { Console.WriteLine(ex); Environment.ExitCode = 1; }
+                return;
+            }
             if (args.Length == 1 && args[0] == "--find-games")
             {
                 foreach (var path in GameDiscovery.FindSystem(CancellationToken.None)) Console.WriteLine(path);
@@ -51,16 +57,6 @@ namespace ExtendedHotbar.Helper
             {
                 try { UpdateTests.VerifyLocalPackage(args[1], args[2], args[3]); }
                 catch (Exception ex) { Console.WriteLine(ex); Environment.ExitCode = 1; }
-                return;
-            }
-            if (args.Length == 1 && args[0] == "--check-public-updates")
-            {
-                using (var timeout = new System.Threading.CancellationTokenSource(TimeSpan.FromSeconds(45)))
-                {
-                    try { var offer = new UpdateClient(new GitHubTransport()).Check(Updates.ParseVersion(Updates.HelperVersion), true, timeout.Token); Console.WriteLine(offer == null ? "Public feed read successfully; no newer supported helper." : "Public update offer: " + offer.Version); }
-                    catch (HelperFailure ex) { Console.WriteLine("Public feed check: " + ex.Code + "; " + ex.Message + "; " + ex.GetBaseException().Message); Environment.ExitCode = 2; }
-                    catch (Exception ex) { Console.WriteLine("Public feed check: " + ex); Environment.ExitCode = 3; }
-                }
                 return;
             }
             fixture = File.ReadAllText(args[0]); root = Files.Root(args[1]); Directory.CreateDirectory(root);
@@ -149,7 +145,7 @@ namespace ExtendedHotbar.Helper
                     Check(text.Format("removalSummary", text["saveSuffix"]).Contains(text["saveSuffix"]));
                     Check(text.HistoryAction(Operations.CharacterKeysAction) == text["characters"]);
                     Check(text["charactersDigits"].Contains("1–0") && text["charactersShift"].Contains("1–0"));
-                    Check(text.CharacterConflict(new LosslessJson(Row(34, 0, 49, 0)).Root).Contains(text.Format("bindingSkill", 1)));
+                    Check(text.CharacterConflict(new LosslessJson(Row(Profiles.SkillStart, 0, 49, 0)).Root).Contains(text.Format("bindingSkill", 1)));
                 });
                 Test("localized export only changes intended fields: " + language, () =>
                 {
@@ -201,7 +197,7 @@ namespace ExtendedHotbar.Helper
                 var after = Profiles.Bindings(new LosslessJson(Profiles.Merge(current, Profiles.VanillaDefaults()))).Items.Where(x => x.Get("SlotIndex").Integer == 0).Take(before.Length).Select(x => x.Get("InputType").Integer).ToArray();
                 Check(before.SequenceEqual(after));
             });
-            Test("duplicate bindings refused", () => Throws(() => Profiles.Bindings(new LosslessJson("{\"KeySettingData\":{\"Bindings\":[" + Row(34, 0, 1, 0) + "," + Row(34, 0, 2, 0) + "]}}"))));
+            Test("duplicate bindings refused", () => Throws(() => Profiles.Bindings(new LosslessJson("{\"KeySettingData\":{\"Bindings\":[" + Row(Profiles.SkillStart, 0, 1, 0) + "," + Row(Profiles.SkillStart, 0, 2, 0) + "]}}"))));
             foreach (var mode in new[] { false, true })
             {
                 var shift = mode;
@@ -246,18 +242,18 @@ namespace ExtendedHotbar.Helper
             }
             Test("explicit overwrite clears only exact conflicting keys and preserves row metadata", () =>
             {
-                var source = Settings().Replace(Row(34, 0, 49, 0), Row(34, 0, 49, 0).Replace("true", "false").Replace("}", ",\"Extra\":9007199254740993}"));
+                var source = Settings().Replace(Row(Profiles.SkillStart, 0, 49, 0), Row(Profiles.SkillStart, 0, 49, 0).Replace("true", "false").Replace("}", ",\"Extra\":9007199254740993}"));
                 var doc = new LosslessJson(source); var rows = Profiles.Bindings(doc);
                 source = doc.Apply(new[] { doc.Replace(rows, "[" + string.Join(",", rows.Items.Select(doc.Raw)) + "," + Row(999, 1, 49, 304) + "," + Row(998, 1, 49, 306) + "]") });
                 Check(Profiles.CharacterConflicts(source, false).Count == 11);
                 var changed = new LosslessJson(Profiles.ConfigureCharacters(source, false, true));
                 var bindings = Profiles.Bindings(changed).Items;
-                Check(bindings.Single(x => x.Get("InputType").Integer == 34).Get("KeyCode").Integer == 0);
-                Check(bindings.Single(x => x.Get("InputType").Integer == 34).Get("IsKeyDown").Text == "false");
-                Check(changed.Raw(bindings.Single(x => x.Get("InputType").Integer == 34).Get("Extra")) == "9007199254740993");
+                Check(bindings.Single(x => x.Get("InputType").Integer == Profiles.SkillStart).Get("KeyCode").Integer == 0);
+                Check(bindings.Single(x => x.Get("InputType").Integer == Profiles.SkillStart).Get("IsKeyDown").Text == "false");
+                Check(changed.Raw(bindings.Single(x => x.Get("InputType").Integer == Profiles.SkillStart).Get("Extra")) == "9007199254740993");
                 Check(bindings.Single(x => x.Get("InputType").Integer == 999 && x.Get("SlotIndex").Integer == 1).Get("KeyCode").Integer == 0);
                 Check(bindings.Single(x => x.Get("InputType").Integer == 998).Get("KeyCode").Integer == 49);
-                Check(bindings.Single(x => x.Get("InputType").Integer == 60).Get("KeyCode").Integer == 113);
+                Check(bindings.Single(x => x.Get("InputType").Integer == Profiles.ItemActionType).Get("KeyCode").Integer == 113);
             });
             Test("overwrite preview is read-only and changed settings invalidate consent", () =>
             {
@@ -272,19 +268,19 @@ namespace ExtendedHotbar.Helper
             {
                 var env = new Env(); var original = File.ReadAllText(env.Setting);
                 var backup = env.Op.ConfigureCharacterKeys(env.Game, env.Profile, false, true);
-                File.WriteAllText(env.Setting, File.ReadAllText(env.Setting).Replace(Row(60, 0, 113, 0), Row(60, 0, 108, 0)));
+                File.WriteAllText(env.Setting, File.ReadAllText(env.Setting).Replace(Row(Profiles.ItemActionType, 0, 113, 0), Row(Profiles.ItemActionType, 0, 108, 0)));
                 var undo = env.Op.Restore(env.Game, env.Profile, Path.GetFileName(backup));
-                Check(File.ReadAllText(env.Setting).Contains(Row(34, 0, 49, 0)) && File.ReadAllText(env.Setting).Contains(Row(60, 0, 108, 0)));
+                Check(File.ReadAllText(env.Setting).Contains(Row(Profiles.SkillStart, 0, 49, 0)) && File.ReadAllText(env.Setting).Contains(Row(Profiles.ItemActionType, 0, 108, 0)));
                 Check(Profiles.Same(Profiles.SelectedCharacters(File.ReadAllText(env.Setting)), Profiles.SelectedCharacters(original)));
                 env.Op.Restore(env.Game, env.Profile, Path.GetFileName(undo));
-                Check(!File.ReadAllText(env.Setting).Contains(Row(34, 0, 49, 0)) && File.ReadAllText(env.Setting).Contains(Row(60, 0, 108, 0)));
+                Check(!File.ReadAllText(env.Setting).Contains(Row(Profiles.SkillStart, 0, 49, 0)) && File.ReadAllText(env.Setting).Contains(Row(Profiles.ItemActionType, 0, 108, 0)));
             });
             Test("overwrite undo refuses a later edit to a cleared binding", () =>
             {
                 var env = new Env(); var backup = env.Op.ConfigureCharacterKeys(env.Game, env.Profile, false, true);
-                File.WriteAllText(env.Setting, File.ReadAllText(env.Setting).Replace(Row(34, 0, 0, 0), Row(34, 0, 108, 0)));
+                File.WriteAllText(env.Setting, File.ReadAllText(env.Setting).Replace(Row(Profiles.SkillStart, 0, 0, 0), Row(Profiles.SkillStart, 0, 108, 0)));
                 Throws(() => env.Op.Restore(env.Game, env.Profile, Path.GetFileName(backup)));
-                Check(File.ReadAllText(env.Setting).Contains(Row(34, 0, 108, 0)));
+                Check(File.ReadAllText(env.Setting).Contains(Row(Profiles.SkillStart, 0, 108, 0)));
             });
             Test("explicit overwrite still honors running-game guard and compensating rollback", () =>
             {
@@ -297,7 +293,7 @@ namespace ExtendedHotbar.Helper
             });
             Test("character merge cannot alter skills or duplicate rows", () =>
             {
-                Throws(() => Profiles.MergeCharacters(Settings(), "[" + Row(34, 0, 49, 0) + "]"));
+                Throws(() => Profiles.MergeCharacters(Settings(), "[" + Row(Profiles.SkillStart, 0, 49, 0) + "]"));
                 Throws(() => Profiles.MergeCharacters(Settings(), "[" + Row(4, 0, 49, 0) + "," + Row(4, 0, 49, 0) + "]"));
             });
             Test("character operation backs up only settings and repeat is a no-op", () =>
@@ -313,12 +309,12 @@ namespace ExtendedHotbar.Helper
             {
                 var env = new Env(); var original = Profiles.SelectedCharacters(File.ReadAllText(env.Setting));
                 var backup = env.Op.ConfigureCharacterKeys(env.Game, env.Profile, true);
-                File.WriteAllText(env.Setting, File.ReadAllText(env.Setting).Replace(Row(34, 0, 49, 0), Row(34, 0, 108, 0)).Replace("Korean", "English"));
+                File.WriteAllText(env.Setting, File.ReadAllText(env.Setting).Replace(Row(Profiles.SkillStart, 0, 49, 0), Row(Profiles.SkillStart, 0, 108, 0)).Replace("Korean", "English"));
                 var undo = env.Op.Restore(env.Game, env.Profile, Path.GetFileName(backup));
                 Check(Profiles.Same(Profiles.SelectedCharacters(File.ReadAllText(env.Setting)), original));
-                Check(File.ReadAllText(env.Setting).Contains(Row(34, 0, 108, 0)) && File.ReadAllText(env.Setting).Contains("English"));
+                Check(File.ReadAllText(env.Setting).Contains(Row(Profiles.SkillStart, 0, 108, 0)) && File.ReadAllText(env.Setting).Contains("English"));
                 env.Op.Restore(env.Game, env.Profile, Path.GetFileName(undo));
-                Check(File.ReadAllText(env.Setting).Contains(Row(34, 0, 108, 0)));
+                Check(File.ReadAllText(env.Setting).Contains(Row(Profiles.SkillStart, 0, 108, 0)));
             });
             Test("character undo refuses later character edits", () =>
             {
@@ -598,12 +594,12 @@ namespace ExtendedHotbar.Helper
         private static string Row(int type, int col, int key, int modifier) { return "{\"InputType\":" + type + ",\"SlotIndex\":" + col + ",\"KeyCode\":" + key + ",\"IsKeyDown\":true,\"ModifierKey\":" + modifier + "}"; }
         private static string Settings()
         {
-            var rows = new List<string> { Row(999, 0, 304, 0) };
-            for (int i = 0; i < 10; i++) { rows.Add(Row(4 + i, 0, i == 9 ? 48 : 49 + i, 304)); rows.Add(Row(14 + i, 0, 0, 0)); }
-            for (int i = 0; i < 4; i++) rows.Add(Row(34 + i, 0, 49 + i, 0));
-            rows.Add(Row(60, 0, 113, 0));
-            for (int i = 0; i < 6; i++) rows.Add(Row(12005 + i, 0, i == 5 ? 48 : 53 + i, 0));
-            rows.Add(Row(12101, 0, 101, 0)); rows.Add(Row(12102, 0, 114, 0));
+            var rows = new List<string> { Row(999, 0, Profiles.ShiftModifier, 0) };
+            for (int i = 0; i < Profiles.CharacterRowCount; i++) { rows.Add(Row(Profiles.CharacterStart + i, 0, i == 9 ? 48 : 49 + i, Profiles.ShiftModifier)); rows.Add(Row(Profiles.CharacterAndSkillRowSplit + i, 0, 0, 0)); }
+            for (int i = 0; i < Profiles.SkillRowCount; i++) rows.Add(Row(Profiles.SkillStart + i, 0, 49 + i, 0));
+            rows.Add(Row(Profiles.ItemActionType, 0, 113, 0));
+            for (int i = 0; i < 6; i++) rows.Add(Row(Profiles.HotbarProfileItemStart + i, 0, i == 5 ? 48 : 53 + i, 0));
+            rows.Add(Row(Profiles.ProfileItemUseType, 0, 101, 0)); rows.Add(Row(Profiles.ProfileItemUnsetType, 0, 114, 0));
             return "{\"GeneralSettingData\":{\"Language\":\"Korean\",\"Big\":9007199254740993,\"Precise\":1.234567890123456789e+30},\"KeySettingData\":{\"Bindings\":[" + string.Join(",", rows) + "]}}";
         }
         private static string LegacyNoOp(Env env)

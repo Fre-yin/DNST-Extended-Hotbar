@@ -83,8 +83,8 @@ namespace ExtendedHotbar.Helper
                 Check(rows.Count == 66 && rows.Select(x => x.Get("InputType").Integer + ":" + x.Get("SlotIndex").Integer).Distinct().Count() == 66);
                 var used = rows.Where(x => x.Get("KeyCode").Integer != 0).ToArray();
                 Check(used.Length == 23 && used.Select(x => x.Get("KeyCode").Integer + ":" + x.Get("ModifierKey").Integer).Distinct().Count() == 23);
-                Check(rows.Count(x => x.Get("InputType").Integer == 12005 && x.Get("KeyCode").Integer == 53) == 1);
-                Check(rows.All(x => x.Get("InputType").Integer != 12011 && x.Get("InputType").Integer != 12012));
+                Check(rows.Count(x => x.Get("InputType").Integer == Profiles.HotbarProfileItemStart && x.Get("KeyCode").Integer == 53) == 1);
+                Check(rows.All(x => x.Get("InputType").Integer != Profiles.ExtraProfileEnd - 1 && x.Get("InputType").Integer != Profiles.ExtraProfileEnd));
             });
             test("profile preview rejects unconfirmed conflicts and stale consent; undo / redo are scoped", () => {
                 var e = new Env(root, ModLoaders.BepInEx, fixture, settings);
@@ -151,7 +151,7 @@ namespace ExtendedHotbar.Helper
                 e.Op.PreviewHotbarKeys(e.Game, e.Profile, out hash);
                 backup = e.Op.ConfigureHotbarKeys(e.Game, e.Profile, true, hash);
                 doc = new LosslessJson(File.ReadAllText(e.Settings));
-                var affected = Profiles.Bindings(doc).Items.First(x => x.Get("InputType").Integer == 12005);
+                var affected = Profiles.Bindings(doc).Items.First(x => x.Get("InputType").Integer == Profiles.HotbarProfileItemStart);
                 File.WriteAllText(e.Settings, doc.Apply(new[] { doc.Replace(affected.Get("KeyCode"), "108") }));
                 Refused(() => e.Op.Restore(e.Game, e.Profile, Path.GetFileName(backup)));
             });

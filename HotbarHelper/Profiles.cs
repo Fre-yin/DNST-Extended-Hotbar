@@ -6,10 +6,29 @@ namespace ExtendedHotbar.Helper
 {
     internal static class Profiles
     {
-        internal static bool Extra(int type) { return type >= 12005 && type <= 12012 || type == 12101 || type == 12102; }
-        internal static bool Affected(int type) { return type >= 4 && type <= 23 || type >= 34 && type <= 37 || type == 60 || Extra(type); }
+        internal const int CharacterStart = 4;
+        internal const int CharacterEnd = 23;
+        internal const int SkillStart = 34;
+        internal const int SkillEnd = 37;
+        internal const int CharacterRowCount = 10;
+        internal const int SkillRowCount = 4;
+        internal const int CharacterAndSkillRowSplit = 14;
+        internal const int ZeroModifier = 0;
+        internal const int ShiftModifier = 304;
+        internal const int ItemActionType = 60;
+        internal const int ProfileItemUseType = 12101;
+        internal const int ProfileItemUnsetType = 12102;
+        internal const int ProfileSkillStart = 12001;
+        internal const int ExtraProfileStart = 12005;
+        internal const int ExtraProfileEnd = 12012;
+        internal const int HotbarProfileItemStart = 12005;
+        internal const int HotbarProfileItemEnd = 12010;
+
+        internal static bool Extra(int type) { return type >= ExtraProfileStart && type <= ExtraProfileEnd || type == ProfileItemUseType || type == ProfileItemUnsetType; }
+        internal static bool Affected(int type) { return Character(type) || Skill(type) || type == ItemActionType || Extra(type); }
         // SelectUnit_1..10 and the game's hidden AddSelectUnit_1..10 actions.
-        internal static bool Character(int type) { return type >= 4 && type <= 23; }
+        internal static bool Character(int type) { return type >= CharacterStart && type <= CharacterEnd; }
+        internal static bool Skill(int type) { return type >= SkillStart && type <= SkillEnd; }
         internal static JsonNode Bindings(LosslessJson document)
         {
             var bindings = document.Root.Get("KeySettingData").Get("Bindings");
@@ -76,14 +95,14 @@ namespace ExtendedHotbar.Helper
         private static string CharacterDefaults(bool shift)
         {
             var rows = new List<string>();
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < CharacterRowCount; i++)
             {
                 int digit = i == 9 ? 48 : 49 + i;
-                rows.Add(Row(4 + i, 0, digit, shift ? 304 : 0));
-                rows.Add(Row(4 + i, 1, 0, 0));
+                rows.Add(Row(CharacterStart + i, 0, digit, shift ? ShiftModifier : ZeroModifier));
+                rows.Add(Row(CharacterStart + i, 1, ZeroModifier, ZeroModifier));
                 // A Shift-modified selection must not also emit additive selection.
-                rows.Add(Row(14 + i, 0, shift ? 0 : digit, shift ? 0 : 304));
-                rows.Add(Row(14 + i, 1, 0, 0));
+                rows.Add(Row(CharacterAndSkillRowSplit + i, 0, shift ? 0 : digit, shift ? ZeroModifier : ShiftModifier));
+                rows.Add(Row(CharacterAndSkillRowSplit + i, 1, ZeroModifier, ZeroModifier));
             }
             return "[" + string.Join(",", rows) + "]";
         }
@@ -145,18 +164,18 @@ namespace ExtendedHotbar.Helper
         internal static string VanillaDefaults()
         {
             var rows = new List<string>();
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < CharacterRowCount; i++)
             {
                 int digit = i == 9 ? 48 : 49 + i;
                 for (int col = 0; col < 2; col++)
                 {
-                    rows.Add(Row(4 + i, col, col == 0 ? digit : 0, 0));
-                    rows.Add(Row(14 + i, col, col == 0 ? digit : 0, col == 0 ? 304 : 0));
+                    rows.Add(Row(CharacterStart + i, col, col == 0 ? digit : 0, 0));
+                    rows.Add(Row(CharacterAndSkillRowSplit + i, col, col == 0 ? digit : 0, col == 0 ? ShiftModifier : ZeroModifier));
                 }
             }
             var keys = new[] { 113, 101, 114, 116 };
-            for (int i = 0; i < 4; i++) for (int col = 0; col < 2; col++) rows.Add(Row(34 + i, col, col == 0 ? keys[i] : 0, 0));
-            rows.Add(Row(60, 0, 121, 0)); rows.Add(Row(60, 1, 0, 0));
+            for (int i = 0; i < SkillRowCount; i++) for (int col = 0; col < 2; col++) rows.Add(Row(SkillStart + i, col, col == 0 ? keys[i] : 0, 0));
+            rows.Add(Row(ItemActionType, 0, 121, 0)); rows.Add(Row(ItemActionType, 1, 0, 0));
             return "[" + string.Join(",", rows) + "]";
         }
         internal static string Row(int type, int slot, int key, int modifier)
