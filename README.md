@@ -41,7 +41,7 @@ Wähle deine Tasten selbst in den Spieloptionen. Es gibt kein vorgeschriebenes T
 
 Beide Mod-Ausgaben bleiben Vorabversionen für den oben genannten Spielbuild. Beide endgültigen Release-Builds liefen mit 0 Warnungen und 0 Fehlern. Dokumentiert sind 33 Datentests mit der unveränderten Demo und 32 ohne Demo sowie native Prüfungen beider Loader für Slots, Kontextmenüs, Tastenbelegungen, temporäres Speichern/Laden, zehn Sprachen und die Lebensdauer des Rahmens.
 
-Ein anschließender sichtbarer BepInEx-Nutzercheck wurde positiv bestätigt. Die einzelnen Kampf-, Klick- und Speicheraktionen wurden dabei nicht protokolliert. Vollständige Kampf-, Kampagnen-, Langzeit- und Fremdmod-Kompatibilität ist daher nicht bestätigt. Unbekannte Spielbuilds werden weiterhin blockiert.
+Ein anschließender sichtbarer BepInEx-Nutzercheck wurde positiv bestätigt. Die einzelnen Kampf-, Klick- und Speicheraktionen wurden dabei nicht protokolliert. Vollständige Kampf, Kampagnen, Langzeit und Fremdmod Kompatibilität ist daher nicht bestätigt. Unbekannte Spielbuilds werden weiterhin blockiert.
 
 Der getestete BepInEx-Loader meldet `Class::Init signatures have been exhausted, using a substitute!`; die dokumentierten Tests bestehen trotz dieser Meldung.
 
