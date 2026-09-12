@@ -4,12 +4,11 @@ Mit dieser Mod bekommst du zehn Plätze für Fähigkeiten und drei Plätze
 für Gegenstände. Der normale Angriff bleibt zusätzlich erhalten.
 Dein Charakterfenster und das gewohnte Spielmenü bleiben bestehen.
 
-Mod-Version 0.3.8, für Dungeon Settlers DS_B.0.4.19 (Steam-Build 25154317) unter Windows.
+Mod-Version 0.3.9, für Dungeon Settlers DS_B.0.4.23 (Steam-Build 25269660) unter Windows.
 Dies ist weiterhin eine Testversion. Bitte sichere deine Spielstände.
 
 Dieses Update lässt die Originalbelegung unverändert und zusätzliche Skill-/
-Item-Tasten unbelegt. Selbst in den Spieloptionen zuweisen oder ausdrücklich
-im Helper 0.1.12 das optionale Profil mit Konfliktprüfung anwenden. Bereits
+Item-Tasten unbelegt. Weise deine Tasten selbst in den Spieloptionen zu. Bereits
 vorhandene Belegungen bleiben erhalten, auch alte Konflikte; kein ungefragtes
 Löschen gespeicherter Tasten beim Start.
 Für einfache Updates bleibt der Dateiname DungeonSettlers10Slots.dll gleich.
@@ -20,7 +19,7 @@ mit DS_B.0.4.17 gespeichert; behalte beim Laden mit dem neuen Spiel eine Sicheru
 WICHTIG ZU ANDEREN MODS
 
 Dieses Paket ist für MelonLoader 0.7.3. Eine eigene BepInEx-6-IL2CPP-Vorschau
-ist separat verfügbar. Im Helper 0.1.12 den passenden Loader auswählen. Das gemeinsame Laden mit BepInEx-Mods wie Reroll Helper ist nicht
+ist separat verfügbar. Das gemeinsame Laden mit anderen BepInEx-Mods ist nicht
 bestätigt. Installiere deshalb nicht einfach beide Loader übereinander.
 Eine Mod-DLL wird durch Kopieren in den anderen Mod-Ordner nicht kompatibel.
 Andere MelonLoader-Mods sind ebenfalls nicht pauschal als kompatibel geprüft.
@@ -54,7 +53,7 @@ Dieses Update wird zunächst lokal getestet. Sobald es veröffentlicht ist,
 findest du es unter "Releases", unten bei "Assets":
 https://github.com/Fre-yin/DNST-Extended-Hotbar/releases
 
-Extended-Hotbar-0.3.8.zip enthält die Mod und den optionalen Testspielstand.
+Extended-Hotbar-0.3.9.zip enthält die Mod und den optionalen Testspielstand.
 Du entscheidest selbst, ob du den Spielstand nach seiner Anleitung importierst.
 Er wird nicht automatisch eingebunden. Eine getrennte Variante ist nicht nötig.
 
@@ -115,15 +114,11 @@ SO INSTALLIERST DU DIE MOD
 
 WELCHE TASTEN SIND DAS?
 
-Die Standardbelegung der Mod ist:
-
-   Fähigkeiten:       1, 2, 3, 4, 5, 6, 7, 8, 9, 0
-   Gegenstände:       Q, E, R
-   Charakterauswahl:  linke Umschalttaste gedrückt halten + 1 bis 0
-
-Bereits gespeicherte Tastenbelegungen bleiben erhalten. Falls die Tasten
-bei dir anders sind oder noch fehlen, prüfe die Tastenbelegung in den Optionen.
-Dort findest du auch die zusätzlichen Fähigkeiten und Gegenstandsplätze.
+Originale und bereits gespeicherte Tastenbelegungen bleiben erhalten.
+Fähigkeit 5–10 und Gegenstandsplatz 2–3 haben zunächst keine Taste.
+Belege sie selbst in den Spieloptionen. Es wird kein Zahlen-, Q/E/R- oder
+Shift-Profil automatisch angewendet. Achte auf vorhandene Belegungen wie
+Q/E für das Drehen von Gebäuden; ein bestätigtes Ersetzen kann sie entfernen.
 "Zurücksetzen" verwirft deine eigenen Tastenänderungen.
 
 

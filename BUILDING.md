@@ -2,11 +2,11 @@
 
 **Deutsch** | [English](BUILDING.en.md) | [Zur Projektbeschreibung](README.md)
 
-Diese Anleitung ist für Entwickler. Wer die Mod nur spielen möchte, braucht das fertige Release-Paket, nicht diese Schritte.
+Diese Anleitung beschreibt die Builds der eigenständigen MelonLoader- und BepInEx-Mod. Wer die Mod nur spielen möchte, findet die fertigen Mod-Pakete und die Installation in der [Projektbeschreibung](README.md).
 
-## Voraussetzungen
+## Voraussetzungen für den MelonLoader-Build
 
-- Windows x64 und eine eigene Installation von Dungeon Settlers **DS_B.0.4.19 / Steam 25154317**.
+- Windows x64 und eine eigene Installation von Dungeon Settlers **DS_B.0.4.23 / Steam 25269660**.
 - **MelonLoader 0.7.3** im eigenen Spielordner. Starte das Spiel damit einmal, damit die benötigten Schnittstellen unter `MelonLoader/Il2CppAssemblies` erzeugt werden. Beende das Spiel anschließend.
 - Ein .NET SDK, das `net6.0` bauen kann, die .NET-6-Referenzpakete und eine .NET-6-Laufzeit für die Tests. Der lokale Prüfstand verwendet SDK **10.0.302** mit installierter .NET-6-Unterstützung. `dotnet --list-sdks` und `dotnet --list-runtimes` zeigen die vorhandenen Versionen.
 - Für das optionale Paketierungsskript: **PowerShell 7** (`pwsh`). Für den direkten DLL-Build reicht ein Terminal.
@@ -51,44 +51,11 @@ Neue Pakete enthalten den optionalen Demo-Spielstand immer. Lege ihn gezielt unt
 
 Die Ausschlüsse in `.gitignore` gelten für Git, nicht für manuelle Browser-Uploads. Lade erzeugte Build-Ordner, lokal ergänzte Grafiken und Spielstände daher nicht zusammen mit dem Quellcode über die GitHub-Webseite hoch.
 
-Der Quellcode steht bei Version **0.3.8** und prüft weiterhin die Fingerabdrücke des unterstützten Spielbuilds. Ändere diese Prüfung nicht einfach, um ein unbekanntes Spielupdate freizuschalten; dafür müssen die Schnittstellen und das Verhalten erneut geprüft werden.
+Der Quellcode steht bei Version **0.3.9** und prüft weiterhin die Fingerabdrücke des unterstützten Spielbuilds. Ändere diese Prüfung nicht einfach, um ein unbekanntes Spielupdate freizuschalten; dafür müssen die Schnittstellen und das Verhalten erneut geprüft werden.
 
-## Optional: Helfer 0.1.13 bauen
+## BepInEx 0.3.9-bepinex.1
 
-Verwende einen kurzen Projektpfad, beispielsweise `C:\Dev\ExtendedHotbar`. Die isolierten Tests erzeugen verschachtelte Ordner; sehr lange Ausgangspfade können an der Windows/.NET-Framework-Pfadlängengrenze scheitern. Für `Build.ps1` lässt sich auch ein kurzer `-OutputDirectory` angeben. `Package.ps1` baut intern unter `HotbarHelper/bin-0.1.13`; dafür den gesamten Quellcode kurz ablegen. Bei `PathTooLongException` die Pfade verkürzen und dieselben Tests erneut ausführen.
-
-Der Helfer ist ein separates Windows-Programm. Zum Bauen brauchst du ein .NET SDK mit Roslyn, PowerShell und das **.NET Framework 4.8 Developer Pack**. Zum Ausführen genügt die .NET-Framework-4.8-Laufzeit. Spiel- oder Loader-DLLs und NuGet-Pakete werden für diesen Build nicht benötigt.
-
-Lade zusätzlich beide unveränderten Mod-Pakete aus den [Releases](https://github.com/Fre-yin/DNST-Extended-Hotbar/releases) herunter. Sie wurden bereits mit **helper-v0.1.12** verwendet und werden auch für Helper 0.1.13 benötigt:
-
-| Datei | SHA256 |
-| --- | --- |
-| `Extended-Hotbar-0.3.8.zip` | `D7824BD6B31E3760EBC803111261B75EC5ADF60FAE87B7AAC444DF9B2993F544` |
-| `Extended-Hotbar-BepInEx-0.3.8-bepinex.1.zip` | `77193451CD045D03A50E24A80F2D0582E178F335D90926EDF9AAF9E6B3880547` |
-
-Nur das MelonLoader-Paket enthält den optionalen Demo-Spielstand. Ältere, gleich benannte ZIPs können andere Inhalte haben. Der Helfer prüft die exakten Hashes; selbst neu packen ist kein Ersatz. Die ZIP-Dateien gehören nicht in den Quellcode-Upload.
-
-```powershell
-pwsh -File .\HotbarHelper\Build.ps1 -PackagePath "C:\Downloads\Extended-Hotbar-0.3.8.zip" -BepInExPackagePath "C:\Downloads\Extended-Hotbar-BepInEx-0.3.8-bepinex.1.zip"
-```
-
-Ergebnis: `HotbarHelper/bin/Extended-Hotbar-Helper.exe`. Der Build führt automatisch die isolierten Helfertests mit der selbst verfassten `SyntheticSave.json` aus. Das ist kein spielbarer Kampagnenspielstand. Persönliche Spiel-/Speicherordner werden nicht verändert. Testausgaben bleiben unter `HotbarHelper/bin/test-runs` erhalten.
-
-```powershell
-pwsh -File .\HotbarHelper\Package.ps1 -PackagePath "C:\Downloads\Extended-Hotbar-0.3.8.zip" -BepInExPackagePath "C:\Downloads\Extended-Hotbar-BepInEx-0.3.8-bepinex.1.zip"
-```
-
-Das erstellt zusätzlich ein Helfer-ZIP mit Anleitungen in zehn Sprachen und Lizenzhinweisen. Vorhandene Pakete werden nicht überschrieben; bei Wiederholung einen neuen `-OutputDirectory` angeben. Einzelheiten, optionale Prüfungen und Grenzen: [HotbarHelper/README.md](HotbarHelper/README.md).
-
-Der obige Paketaufruf erstellt keine signierte `.zip.update.json` für lokale Selbstupdates. Dafür bietet `Package.ps1` die ausdrückliche Option `-SignUpdatePackage`; sie ist beim obigen Aufruf nicht gesetzt. Für das vorbereitete 0.1.13-Paket liegt noch keine solche Datei vor; die manuelle Verteilung durch vollständiges Entpacken wird unterstützt. Ein Selbstupdate aus einem älteren Helper darf erst mit einer gültigen, exakt zum Paket passenden Signaturdatei angeboten werden. Der normale Build nutzt nur die vorhandene öffentliche `UpdateTrust.xml`, keinen privaten Veröffentlichungsschlüssel.
-
-Helper 0.1.13 wird als Vorabversion vorbereitet. HTTP-Client, Release-Feed und Online-Updatefunktionen sind entfernt; die optionale Suche nach bereits vorhandenen lokalen Paketen und deren Signaturprüfung bleiben erhalten. Die vollständige Quelldateiliste in `Build.ps1` enthält `LocalUpdatePreferences.cs` für das Programm und `LocalOnlyChecks.cs` ausschließlich für die Tests.
-
-Früher gemeldete Spieltests gelten dem vorherigen Helper-Stand. Für 0.1.13 wurde kein neuer Spieltest durchgeführt. Automatisierte Tests belegen keine vollständige Kampagnen-/Langzeitkompatibilität; den dokumentierten Prüfstand nennt die [Projektbeschreibung](README.md#prüfstand-und-grenzen).
-
-## BepInEx 0.3.8-bepinex.1
-
-Die BepInEx-Ausgabe bleibt für Helper 0.1.13 unverändert. Ihr Build benötigt eine eigene initialisierte BepInEx 6 Unity IL2CPP x64 Spielkopie (getestet: 6.0.0-be.788+5b766a3), keine MelonLoader-Referenzen.
+Die BepInEx-Ausgabe ist ein eigenständiges Mod-Paket. Ihr Build benötigt eine eigene initialisierte BepInEx 6 Unity IL2CPP x64 Spielkopie (getestet: 6.0.0-be.788+5b766a3), keine MelonLoader-Referenzen.
 
 ```powershell
 dotnet build .\DungeonSettlersHotbar.BepInEx\DungeonSettlersHotbar.BepInEx.csproj -c Release "-p:GameDir=C:\Games\DungeonSettlers-BepInEx"

@@ -77,10 +77,19 @@ internal static class ItemSlotChecks
             using var context = new ItemSlotContext(slot);
             var menu = menuFactory.CreateUnsetItemQuickSlot(first);
             Require(menu.InteractionInputType == UIInputType.InteractionOption_UnsetItemQuickSlot, "native remove label");
-            var evt = factory.ConvertUIEventToEventData(menu.InteractionUIInput);
-            Require(evt?.TryCast<UnsetItemQuickSlotRequested>()?.UnitGuid.Equals(first) == true
-                && ItemSlotInput.Take(evt.Cast<Il2CppSystem.Object>()) == slot, "native GUID-specific remove event " + slot);
+            foreach (var modifier in new[] { ModifierKey.None, ModifierKey.LeftShift, ModifierKey.Ctrl, ModifierKey.Alt })
+            {
+                var nativeInput = new UIInput(UIInputType.InteractionOption_UnsetItemQuickSlot, first);
+                var native = factory.ConvertUIEventToEventData(nativeInput, modifier);
+                Require(native?.TryCast<UnsetItemQuickSlotRequested>()?.UnitGuid.Equals(first) == true,
+                    "native remove contract " + modifier);
+                var evt = factory.ConvertUIEventToEventData(menu.InteractionUIInput, modifier);
+                Require(evt?.TryCast<UnsetItemQuickSlotRequested>()?.UnitGuid.Equals(first) == true
+                    && ItemSlotInput.Take(evt.Cast<Il2CppSystem.Object>()) == slot,
+                    "native GUID-specific remove event " + slot + " / " + modifier);
+            }
         }
+        DungeonSettlers10SlotsMod.Log.Msg("UI modifier contract PASS: native and extra item removal preserve GUID/slot for None, Shift, Ctrl and Alt on the two-argument input factory.");
         DungeonSettlers10SlotsMod.Log.Msg("Item-slot isolated checks PASS: three assignments, GUID isolation, skill preservation, scoped read/write/remove/reset, JSON + native storage round trip, unknown-version preservation, native/unbound defaults + arbitrary rebinds, key and menu routing.");
     }
 

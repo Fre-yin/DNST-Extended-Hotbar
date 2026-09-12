@@ -59,24 +59,31 @@ internal static class ExtraInteractions
         var factory = IsolatedFactory();
         var guid = Il2CppSystem.Guid.NewGuid();
         var events = new InputEventFactory();
+        var modifiers = new[] { ModifierKey.None, ModifierKey.LeftShift, ModifierKey.Ctrl, ModifierKey.Alt };
         for (var index = 0; index < DungeonSettlers10SlotsMod.Capacity; index++)
         {
             var remove = factory.CreateUnsetQuickslot(index, guid);
-            var evt = events.ConvertUIEventToEventData(remove.InteractionUIInput)?.TryCast<UnsetQuickSlotRequested>();
-            Require(evt != null && evt.Index == index && evt.UnitGuid.Equals(guid), "remove event slot " + (index + 1));
+            foreach (var modifier in modifiers)
+            {
+                var evt = events.ConvertUIEventToEventData(remove.InteractionUIInput, modifier)?.TryCast<UnsetQuickSlotRequested>();
+                Require(evt != null && evt.Index == index && evt.UnitGuid.Equals(guid), "remove event slot " + (index + 1) + " / " + modifier);
+            }
             Require(remove.InteractionInputType == UIInputType.InteractionOption_UnsetQuickSlot1 + (IsExtra(index) ? 0 : index), "remove label slot " + (index + 1));
             if (checkText) CheckText(remove, index, "remove");
             foreach (var enabled in new[] { false, true })
             {
                 var auto = factory.CreateAutoSkillSet(index, guid, enabled);
-                var toggle = events.ConvertUIEventToEventData(auto.InteractionUIInput)?.TryCast<ToggleAutoSkillRequested>();
-                Require(toggle != null && toggle.Index == index && toggle.UnitGuid.Equals(guid), "auto event slot " + (index + 1));
+                foreach (var modifier in modifiers)
+                {
+                    var toggle = events.ConvertUIEventToEventData(auto.InteractionUIInput, modifier)?.TryCast<ToggleAutoSkillRequested>();
+                    Require(toggle != null && toggle.Index == index && toggle.UnitGuid.Equals(guid), "auto event slot " + (index + 1) + " / " + modifier);
+                }
                 var baseLabel = enabled ? UIInputType.InteractionOption_UnsetAutoSkill1 : UIInputType.InteractionOption_SetAutoSkill1;
                 Require(auto.InteractionInputType == baseLabel + (IsExtra(index) ? 0 : index), "auto label slot " + (index + 1));
                 if (checkText) CheckText(auto, index, enabled ? "auto off" : "auto on");
             }
         }
-        DungeonSettlers10SlotsMod.Log.Msg("Native context checks PASS: slots 1-10 remove + auto on/off retain original labels and correct GUID/index events; localized text checked=" + checkText);
+        DungeonSettlers10SlotsMod.Log.Msg("Native context checks PASS: slots 1-10 remove + auto on/off retain original labels and correct GUID/index events with None, Shift, Ctrl and Alt; localized text checked=" + checkText);
     }
 
     static void CheckText(Interaction interaction, int index, string action)
@@ -106,7 +113,7 @@ internal static class ExtraAutoInteraction
     static void Postfix(int __state, ref Interaction __result) => ExtraInteractions.SetAction(__result, __state, ExtraInteractions.ToggleAuto);
 }
 
-[HarmonyPatch(typeof(InputEventFactory), nameof(InputEventFactory.ConvertUIEventToEventData))]
+[HarmonyPatch(typeof(InputEventFactory), nameof(InputEventFactory.ConvertUIEventToEventData), new[] { typeof(UIInput), typeof(ModifierKey) })]
 internal static class ExtraInteractionEvents
 {
     static bool Prefix(InputEventFactory __instance, UIInput __0, ref IEventData __result)

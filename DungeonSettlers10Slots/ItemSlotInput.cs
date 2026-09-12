@@ -31,19 +31,60 @@ internal static class ItemSlotInput
     // Native UseItemQuickSlotRequested has no index. Retain slot metadata until
     // the normal event dispatcher delivers that exact native object, not just
     // until the input factory returns. Strong references prevent pointer reuse.
+    const int MaxPending = 256;
+    static readonly object sync = new();
     static readonly Dictionary<IntPtr, (IEventData Event, int Slot)> pending = new();
+    static Queue<IntPtr> pendingOrder = new();
     internal static void Tag(ref IEventData evt, int slot)
     {
         if (evt == null || !ItemSlotContext.IsExtra(slot)) return;
-        if (pending.Count >= 256)
+        lock (sync)
         {
-            evt = null; // Never fall back to executing item 1 when metadata is lost.
-            DungeonSettlers10SlotsMod.Log.Warning("Zusatz-Itemeingabe verworfen: Ereigniswarteschlange voll.");
-            return;
+            if (pending.TryGetValue(evt.Pointer, out _))
+            {
+                pending[evt.Pointer] = (evt, slot);
+                return;
+            }
+            if (pending.Count >= MaxPending)
+                EvictUntilRoomOrWarn();
+            if (pending.Count >= MaxPending)
+            {
+                evt = null; // Never fall back to executing item 1 when metadata is lost.
+                DungeonSettlers10SlotsMod.Log.Warning("Zusatz-Itemeingabe verworfen: Ereigniswarteschlange voll.");
+                return;
+            }
+            pendingOrder.Enqueue(evt.Pointer);
+            pending.Add(evt.Pointer, (evt, slot));
         }
-        pending[evt.Pointer] = (evt, slot);
     }
-    internal static int Take(Il2CppSystem.Object evt) => pending.Remove(evt.Pointer, out var item) ? item.Slot : 0;
+    static void EvictUntilRoomOrWarn()
+    {
+        while (pending.Count >= MaxPending && pendingOrder.Count != 0)
+        {
+            var oldest = pendingOrder.Dequeue();
+            pending.Remove(oldest);
+        }
+        if (pending.Count >= MaxPending) return;
+    }
+    static void RemoveFromOrder(IntPtr pointer)
+    {
+        if (pendingOrder.Count == 0) return;
+        var cleaned = new Queue<IntPtr>(pendingOrder.Count);
+        foreach (var item in pendingOrder)
+            if (item != pointer)
+                cleaned.Enqueue(item);
+        pendingOrder = cleaned;
+    }
+    internal static int Take(Il2CppSystem.Object evt)
+    {
+        if (evt == null) return 0;
+        lock (sync)
+        {
+            if (!pending.Remove(evt.Pointer, out var item)) return 0;
+            RemoveFromOrder(evt.Pointer);
+            return item.Slot;
+        }
+    }
 }
 
 [HarmonyPatch(typeof(InputEventFactory), nameof(InputEventFactory.ConvertKeyInputToEventData))]
@@ -62,9 +103,11 @@ internal static class ExtraItemKeyEvent
     }
 }
 
-[HarmonyPatch(typeof(InputEventFactory), nameof(InputEventFactory.ConvertUIEventToEventData))]
+[HarmonyPatch(typeof(InputEventFactory), nameof(InputEventFactory.ConvertUIEventToEventData), new[] { typeof(UIInput), typeof(ModifierKey) })]
 internal static class ExtraItemUIEvent
 {
+    // DS_B.0.4.23 adds a modifier argument. Remap only the action/slot;
+    // the original method receives the player's modifier unchanged.
     static bool Prefix(ref UIInput __0, out int __state, ref IEventData __result)
     {
         __state = 0;

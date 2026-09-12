@@ -17,29 +17,40 @@ internal static class ItemSlotStorage
 {
     static readonly Dictionary<IntPtr, (UnitQuickSlotContainer Owner, ItemSlotState State)> containers = new();
     static readonly BoundedSnapshotCache<IntPtr, (SaveDictionary Owner, ItemSlotState State)> snapshots = new(64);
+    static readonly object sync = new();
 
     internal static ItemSlotState State(UnitQuickSlotContainer container)
     {
-        if (!containers.TryGetValue(container.Pointer, out var entry))
-            containers.Add(container.Pointer, entry = (container, new ItemSlotState()));
-        return entry.State;
+        lock (sync)
+        {
+            if (!containers.TryGetValue(container.Pointer, out var entry))
+                containers.Add(container.Pointer, entry = (container, new ItemSlotState()));
+            return entry.State;
+        }
     }
 
     internal static string Read(UnitQuickSlotContainer container, Guid guid, int slot)
     {
         if (!ItemSlotContext.IsExtra(slot) || !container._unitQuickSlot.ContainsKey(guid)) return "";
-        return State(container).Units.TryGetValue(guid.ToString(), out var keys) ? keys[slot - 1] : "";
+        var state = State(container);
+        lock (state.Sync)
+        {
+            return state.Units.TryGetValue(guid.ToString(), out var keys) ? keys[slot - 1] : "";
+        }
     }
 
     internal static void Write(UnitQuickSlotContainer container, Guid guid, int slot, string key)
     {
         if (!ItemSlotContext.IsExtra(slot) || !container._unitQuickSlot.ContainsKey(guid)) return;
         var state = State(container);
-        if (state.OpaqueExtension != null || state.SaveBlockReason != null) return; // Preserve unsupported mod data, read-only.
-        var id = guid.ToString();
-        if (!state.Units.TryGetValue(id, out var keys)) state.Units.Add(id, keys = new[] { "", "" });
-        keys[slot - 1] = key ?? "";
-        if (keys.All(string.IsNullOrEmpty)) state.Units.Remove(id);
+        lock (state.Sync)
+        {
+            if (state.OpaqueExtension != null || state.SaveBlockReason != null) return; // Preserve unsupported mod data, read-only.
+            var id = guid.ToString();
+            if (!state.Units.TryGetValue(id, out var keys)) state.Units.Add(id, keys = new[] { "", "" });
+            keys[slot - 1] = key ?? "";
+            if (keys.All(string.IsNullOrEmpty)) state.Units.Remove(id);
+        }
     }
 
     internal static void Remember(SaveDictionary dictionary, ItemSlotState state)
@@ -61,15 +72,18 @@ internal static class ItemSlotStorage
     internal static void Loaded(UnitQuickSlotContainer container, SaveDictionary dictionary)
     {
         TrySnapshot(dictionary, out var loaded);
-        containers[container.Pointer] = (container, loaded ?? new ItemSlotState
+        lock (sync)
         {
-            SaveBlockReason = "Zuordnung der geladenen Itemslot-Zusatzdaten fehlt; Spielstand bitte erneut laden."
-        });
+            containers[container.Pointer] = (container, loaded ?? new ItemSlotState
+            {
+                SaveBlockReason = "Zuordnung der geladenen Itemslot-Zusatzdaten fehlt; Spielstand bitte erneut laden."
+            });
+        }
     }
 
-    internal static void ClearContainers() => containers.Clear();
-    internal static void ClearAll() { containers.Clear(); snapshots.Clear(); }
-    internal static void Forget(UnitQuickSlotContainer container) => containers.Remove(container.Pointer);
+    internal static void ClearContainers() { lock (sync) { containers.Clear(); } }
+    internal static void ClearAll() { lock (sync) { containers.Clear(); } snapshots.Clear(); }
+    internal static void Forget(UnitQuickSlotContainer container) { lock (sync) { containers.Remove(container.Pointer); } }
 }
 
 internal sealed class ItemSlotContext : IDisposable
@@ -131,7 +145,11 @@ internal static class ResetExtraItems
 {
     static IEnumerable<System.Reflection.MethodBase> TargetMethods() => new[] { nameof(UnitQuickSlotContainer.Reset), nameof(UnitQuickSlotContainer.OnDespawned) }
         .Select(name => AccessTools.Method(typeof(UnitQuickSlotContainer), name));
-    static void Postfix(UnitQuickSlotContainer __instance, Guid __0) => ItemSlotStorage.State(__instance).Units.Remove(__0.ToString());
+    static void Postfix(UnitQuickSlotContainer __instance, Guid __0)
+    {
+        var state = ItemSlotStorage.State(__instance);
+        lock (state.Sync) state.Units.Remove(__0.ToString());
+    }
 }
 
 [HarmonyPatch(typeof(UnitQuickSlotContainer), nameof(UnitQuickSlotContainer.Clear))]

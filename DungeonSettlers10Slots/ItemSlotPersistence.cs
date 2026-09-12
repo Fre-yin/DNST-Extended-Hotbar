@@ -64,27 +64,22 @@ internal static class SaveItemExtension
     static void Finalizer(WriteContext __state) => Current = __state?.Previous;
 }
 
-[HarmonyPatch(typeof(SaveLoadHelper), nameof(SaveLoadHelper.WriteJsonFileSafely))]
-internal static class WriteItemExtension
-{
-    static bool Prefix(string __0, ref string __1)
+    [HarmonyPatch(typeof(SaveLoadHelper), nameof(SaveLoadHelper.WriteJsonFileSafely))]
+    internal static class WriteItemExtension
     {
-        var context = SaveItemExtension.Current;
-        if (context == null) return true;
-        if (context.Failed) return false; // Also suppress the subsequent save-header write.
-        if (!string.Equals(__0, context.Path, StringComparison.OrdinalIgnoreCase))
+        static bool Prefix(string __0, ref string __1)
         {
-            if (context.CampaignPrepared) return true; // Native header follows the campaign.
-            context.Failed = true;
-            DungeonSettlers10SlotsMod.Log.Error("Speichern abgebrochen: unerwartete Schreibreihenfolge/Kampagnenpfad.");
-            return false;
-        }
-        try
-        {
-            __1 = ItemSlotSaveCodec.Encode(__1, context.State);
-            context.CampaignPrepared = true;
-            return true;
-        }
+            var context = SaveItemExtension.Current;
+            if (context == null) return true;
+            if (context.Failed) return false; // Also suppress the subsequent save-header write.
+            if (!string.Equals(__0, context.Path, StringComparison.OrdinalIgnoreCase)) return true;
+            if (context.CampaignPrepared) return true;
+            try
+            {
+                __1 = ItemSlotSaveCodec.Encode(__1, context.State?.Copy());
+                context.CampaignPrepared = true;
+                return true;
+            }
         catch (Exception ex)
         {
             // Managed exceptions must not escape into the IL2CPP trampoline:

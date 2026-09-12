@@ -33,10 +33,10 @@ public sealed partial class DungeonSettlers10SlotsMod
     internal static bool RunUiAudits { get; } = Environment.GetCommandLineArgs().Contains(UiAuditArgument);
     internal static bool RunAudits { get; } = RunUiAudits || Environment.GetCommandLineArgs().Contains("--ds-run-item-audits")
         || Environment.GetCommandLineArgs().Contains("--ds-run-audits");
-    // DS_B.0.4.19, Steam build 25154317. The native binary and its metadata
+    // DS_B.0.4.23, Steam build 25269660. The native binary and its metadata
     // belong together; a partially copied patch must not enable these hooks.
-    private const string SupportedHash = "B0CD8B641D551019B82C0AF3DDE1532D6FF7BA155B20B2D3936742924B42DB2A";
-    private const string SupportedMetadataHash = "CE84EC266501C8DF4A23B31D50D8B413C82DAE49A062BC623B3440E8A3F5A23F";
+    private const string SupportedHash = "8049A17906060F10A5A35ACB530740C6D61C2F07E6AE814A5902B5CF76A63017";
+    private const string SupportedMetadataHash = "8D462701B21307252B6A0A5B0E77EECDFE7E10BC54F9D66EA59A1127E371DF47";
 
     internal void StartRuntime(HotbarLog logger, HarmonyLib.Harmony harmony)
     {
@@ -58,10 +58,10 @@ public sealed partial class DungeonSettlers10SlotsMod
         var metadata = Path.Combine(Application.dataPath, "il2cpp_data", "Metadata", "global-metadata.dat");
         if (FileHash(binary) != SupportedHash || FileHash(metadata) != SupportedMetadataHash)
         {
-            Log.Warning("Unbekannte oder nicht zusammengehörige Spieldateien: 10-Slot-Erweiterung deaktiviert; erwartet DS_B.0.4.19 / Build 25154317 (Spielcode und Metadaten).");
+            Log.Warning("Unbekannte oder nicht zusammengehörige Spieldateien: 10-Slot-Erweiterung deaktiviert; erwartet DS_B.0.4.23 / Build 25269660 (Spielcode und Metadaten).");
             return;
         }
-        Log.Msg("Compatibility fingerprints PASS: DS_B.0.4.19 / Steam 25154317; native binary and metadata match.");
+        Log.Msg("Compatibility fingerprints PASS: DS_B.0.4.23 / Steam 25269660; native binary and metadata match.");
 #if BEPINEX
         NativeSaveDictionary.VerifyInterop();
         Log.Msg("BepInEx save dictionary interop PASS: boxed native save record roundtrip before patching.");

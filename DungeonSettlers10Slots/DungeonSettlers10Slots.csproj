@@ -6,7 +6,7 @@
     <AssemblyName>DungeonSettlers10Slots</AssemblyName>
     <RootNamespace>DungeonSettlers10Slots</RootNamespace>
     <!-- Supply your own initialized MelonLoader game folder with -p:GameDir=... -->
-    <Version>0.3.8</Version>
+    <Version>0.3.9</Version>
     <AssemblyTitle>Extended Hotbar</AssemblyTitle>
     <Product>Extended Hotbar</Product>
     <Deterministic>true</Deterministic>
