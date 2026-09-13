@@ -1,12 +1,13 @@
-# Extended Hotbar — BepInEx preview 0.3.9-bepinex.1
+# Extended Hotbar — BepInEx 1.0.0
 
 Zehn aktive Skill-Slots, separater Basisangriff und drei Item-Slots für
 Dungeon Settlers. Eigener BepInEx-Einstieg, gemeinsame Spiellogik mit der
-MelonLoader-Version 0.3.9. Noch keine als stabil freigegebene Spieltest-Version.
+MelonLoader-Version 1.0.0. Version 1.0 kennzeichnet den funktionsvollständigen,
+stabilisierten Umfang; die unten genannten Testgrenzen bleiben bestehen.
 
 ## Voraussetzungen
 
-- Windows x64; Dungeon Settlers DS_B.0.4.23 / Steam-Build 25269660.
+- Windows x64; Steam-Build 25284551 auf der unveränderten DS_B.0.4.23-Codebasis.
 - Separates Spielverzeichnis mit BepInEx **Unity.IL2CPP win-x64**, getestet mit
   **6.0.0-be.788+5b766a3**. BepInEx 5 / Mono ist hierfür falsch.
 - Steam muss mit einer berechtigten Spielinstallation verfügbar sein.
@@ -43,9 +44,9 @@ Tastenbelegungen werden beim normalen Start nicht automatisch überschrieben.
 Falls Steam beim direkten Start zurück zur Originalinstallation springt:
 für die lokale Entwicklungskopie eine `steam_appid.txt` mit `2798330` neben
 der EXE verwenden und das Arbeitsverzeichnis auf diese Kopie setzen. Steam
-und die normale Spielberechtigung bleiben erforderlich. Die lokal eingerichtete
-`steam_appid.txt` gehört nicht zum Plugin-Paket. Siehe
-https://partner.steamgames.com/doc/api/steam_api#SteamAPI_RestartAppIfNecessary
+und die normale Spielberechtigung bleiben erforderlich.
+Diese Datei gehört nicht zum Plugin-Paket.
+Siehe https://partner.steamgames.com/doc/api/steam_api#SteamAPI_RestartAppIfNecessary
 
 ## Entfernen und Zurückwechseln
 
@@ -56,19 +57,18 @@ das Entfernen des Plugins ist keine Spielstand-Konvertierung zu Vanilla.
 
 ## Prüfstand und Grenzen
 
-Am 12.09.2026 auf DS_B.0.4.23 / 25269660 in getrennten Spielkopien geprüft:
+Am 13.09.2026 auf Steam-Build 25284551 in getrennten Spielkopien geprüft;
+GameAssembly und IL2CPP-Metadaten sind bytegleich mit DS_B.0.4.23 / 25269660:
 beide Loader-Builds, reine Datentests, native zehn Slots,
 GUID-Trennung, Save/Load inklusive tatsächlichem temporärem Dateischreiben,
 Erhalt alter 12-Slot-Daten, drei Item-Slots, Tastaturfilter und Belegungen,
 zehn Sprachen, Rahmen-Lebensdauer sowie BepInEx-Update-/Szenen-/Quit-Callbacks.
 Zusätzlich: Skill- und Item-Kontextmenüs mit None, Shift, Ctrl und Alt gegen
-die im Patch geänderte Eingabeschnittstelle. BepInEx beendet den Test sauber.
-Aktuelle Details: `../DungeonSettlers10Slots/PATCH-25269660.md` im Quellbaum.
+die bereits für Build 25269660 angepasste und in 25284551 unveränderte Eingabeschnittstelle. BepInEx beendet den Test sauber.
+Aktuelle Details: `../DungeonSettlers10Slots/PATCH-25284551.md` im Quellbaum.
 `VALIDATION.md` enthält historische Tests auf 0.4.19.
 
-Ein anschließender normaler, sichtbarer BepInEx-Nutzercheck wurde positiv bestätigt.
-Einzelne Kampf-, Klick- oder Speicheraktionen wurden dabei nicht protokolliert.
-Noch offen: detailliert protokollierte Tastendrücke und Kampfabläufe, längere
+Noch offen: tatsächliche Tastendrücke und sichtbare Hotbar im Kampf, längere
 Kampagnen und Zusammenspiel mit anderen BepInEx-Mods. Die neue Kopie enthält
 nur diese Hotbar, nicht automatisch die übrigen MelonLoader-Addons.
 
@@ -97,7 +97,8 @@ weiterhin erforderlich; dort verbleibt auch der MelonLoader-Einstieg.
 
 ## English summary
 
-Experimental BepInEx 6 Unity IL2CPP x64 port for DS_B.0.4.23 / Steam 25269660.
+Feature-complete BepInEx 6 Unity IL2CPP x64 port tested with Steam build 25284551
+on the unchanged DS_B.0.4.23 code baseline (also used by Steam 25269660).
 Install the package's `BepInEx` folder into a separate BepInEx game copy, with
 the plugin DLL and its adjacent assets kept together. Never mix loaders.
 Extra bindings start empty; existing bindings are preserved. Choose keys in
@@ -105,7 +106,6 @@ the game options; no number-key, Q/E/R or Shift preset is applied. Both copies s
 the real save/settings directory: back up first, close all copies, and begin
 with a new test campaign. Native tests on 0.4.23 passed for slots, persistence,
 bindings, localization, frame lifetime, loader callbacks and None/Shift/Ctrl/Alt
-context-menu routing through the updated input factory. A subsequent visible user
-check was successful, but detailed combat, long-session and third-party testing
-is still outstanding.
+context-menu routing through the input factory already adapted in 0.3.9. No input-logic change was needed for 1.0.0. Real combat, visible HUD,
+long sessions and third-party compatibility still require playtesting.
 Original mod code is MIT; the edited game artwork is not. See the notices.

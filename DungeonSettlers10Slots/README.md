@@ -1,6 +1,6 @@
-# Extended Hotbar 0.3.9 – für Dungeon Settlers
+# Extended Hotbar 1.0.0 – für Dungeon Settlers
 
-Lokaler Update-Kandidat für **DS_B.0.4.23 / Steam-Build 25269660**, Windows x64, MelonLoader 0.7.3. Gegen neu erzeugte Spiel-Schnittstellen gebaut und mit nativen Laufzeittests in einer getrennten Spielkopie geprüft. Sichtbarer Kampf und lange Kampagnen sind noch nicht abgenommen. **DungeonSettlers10Slots.dll**, Speicher-/Binding-Kennungen, zehn aktive Skills plus Basisangriff und drei Itemslots bleiben unverändert. Keine Zwölf-Slot-Oberfläche. Frühere Versions- und Abnahmeberichte sind historische Stände, keine Abnahme dieses Patches.
+Version 1.0.0 für **Steam-Build 25284551** auf der unveränderten **DS_B.0.4.23-Codebasis**, Windows x64, MelonLoader 0.7.3. GameAssembly und IL2CPP-Metadaten sind bytegleich mit Build 25269660; geändert wurden ausschließlich Addressables. Gegen die frisch aktualisierte Spielkopie gebaut und mit nativen Laufzeittests geprüft. Der Dateiname **DungeonSettlers10Slots.dll**, Speicher-/Binding-Kennungen, zehn aktive Skills plus Basisangriff und drei Itemslots bleiben unverändert. Keine Zwölf-Slot-Oberfläche. Version 1.0.0 kennzeichnet den funktionsvollständigen, stabilisierten Funktionsumfang; sichtbarer Langzeitbetrieb und beliebige Drittmod-Kombinationen können dennoch nicht pauschal garantiert werden. Frühere Versions- und Abnahmeberichte sind historische Stände, keine Abnahme dieses Patches.
 
 ## Lizenz und unterstützter Loader
 
@@ -10,7 +10,7 @@ Inoffizielle Community-Mod, kein offizielles oder als solches genehmigtes Produk
 
 Dieses Paket verwendet **MelonLoader 0.7.3**. Eine eigene BepInEx-6-Unity-IL2CPP-x64-Ausgabe wird getrennt gebaut. Zwei Loader übereinander zu installieren oder die DLL in den jeweils anderen Mod-Ordner zu kopieren ist keine freigegebene Installationsmethode. Andere Mods sind nicht pauschal als kompatibel geprüft.
 
-Frühere Paketrevisionen bleiben unverändert erhalten. Neue Pakete werden hier nur lokal vorbereitet; GitHub-/Nexus-Veröffentlichungen und Commits übernimmt Danny manuell.
+Fertige Pakete: [GitHub Releases](https://github.com/Fre-yin/DNST-Extended-Hotbar/releases/tag/v1.0.0). Beide Loader-Ausgaben verwenden Version 1.0.0.
 
 ## Umfang
 
@@ -71,13 +71,13 @@ Bei unbekanntem Spielcode oder abweichenden Metadaten deaktiviert sich die Erwei
 
 Der native Belegungsdialog nimmt einzelne Tasten auf, keine frei eingegebenen Modifier-Kombinationen. Bereits vorhandene Modifier-Belegungen bleiben erhalten, werden aber nicht von der Mod erzeugt. Lange Kürzel und schmale Auflösungen sind gesondert zu prüfen.
 
-Der frühere kurze Helligkeitstick ist nicht abschließend als behoben nachgewiesen. Langzeittest, Dungeonwechsel, unterschiedliche Itemarten und mehrere UI-Skalierungen bleiben Teil der Release-Abnahme. Daher **Release-Kandidat**, keine pauschale Fehlerfreiheitszusage.
+Der frühere kurze Helligkeitstick ist nicht abschließend als behoben nachgewiesen. Langzeittest, Dungeonwechsel, unterschiedliche Itemarten und mehrere UI-Skalierungen bleiben sinnvolle weitere Beobachtungspunkte. **Version 1.0 bezeichnet den abgeschlossenen Funktionsumfang, nicht eine pauschale Fehlerfreiheitszusage.**
 
-Aktuelle Patch-Belege: PATCH-25269660.md. RELEASE-REVIEW.md und DEVELOPMENT-HISTORY.md enthalten frühere Zwischenstände; deren historische Installationshinweise gelten nicht automatisch für die aktuelle Version.
+Aktuelle Patch-Belege: PATCH-25284551.md. PATCH-25269660.md, RELEASE-REVIEW.md und DEVELOPMENT-HISTORY.md enthalten frühere Zwischenstände; deren historische Installationshinweise gelten nicht automatisch für die aktuelle Version.
 
 ## Bauen und prüfen
 
-Aus dem Workspace, mit dem Pfad einer auf DS_B.0.4.23 aktualisierten MelonLoader-Spielkopie:
+Aus dem Workspace, mit dem Pfad einer auf Steam-Build 25284551 aktualisierten MelonLoader-Spielkopie:
 
     $gameDir = 'C:\Pfad\zur\aktualisierten\Spielkopie'
     dotnet build DungeonSettlers10Slots/DungeonSettlers10Slots.csproj -c Release "-p:GameDir=$gameDir"

@@ -6,7 +6,7 @@ This guide covers builds of the standalone MelonLoader and BepInEx mods. Players
 
 ## Requirements for the MelonLoader build
 
-- Windows x64 and your own installation of Dungeon Settlers **DS_B.0.4.23 / Steam 25269660**.
+- Windows x64 and your own installation of Dungeon Settlers **Steam 25284551 on the unchanged DS_B.0.4.23 code baseline**. Build 25269660 has the same verified game-code and metadata fingerprints.
 - **MelonLoader 0.7.3** in your game folder. Start the game with it once to generate the required interfaces under `MelonLoader/Il2CppAssemblies`, then close the game.
 - A .NET SDK capable of targeting `net6.0`, the .NET 6 reference packs, and a .NET 6 runtime for the tests. The local verification environment uses SDK **10.0.302** with .NET 6 support installed. Use `dotnet --list-sdks` and `dotnet --list-runtimes` to check your installed versions.
 - **PowerShell 7** (`pwsh`) for the optional packaging script. A terminal is sufficient for the direct DLL build.
@@ -51,9 +51,9 @@ New packages always include the optional demo save. Explicitly place it at `Dung
 
 The exclusions in `.gitignore` apply to Git, not manual browser uploads. Do not upload generated build directories, locally added artwork or save files alongside the source through the GitHub website.
 
-The source is at version **0.3.9** and still checks the supported game build's fingerprints. Do not simply change that check to enable an unknown game update: interfaces and behavior must be verified again first.
+The source is at version **1.0.0** and still checks the identical fingerprints of supported game builds 25269660 and 25284551. Do not simply change that check to enable an unknown game update: interfaces and behavior must be verified again first.
 
-## BepInEx 0.3.9-bepinex.1
+## BepInEx 1.0.0
 
 The BepInEx edition is a standalone mod package. Its build requires its own initialized BepInEx 6 Unity IL2CPP x64 game copy (tested: 6.0.0-be.788+5b766a3), not MelonLoader references.
 
