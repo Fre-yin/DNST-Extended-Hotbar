@@ -46,7 +46,7 @@ internal static class ItemSlotInput
                 return;
             }
             if (pending.Count >= MaxPending)
-                EvictUntilRoomOrWarn();
+                EvictOldestPending();
             if (pending.Count >= MaxPending)
             {
                 evt = null; // Never fall back to executing item 1 when metadata is lost.
@@ -57,14 +57,20 @@ internal static class ItemSlotInput
             pending.Add(evt.Pointer, (evt, slot));
         }
     }
-    static void EvictUntilRoomOrWarn()
+    static bool evictionLogged;
+    // A full table means earlier tagged events were never dispatched (dropped by an
+    // input gate). The oldest entries are those leaks; a live event would need 256
+    // newer tags before its own dispatch. Warn once so a real leak stays visible.
+    static void EvictOldestPending()
     {
+        var evicted = 0;
         while (pending.Count >= MaxPending && pendingOrder.Count != 0)
         {
-            var oldest = pendingOrder.Dequeue();
-            pending.Remove(oldest);
+            if (pending.Remove(pendingOrder.Dequeue())) evicted++;
         }
-        if (pending.Count >= MaxPending) return;
+        if (evicted == 0 || evictionLogged) return;
+        evictionLogged = true;
+        DungeonSettlers10SlotsMod.Log.Warning($"Zusatz-Itemeingabe: {evicted} nie zugestellte Ereignisse verworfen (Warteschlange voll). Diese Meldung erscheint nur einmal.");
     }
     static void RemoveFromOrder(IntPtr pointer)
     {

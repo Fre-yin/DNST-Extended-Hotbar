@@ -8,7 +8,7 @@ using UnityEngine.SceneManagement;
 
 namespace DungeonSettlers10Slots;
 
-[BepInPlugin(Id, "Extended Hotbar (BepInEx)", "1.0.0")]
+[BepInPlugin(Id, "Extended Hotbar (BepInEx)", "1.0.1")]
 [BepInProcess("DungeonSettlers.exe")]
 public sealed class Plugin : BasePlugin
 {
@@ -16,15 +16,21 @@ public sealed class Plugin : BasePlugin
 
     public override void Load()
     {
-        using (var process = System.Diagnostics.Process.GetCurrentProcess())
-            Log.LogInfo($"Hotbar session: {process.Id}|{process.StartTime.ToUniversalTime().Ticks}|{Path.GetDirectoryName(process.MainModule.FileName)}");
         var runtime = new DungeonSettlers10SlotsMod();
         HotbarDriver driver = null;
         try
         {
             runtime.StartRuntime(new HotbarLog(message => Log.LogInfo(message),
                 message => Log.LogWarning(message), message => Log.LogError(message)), new Harmony(Id));
-            if (!runtime.IsReady) throw new InvalidOperationException("Hotbar compatibility or initialization check failed. No hotbar hooks remain active.");
+            if (runtime.CompatibilityRejected)
+            {
+                // Same outcome as MelonLoader: the runtime already warned and installed
+                // no hooks. An unsupported game build after a patch is not a crash.
+                runtime.StopRuntime();
+                if (Environment.GetCommandLineArgs().Contains("--ds-bepinex-smoke-test")) Application.Quit(1);
+                return;
+            }
+            if (!runtime.IsReady) throw new InvalidOperationException("Hotbar initialization check failed. No hotbar hooks remain active.");
             driver = AddComponent<HotbarDriver>();
             driver.Attach(runtime);
             Log.LogInfo("BepInEx hotbar lifecycle attached. MelonLoader is not required; restart to remove this plugin.");

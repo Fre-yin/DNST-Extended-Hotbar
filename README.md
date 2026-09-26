@@ -4,7 +4,7 @@
 
 Zehn aktive Fähigkeitsplätze, ein separater Basisangriff und drei Gegenstandsplätze für Dungeon Settlers.
 
-**Version 1.0.0 für MelonLoader und BepInEx — funktionsvollständige Veröffentlichung.**
+**Version 1.0.1 für MelonLoader und BepInEx — Wartungsausgabe der funktionsvollständigen 1.0.**
 
 ## Downloads
 
@@ -12,8 +12,8 @@ Lade das eigenständige Mod-Paket für deinen installierten Loader herunter:
 
 | Loader | Mod-Paket |
 | --- | --- |
-| MelonLoader | [Extended-Hotbar-1.0.0.zip](https://github.com/Fre-yin/DNST-Extended-Hotbar/releases/download/v1.0.0/Extended-Hotbar-1.0.0.zip) |
-| BepInEx | [Extended-Hotbar-BepInEx-1.0.0.zip](https://github.com/Fre-yin/DNST-Extended-Hotbar/releases/download/v1.0.0/Extended-Hotbar-BepInEx-1.0.0.zip) |
+| MelonLoader | [Extended-Hotbar-1.0.1.zip](https://github.com/Fre-yin/DNST-Extended-Hotbar/releases/download/v1.0.1/Extended-Hotbar-1.0.1.zip) |
+| BepInEx | [Extended-Hotbar-BepInEx-1.0.1.zip](https://github.com/Fre-yin/DNST-Extended-Hotbar/releases/download/v1.0.1/Extended-Hotbar-BepInEx-1.0.1.zip) |
 
 Diese Links führen direkt zu den jeweiligen Mod-ZIPs. Die automatisch erzeugten Quellcode-Archive sind keine Installationspakete.
 
@@ -39,11 +39,18 @@ Wähle deine Tasten selbst in den Spieloptionen. Es gibt kein vorgeschriebenes T
 
 ## Prüfstand und Grenzen
 
-Beide endgültigen 1.0.0-Builds liefen mit 0 Warnungen und 0 Fehlern. Die Pakettests bestanden mit 33/33 für MelonLoader und 32/32 für BepInEx. Beide finalen DLLs bestanden auf Steam-Build 25284551 die vollständigen nativen Prüfungen für Slots, Kontextmenüs, Tastenbelegungen, temporäres Speichern/Laden, zehn Sprachen und die Lebensdauer des Rahmens. BepInEx beendete mit Exitcode 0 und sauberem Runtime-Cleanup; MelonLoader wurde nach den bestandenen Prüfungen im vorgesehenen 45-Sekunden-Fenster gezielt beendet.
+1.0.1 ist eine Wartungsausgabe ohne neuen Funktionsumfang. Spielstandformat, Tastenbelegungen, Layout und Grafik sind gegenüber 1.0.0 unverändert. Die Änderungen:
+- BepInEx deaktiviert sich bei unbekanntem Spielbuild jetzt wie MelonLoader nur mit einer Warnung.
+- Das BepInEx-Log enthält keinen lokalen Spielordner mehr.
+- Der Speicherpfad-Abgleich ist robuster, und ein unbestätigtes Speichern wird im Log gemeldet.
+- Die Warteschlange der Item-Eingabe wird sauberer bereinigt.
+- Eine fehlerhafte Rahmenprüfung im UI-Prüfmodus ist korrigiert.
 
-Version 1.0.0 bezeichnet den abgeschlossenen Funktionsumfang. Sichtbarer Kampf- und Langzeitbetrieb, Kampagnenwechsel, alle Auflösungen und beliebige Fremdmod-Kombinationen sind dadurch nicht vollständig geprüft. Die Prüfläufe veränderten keine reale Kampagne, persönlichen Tastenbelegungen oder Steam-Dateien. Abweichende Spielcode- oder Metadaten-Fingerabdrücke werden weiterhin blockiert.
+Einzelheiten stehen im [Changelog](DungeonSettlers10Slots/CHANGELOG.md).
 
-Gegenüber 0.3.9 blieb die Hotbar-, Save-, Binding-, Eingabe-, Layout- und Asset-Logik unverändert. Der Spielpatch änderte ausschließlich Addressables einschließlich UI-Prefabs und Tabellen. Aktualisiert wurden Versionsangaben, Kompatibilitätsmeldung und Dokumentation. Einzelheiten: [Changelog](DungeonSettlers10Slots/CHANGELOG.md) und [Patchbericht](DungeonSettlers10Slots/PATCH-25284551.md).
+Beide 1.0.1-Builds liefen mit 0 Warnungen und 0 Fehlern. Die Pakettests bestanden mit 33/33 für MelonLoader und 32/32 für BepInEx. Die BepInEx-DLL bestand die nativen Prüfläufe einschließlich UI-Prüfungen mit geladener Kampagne, gemeinsam mit Dungeon Settlers Delvers: Core 0.2.0. Die MelonLoader-DLL lud gemeinsam mit Delvers Core und Frieren 0.2.0. Die vollständigen nativen 1.0.0-Prüfungen auf Steam-Build 25284551 sind im [Patchbericht](DungeonSettlers10Slots/PATCH-25284551.md) beschrieben.
+
+Version 1.0 bezeichnet den abgeschlossenen Funktionsumfang. Sichtbarer Kampf- und Langzeitbetrieb, Kampagnenwechsel, alle Auflösungen und beliebige Fremdmod-Kombinationen sind dadurch nicht vollständig geprüft. Die Prüfläufe veränderten keine reale Kampagne, persönlichen Tastenbelegungen oder Steam-Dateien. Abweichende Spielcode- oder Metadaten-Fingerabdrücke werden weiterhin blockiert.
 
 Der getestete BepInEx-Loader meldet `Class::Init signatures have been exhausted, using a substitute!`; die dokumentierten Tests bestehen trotz dieser Meldung.
 

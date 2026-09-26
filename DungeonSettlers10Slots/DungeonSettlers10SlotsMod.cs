@@ -23,6 +23,9 @@ public sealed partial class DungeonSettlers10SlotsMod
     private HarmonyLib.Harmony runtimeHarmony;
     private bool stopped;
     internal bool IsReady => ready;
+    // An unknown game build is an expected state after a game patch: the warning
+    // is logged and no hooks are installed. Loaders must not report it as a crash.
+    internal bool CompatibilityRejected { get; private set; }
     internal static int FirstExtra;
     internal const int Capacity = 10;
     internal static int ExtraCount => Capacity - FirstExtra;
@@ -43,6 +46,7 @@ public sealed partial class DungeonSettlers10SlotsMod
         Log = logger;
         runtimeHarmony = harmony;
         stopped = false;
+        CompatibilityRejected = false;
         try { Initialize(); }
         catch (Exception ex)
         {
@@ -59,6 +63,7 @@ public sealed partial class DungeonSettlers10SlotsMod
         if (FileHash(binary) != SupportedHash || FileHash(metadata) != SupportedMetadataHash)
         {
             Log.Warning("Unbekannte oder nicht zusammengehörige Spieldateien: 10-Slot-Erweiterung deaktiviert; erwartet den geprüften Spielcode aus DS_B.0.4.23 / Steam 25269660 oder 25284551 (Spielcode und Metadaten).");
+            CompatibilityRejected = true;
             return;
         }
         Log.Msg("Compatibility fingerprints PASS: DS_B.0.4.23 code baseline / Steam 25269660 or 25284551; native binary and metadata match.");

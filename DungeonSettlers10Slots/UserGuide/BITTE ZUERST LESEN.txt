@@ -4,8 +4,8 @@ Mit dieser Mod bekommst du zehn Plätze für Fähigkeiten und drei Plätze
 für Gegenstände. Der normale Angriff bleibt zusätzlich erhalten.
 Dein Charakterfenster und das gewohnte Spielmenü bleiben bestehen.
 
-Mod-Version 1.0.0, geprüft mit Steam-Build 25284551 auf der unveränderten DS_B.0.4.23-Codebasis unter Windows.
-Dies ist die erste funktionsvollständige Ausgabe. Bitte sichere deine Spielstände weiterhin.
+Mod-Version 1.0.1, geprüft mit Steam-Build 25284551 auf der unveränderten DS_B.0.4.23-Codebasis unter Windows.
+Dies ist eine Wartungsausgabe der funktionsvollständigen Version 1.0. Bitte sichere deine Spielstände weiterhin.
 
 Dieses Update lässt die Originalbelegung unverändert und zusätzliche Skill-/
 Item-Tasten unbelegt. Weise deine Tasten selbst in den Spieloptionen zu. Bereits
@@ -19,7 +19,7 @@ mit DS_B.0.4.17 gespeichert; behalte beim Laden mit dem neuen Spiel eine Sicheru
 WICHTIG ZU ANDEREN MODS
 
 Dieses Paket ist für MelonLoader 0.7.3. Eine eigene BepInEx-6-IL2CPP-Ausgabe
-der Version 1.0.0 ist separat verfügbar. Das gemeinsame Laden mit anderen BepInEx-Mods ist nicht
+der Version 1.0.1 ist separat verfügbar. Das gemeinsame Laden mit anderen BepInEx-Mods ist nicht
 bestätigt. Installiere deshalb nicht einfach beide Loader übereinander.
 Eine Mod-DLL wird durch Kopieren in den anderen Mod-Ordner nicht kompatibel.
 Andere MelonLoader-Mods sind ebenfalls nicht pauschal als kompatibel geprüft.
@@ -52,7 +52,7 @@ DEN RICHTIGEN DOWNLOAD FINDEN
 Die veröffentlichten Mod-Pakete findest du unter "Releases", unten bei "Assets":
 https://github.com/Fre-yin/DNST-Extended-Hotbar/releases
 
-Extended-Hotbar-1.0.0.zip enthält die Mod und den optionalen Testspielstand.
+Extended-Hotbar-1.0.1.zip enthält die Mod und den optionalen Testspielstand.
 Du entscheidest selbst, ob du den Spielstand nach seiner Anleitung importierst.
 Er wird nicht automatisch eingebunden. Eine getrennte Variante ist nicht nötig.
 

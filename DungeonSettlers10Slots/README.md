@@ -1,6 +1,6 @@
-# Extended Hotbar 1.0.0 – für Dungeon Settlers
+# Extended Hotbar 1.0.1 – für Dungeon Settlers
 
-Version 1.0.0 für **Steam-Build 25284551** auf der unveränderten **DS_B.0.4.23-Codebasis**, Windows x64, MelonLoader 0.7.3. GameAssembly und IL2CPP-Metadaten sind bytegleich mit Build 25269660; geändert wurden ausschließlich Addressables. Gegen die frisch aktualisierte Spielkopie gebaut und mit nativen Laufzeittests geprüft. Der Dateiname **DungeonSettlers10Slots.dll**, Speicher-/Binding-Kennungen, zehn aktive Skills plus Basisangriff und drei Itemslots bleiben unverändert. Keine Zwölf-Slot-Oberfläche. Version 1.0.0 kennzeichnet den funktionsvollständigen, stabilisierten Funktionsumfang; sichtbarer Langzeitbetrieb und beliebige Drittmod-Kombinationen können dennoch nicht pauschal garantiert werden. Frühere Versions- und Abnahmeberichte sind historische Stände, keine Abnahme dieses Patches.
+Version 1.0.1 für **Steam-Build 25284551** auf der unveränderten **DS_B.0.4.23-Codebasis**, Windows x64, MelonLoader 0.7.3. GameAssembly und IL2CPP-Metadaten sind bytegleich mit Build 25269660; geändert wurden ausschließlich Addressables. Gegen die frisch aktualisierte Spielkopie gebaut und mit nativen Laufzeittests geprüft. Der Dateiname **DungeonSettlers10Slots.dll**, Speicher-/Binding-Kennungen, zehn aktive Skills plus Basisangriff und drei Itemslots bleiben unverändert. Keine Zwölf-Slot-Oberfläche. Version 1.0 kennzeichnet den funktionsvollständigen, stabilisierten Funktionsumfang; sichtbarer Langzeitbetrieb und beliebige Drittmod-Kombinationen können dennoch nicht pauschal garantiert werden. Frühere Versions- und Abnahmeberichte sind historische Stände, keine Abnahme dieses Patches.
 
 ## Lizenz und unterstützter Loader
 
@@ -10,7 +10,7 @@ Inoffizielle Community-Mod, kein offizielles oder als solches genehmigtes Produk
 
 Dieses Paket verwendet **MelonLoader 0.7.3**. Eine eigene BepInEx-6-Unity-IL2CPP-x64-Ausgabe wird getrennt gebaut. Zwei Loader übereinander zu installieren oder die DLL in den jeweils anderen Mod-Ordner zu kopieren ist keine freigegebene Installationsmethode. Andere Mods sind nicht pauschal als kompatibel geprüft.
 
-Fertige Pakete: [GitHub Releases](https://github.com/Fre-yin/DNST-Extended-Hotbar/releases/tag/v1.0.0). Beide Loader-Ausgaben verwenden Version 1.0.0.
+Fertige Pakete: [GitHub Releases](https://github.com/Fre-yin/DNST-Extended-Hotbar/releases/tag/v1.0.1). Beide Loader-Ausgaben verwenden Version 1.0.1.
 
 ## Umfang
 
@@ -73,7 +73,7 @@ Der native Belegungsdialog nimmt einzelne Tasten auf, keine frei eingegebenen Mo
 
 Der frühere kurze Helligkeitstick ist nicht abschließend als behoben nachgewiesen. Langzeittest, Dungeonwechsel, unterschiedliche Itemarten und mehrere UI-Skalierungen bleiben sinnvolle weitere Beobachtungspunkte. **Version 1.0 bezeichnet den abgeschlossenen Funktionsumfang, nicht eine pauschale Fehlerfreiheitszusage.**
 
-Aktuelle Patch-Belege: PATCH-25284551.md. PATCH-25269660.md, RELEASE-REVIEW.md und DEVELOPMENT-HISTORY.md enthalten frühere Zwischenstände; deren historische Installationshinweise gelten nicht automatisch für die aktuelle Version.
+Änderungen und Prüfstand von 1.0.1: CHANGELOG.md. Aktuelle Patch-Belege: PATCH-25284551.md. PATCH-25269660.md, RELEASE-REVIEW.md und DEVELOPMENT-HISTORY.md enthalten frühere Zwischenstände; deren historische Installationshinweise gelten nicht automatisch für die aktuelle Version.
 
 ## Bauen und prüfen
 

@@ -4,7 +4,7 @@
 
 Ten active skill slots, a separate basic attack and three item slots for Dungeon Settlers.
 
-**Version 1.0.0 for MelonLoader and BepInEx — feature-complete release.**
+**Version 1.0.1 for MelonLoader and BepInEx — maintenance release of the feature-complete 1.0.**
 
 ## Downloads
 
@@ -12,8 +12,8 @@ Download the standalone mod package matching your installed loader:
 
 | Loader | Mod package |
 | --- | --- |
-| MelonLoader | [Extended-Hotbar-1.0.0.zip](https://github.com/Fre-yin/DNST-Extended-Hotbar/releases/download/v1.0.0/Extended-Hotbar-1.0.0.zip) |
-| BepInEx | [Extended-Hotbar-BepInEx-1.0.0.zip](https://github.com/Fre-yin/DNST-Extended-Hotbar/releases/download/v1.0.0/Extended-Hotbar-BepInEx-1.0.0.zip) |
+| MelonLoader | [Extended-Hotbar-1.0.1.zip](https://github.com/Fre-yin/DNST-Extended-Hotbar/releases/download/v1.0.1/Extended-Hotbar-1.0.1.zip) |
+| BepInEx | [Extended-Hotbar-BepInEx-1.0.1.zip](https://github.com/Fre-yin/DNST-Extended-Hotbar/releases/download/v1.0.1/Extended-Hotbar-BepInEx-1.0.1.zip) |
 
 These links go directly to the respective mod ZIPs. Automatically generated source-code archives are not installation packages.
 
@@ -39,11 +39,18 @@ Choose your own bindings in the game options. There is no required key profile. 
 
 ## Validation and limitations
 
-Both final 1.0.0 builds completed with 0 warnings and 0 errors. Package tests passed 33/33 for MelonLoader and 32/32 for BepInEx. Both final DLLs passed the full native checks on Steam build 25284551 for slots, context menus, bindings, temporary save/load, ten languages and frame lifetime. BepInEx exited with code 0 and clean runtime cleanup; MelonLoader was deliberately stopped after its successful checks within the planned 45-second test window.
+1.0.1 is a maintenance release with no new features. The save format, key bindings, layout and artwork are unchanged from 1.0.0. The changes:
+- On an unknown game build, BepInEx now disables itself with a warning, as MelonLoader already did.
+- The BepInEx log no longer contains your local game folder.
+- Save-path matching is more robust, and an unconfirmed save is reported in the log.
+- The item-input queue is cleaned up more reliably.
+- An incorrect frame check in the UI audit mode is fixed.
 
-Version 1.0.0 marks the completed feature set. These checks do not fully establish visible combat, long sessions, campaign switching, every resolution or arbitrary third-party-mod combinations. The test runs changed no real campaign, personal bindings or Steam files. Different game-code or metadata fingerprints remain blocked.
+Details are in the [changelog](DungeonSettlers10Slots/CHANGELOG.md), which is written in German.
 
-Hotbar, save, binding, input, layout and asset logic are unchanged from 0.3.9. The game patch changed only Addressables, including UI prefabs and tables. Version information, compatibility messages and documentation were updated. See the [changelog](DungeonSettlers10Slots/CHANGELOG.md) and [patch report](DungeonSettlers10Slots/PATCH-25284551.md).
+Both 1.0.1 builds completed with 0 warnings and 0 errors. Package tests passed 33/33 for MelonLoader and 32/32 for BepInEx. The BepInEx DLL passed the native checks, including the UI checks with a loaded campaign, alongside Dungeon Settlers Delvers: Core 0.2.0. The MelonLoader DLL loaded alongside Delvers Core and Frieren 0.2.0. The full native 1.0.0 checks on Steam build 25284551 are described in the [patch report](DungeonSettlers10Slots/PATCH-25284551.md).
+
+Version 1.0 marks the completed feature set. These checks do not fully establish visible combat, long sessions, campaign switching, every resolution or arbitrary third-party-mod combinations. The test runs changed no real campaign, personal bindings or Steam files. Different game-code or metadata fingerprints remain blocked.
 
 The tested BepInEx loader reports `Class::Init signatures have been exhausted, using a substitute!`; the documented tests pass despite this message.
 

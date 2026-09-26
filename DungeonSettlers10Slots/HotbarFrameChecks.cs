@@ -93,7 +93,7 @@ internal static class HotbarFrameChecks
                 Require(Mathf.Abs(panel.anchoredPosition.x - offset) < 0.01f, "gap offset applied");
                 if (bar._itemQuickSlot)
                     Require(Mathf.Abs(BoundsIn(panel, bar._itemQuickSlot.GetComponent<RectTransform>()).xMin
-                        - panel.rect.xMax - 8) < 0.05f, "Y follows nonzero gap offset");
+                        - panel.rect.xMax - ItemSlotUI.FrameGap) < 0.05f, "Y follows nonzero gap offset");
                 var positioned = all.Select(Stamp).ToArray();
                 layout.Apply(offset);
                 Require(all.Select(Stamp).SequenceEqual(positioned), "gap offset idempotent");

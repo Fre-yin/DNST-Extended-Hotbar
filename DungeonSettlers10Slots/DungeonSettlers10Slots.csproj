@@ -6,10 +6,12 @@
     <AssemblyName>DungeonSettlers10Slots</AssemblyName>
     <RootNamespace>DungeonSettlers10Slots</RootNamespace>
     <!-- Supply your own initialized MelonLoader game folder with -p:GameDir=... -->
-    <Version>1.0.0</Version>
+    <Version>1.0.1</Version>
     <AssemblyTitle>Extended Hotbar</AssemblyTitle>
     <Product>Extended Hotbar</Product>
     <Deterministic>true</Deterministic>
+    <!-- Keep the release version plain: the SDK would otherwise append the checkout's git commit, which may not match the built source. -->
+    <IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Il2CppNewtonsoft.Json"><HintPath>$(GameDir)\MelonLoader\Il2CppAssemblies\Il2CppNewtonsoft.Json.dll</HintPath><Private>false</Private></Reference>

@@ -48,7 +48,8 @@ internal static class CombatBindingPreset
         foreach (var original in OriginalDefaults)
         {
             // The game itself filters its internal developer actions.
-            if ((int)original.InputType >= 65 && (int)original.InputType <= 70) continue;
+            if (original.InputType >= KeyInputType.TEST_SpawnLittleItems
+                && original.InputType <= KeyInputType.TEST_TurnOnOffUI) continue;
             Require(reader.TryGetBinding(original.InputType, original.SlotIndex, out var kept)
                 && kept.KeyCode == original.KeyCode && kept.ModifierKey == original.ModifierKey
                 && kept.IsKeyDown == original.IsKeyDown, "native default retained: " + original.InputType);

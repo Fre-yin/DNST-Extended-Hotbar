@@ -51,9 +51,9 @@ Neue Pakete enthalten den optionalen Demo-Spielstand immer. Lege ihn gezielt unt
 
 Die Ausschlüsse in `.gitignore` gelten für Git, nicht für manuelle Browser-Uploads. Lade erzeugte Build-Ordner, lokal ergänzte Grafiken und Spielstände daher nicht zusammen mit dem Quellcode über die GitHub-Webseite hoch.
 
-Der Quellcode steht bei Version **1.0.0** und prüft weiterhin die identischen Fingerabdrücke der unterstützten Spielbuilds 25269660 und 25284551. Ändere diese Prüfung nicht einfach, um ein unbekanntes Spielupdate freizuschalten; dafür müssen die Schnittstellen und das Verhalten erneut geprüft werden.
+Der Quellcode steht bei Version **1.0.1** und prüft weiterhin die identischen Fingerabdrücke der unterstützten Spielbuilds 25269660 und 25284551. Ändere diese Prüfung nicht einfach, um ein unbekanntes Spielupdate freizuschalten; dafür müssen die Schnittstellen und das Verhalten erneut geprüft werden.
 
-## BepInEx 1.0.0
+## BepInEx 1.0.1
 
 Die BepInEx-Ausgabe ist ein eigenständiges Mod-Paket. Ihr Build benötigt eine eigene initialisierte BepInEx 6 Unity IL2CPP x64 Spielkopie (getestet: 6.0.0-be.788+5b766a3), keine MelonLoader-Referenzen.
 

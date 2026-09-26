@@ -1,8 +1,8 @@
-# Extended Hotbar — BepInEx 1.0.0
+# Extended Hotbar — BepInEx 1.0.1
 
 Zehn aktive Skill-Slots, separater Basisangriff und drei Item-Slots für
 Dungeon Settlers. Eigener BepInEx-Einstieg, gemeinsame Spiellogik mit der
-MelonLoader-Version 1.0.0. Version 1.0 kennzeichnet den funktionsvollständigen,
+MelonLoader-Version 1.0.1. Version 1.0 kennzeichnet den funktionsvollständigen,
 stabilisierten Umfang; die unten genannten Testgrenzen bleiben bestehen.
 
 ## Voraussetzungen
@@ -68,8 +68,18 @@ die bereits für Build 25269660 angepasste und in 25284551 unveränderte Eingabe
 Aktuelle Details: `../DungeonSettlers10Slots/PATCH-25284551.md` im Quellbaum.
 `VALIDATION.md` enthält historische Tests auf 0.4.19.
 
+1.0.1 (26.09.2026) ist eine Wartungsausgabe ohne neuen Funktionsumfang. Bei
+unbekanntem Spielbuild deaktiviert sich das Plugin jetzt nur mit einer Warnung
+und meldet keinen Ladefehler mehr. Das Log enthält keinen lokalen Spielordner
+mehr. Speicherpfad-Abgleich und Item-Eingabe sind robuster, und die
+Rahmenprüfung im UI-Prüfmodus ist korrigiert.
+
+Die nativen Prüfläufe einschließlich UI-Prüfungen bestanden mit geladener
+Kampagne, gemeinsam mit Dungeon Settlers Delvers: Core 0.2.0.
+Details: `../DungeonSettlers10Slots/CHANGELOG.md`.
+
 Noch offen: tatsächliche Tastendrücke und sichtbare Hotbar im Kampf, längere
-Kampagnen und Zusammenspiel mit anderen BepInEx-Mods. Die neue Kopie enthält
+Kampagnen und Zusammenspiel mit weiteren BepInEx-Mods. Die neue Kopie enthält
 nur diese Hotbar, nicht automatisch die übrigen MelonLoader-Addons.
 
 Der getestete Loader meldet `Class::Init signatures have been exhausted,
@@ -106,6 +116,11 @@ the game options; no number-key, Q/E/R or Shift preset is applied. Both copies s
 the real save/settings directory: back up first, close all copies, and begin
 with a new test campaign. Native tests on 0.4.23 passed for slots, persistence,
 bindings, localization, frame lifetime, loader callbacks and None/Shift/Ctrl/Alt
-context-menu routing through the input factory already adapted in 0.3.9. No input-logic change was needed for 1.0.0. Real combat, visible HUD,
+context-menu routing through the input factory already adapted in 0.3.9. No input-logic change was needed for 1.0.0.
+1.0.1 is a maintenance release. On an unknown game build it now disables itself
+with a warning instead of a load error, and its log no longer contains the local
+game folder. It also makes save-path matching more robust and fixes the
+UI-audit frame check. Its native checks, including the UI
+checks, passed with a loaded campaign alongside Delvers Core 0.2.0. Real combat, visible HUD,
 long sessions and third-party compatibility still require playtesting.
 Original mod code is MIT; the edited game artwork is not. See the notices.

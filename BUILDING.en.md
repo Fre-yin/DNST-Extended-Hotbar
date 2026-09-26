@@ -51,9 +51,9 @@ New packages always include the optional demo save. Explicitly place it at `Dung
 
 The exclusions in `.gitignore` apply to Git, not manual browser uploads. Do not upload generated build directories, locally added artwork or save files alongside the source through the GitHub website.
 
-The source is at version **1.0.0** and still checks the identical fingerprints of supported game builds 25269660 and 25284551. Do not simply change that check to enable an unknown game update: interfaces and behavior must be verified again first.
+The source is at version **1.0.1** and still checks the identical fingerprints of supported game builds 25269660 and 25284551. Do not simply change that check to enable an unknown game update: interfaces and behavior must be verified again first.
 
-## BepInEx 1.0.0
+## BepInEx 1.0.1
 
 The BepInEx edition is a standalone mod package. Its build requires its own initialized BepInEx 6 Unity IL2CPP x64 game copy (tested: 6.0.0-be.788+5b766a3), not MelonLoader references.
 

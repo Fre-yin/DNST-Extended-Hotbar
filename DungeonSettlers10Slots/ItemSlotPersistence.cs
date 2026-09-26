@@ -58,7 +58,24 @@ internal static class SaveItemExtension
 
     static void Postfix(WriteContext __state, ref bool __result)
     {
+        // The native save reported success, but the campaign file never passed through
+        // the item-slot encoder: say so instead of failing silently.
+        if (__result && __state != null && !__state.Failed && !__state.CampaignPrepared)
+            DungeonSettlers10SlotsMod.Log.Error("Speichern nicht bestätigt: Die Kampagnendatei wurde ohne Itemslot-Zusatzdaten geschrieben (unerwarteter Speicherpfad).");
         if (__state == null || __state.Failed || !__state.CampaignPrepared) __result = false;
+    }
+
+    // Same file, regardless of separators or relative segments in either spelling.
+    internal static bool SamePath(string left, string right)
+    {
+        if (string.Equals(left, right, StringComparison.OrdinalIgnoreCase)) return true;
+        if (string.IsNullOrEmpty(left) || string.IsNullOrEmpty(right)) return false;
+        try
+        {
+            return string.Equals(System.IO.Path.GetFullPath(left), System.IO.Path.GetFullPath(right),
+                StringComparison.OrdinalIgnoreCase);
+        }
+        catch (Exception) { return false; }
     }
 
     static void Finalizer(WriteContext __state) => Current = __state?.Previous;
@@ -72,7 +89,7 @@ internal static class SaveItemExtension
             var context = SaveItemExtension.Current;
             if (context == null) return true;
             if (context.Failed) return false; // Also suppress the subsequent save-header write.
-            if (!string.Equals(__0, context.Path, StringComparison.OrdinalIgnoreCase)) return true;
+            if (!SaveItemExtension.SamePath(__0, context.Path)) return true;
             if (context.CampaignPrepared) return true;
             try
             {
@@ -93,7 +110,7 @@ internal static class SaveItemExtension
     static void Finalizer(Exception __exception, string __0)
     {
         var context = SaveItemExtension.Current;
-        if (__exception != null && context != null && string.Equals(__0, context.Path, StringComparison.OrdinalIgnoreCase))
+        if (__exception != null && context != null && SaveItemExtension.SamePath(__0, context.Path))
             context.Failed = true;
     }
 }
