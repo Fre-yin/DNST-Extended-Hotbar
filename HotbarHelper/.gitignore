@@ -1,7 +1,0 @@
-bin/
-bin-*/
-dist/
-*.exe
-*.zip
-*.pdb
-*.png

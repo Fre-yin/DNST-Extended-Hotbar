@@ -1,16 +1,16 @@
-# Extended Hotbar 1.0.1 – für Dungeon Settlers
+# Extended Hotbar 1.0.2 für Dungeon Settlers
 
-Version 1.0.1 für **Steam-Build 25284551** auf der unveränderten **DS_B.0.4.23-Codebasis**, Windows x64, MelonLoader 0.7.3. GameAssembly und IL2CPP-Metadaten sind bytegleich mit Build 25269660; geändert wurden ausschließlich Addressables. Gegen die frisch aktualisierte Spielkopie gebaut und mit nativen Laufzeittests geprüft. Der Dateiname **DungeonSettlers10Slots.dll**, Speicher-/Binding-Kennungen, zehn aktive Skills plus Basisangriff und drei Itemslots bleiben unverändert. Keine Zwölf-Slot-Oberfläche. Version 1.0 kennzeichnet den funktionsvollständigen, stabilisierten Funktionsumfang; sichtbarer Langzeitbetrieb und beliebige Drittmod-Kombinationen können dennoch nicht pauschal garantiert werden. Frühere Versions- und Abnahmeberichte sind historische Stände, keine Abnahme dieses Patches.
+Version 1.0.2 für **Steam-Build 25846389 (DS_B.0.4.29)**, Windows x64, MelonLoader 0.7.3. Das Spielupdate ändert GameAssembly und IL2CPP-Metadaten. Gegen die frisch aktualisierte Spielkopie gebaut und mit nativen Laufzeittests geprüft. Der Dateiname **DungeonSettlers10Slots.dll**, Speicher-/Binding-Kennungen, zehn aktive Skills plus Basisangriff und drei Itemslots bleiben unverändert. Keine Zwölf-Slot-Oberfläche. Version 1.0 kennzeichnet den funktionsvollständigen, stabilisierten Funktionsumfang; sichtbarer Langzeitbetrieb und beliebige Drittmod-Kombinationen können dennoch nicht pauschal garantiert werden. Frühere Versions- und Abnahmeberichte sind historische Stände, keine Abnahme dieses Patches.
 
 ## Lizenz und unterstützter Loader
 
-Der eigenständig verfasste Modcode, Build-Skripte und eigene Anleitungstexte stehen unter **MIT**, siehe [LICENSE](LICENSE). Das ist keine freie Lizenz für das gesamte gemischte Paket: **SkillFrame__sharedassets0_mod_4898.png ist eine von Danny bearbeitete Originalgrafik aus Dungeon Settlers und ausdrücklich nicht MIT-lizenziert.** Der Rechtehinweis [Assets/NOTICE.txt](Assets/NOTICE.txt) wird direkt neben der PNG mitgeliefert. Auch der optionale Testspielstand und darin repräsentierte Spielinhalte werden nicht unter die MIT-Code-Lizenz gestellt. Rechteumfang und Herkunft: [LICENSING.txt](LICENSING.txt), [THIRD_PARTY_NOTICES.txt](THIRD_PARTY_NOTICES.txt). Original-Lizenztexte der referenzierten Bibliotheken liegen unter `Licenses`; ihre DLLs werden nicht verteilt.
+Der eigenständig verfasste Modcode, Build-Skripte und eigene Anleitungstexte stehen unter **MIT**, siehe [LICENSE](LICENSE). Das ist keine freie Lizenz für das gesamte gemischte Paket: **SkillFrame__sharedassets0_mod_4898.png ist eine von Fre-yin bearbeitete Originalgrafik aus Dungeon Settlers und ausdrücklich nicht MIT-lizenziert.** Der Rechtehinweis [Assets/NOTICE.txt](Assets/NOTICE.txt) wird direkt neben der PNG mitgeliefert. Auch der optionale Testspielstand und darin repräsentierte Spielinhalte werden nicht unter die MIT-Code-Lizenz gestellt. Rechteumfang und Herkunft: [LICENSING.txt](LICENSING.txt), [THIRD_PARTY_NOTICES.txt](THIRD_PARTY_NOTICES.txt). Original-Lizenztexte der referenzierten Bibliotheken liegen unter `Licenses`; ihre DLLs werden nicht verteilt.
 
 Inoffizielle Community-Mod, kein offizielles oder als solches genehmigtes Produkt. Unsere Code-Lizenz erteilt keine Rechte am Spiel und hebt die [Dungeon-Settlers-EULA](https://store.steampowered.com/eula/2798330_eula_0) nicht auf.
 
 Dieses Paket verwendet **MelonLoader 0.7.3**. Eine eigene BepInEx-6-Unity-IL2CPP-x64-Ausgabe wird getrennt gebaut. Zwei Loader übereinander zu installieren oder die DLL in den jeweils anderen Mod-Ordner zu kopieren ist keine freigegebene Installationsmethode. Andere Mods sind nicht pauschal als kompatibel geprüft.
 
-Fertige Pakete: [GitHub Releases](https://github.com/Fre-yin/DNST-Extended-Hotbar/releases/tag/v1.0.1). Beide Loader-Ausgaben verwenden Version 1.0.1.
+Fertige Pakete: [GitHub Releases](https://github.com/Fre-yin/DNST-Extended-Hotbar/releases/tag/v1.0.2). Beide Loader-Ausgaben verwenden Version 1.0.2.
 
 ## Umfang
 
@@ -73,11 +73,11 @@ Der native Belegungsdialog nimmt einzelne Tasten auf, keine frei eingegebenen Mo
 
 Der frühere kurze Helligkeitstick ist nicht abschließend als behoben nachgewiesen. Langzeittest, Dungeonwechsel, unterschiedliche Itemarten und mehrere UI-Skalierungen bleiben sinnvolle weitere Beobachtungspunkte. **Version 1.0 bezeichnet den abgeschlossenen Funktionsumfang, nicht eine pauschale Fehlerfreiheitszusage.**
 
-Änderungen und Prüfstand von 1.0.1: CHANGELOG.md. Aktuelle Patch-Belege: PATCH-25284551.md. PATCH-25269660.md, RELEASE-REVIEW.md und DEVELOPMENT-HISTORY.md enthalten frühere Zwischenstände; deren historische Installationshinweise gelten nicht automatisch für die aktuelle Version.
+Änderungen und Prüfstand von 1.0.2: CHANGELOG.md. Aktuelle Patch-Belege: PATCH-25846389.md. PATCH-25284551.md, PATCH-25269660.md, RELEASE-REVIEW.md und DEVELOPMENT-HISTORY.md enthalten frühere Zwischenstände; deren historische Installationshinweise gelten nicht automatisch für die aktuelle Version.
 
 ## Bauen und prüfen
 
-Aus dem Workspace, mit dem Pfad einer auf Steam-Build 25284551 aktualisierten MelonLoader-Spielkopie:
+Aus dem Workspace, mit dem Pfad einer auf Steam-Build 25846389 aktualisierten MelonLoader-Spielkopie:
 
     $gameDir = 'C:\Pfad\zur\aktualisierten\Spielkopie'
     dotnet build DungeonSettlers10Slots/DungeonSettlers10Slots.csproj -c Release "-p:GameDir=$gameDir"

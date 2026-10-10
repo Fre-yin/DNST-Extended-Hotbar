@@ -1,6 +1,6 @@
 using MelonLoader;
 
-[assembly: MelonInfo(typeof(DungeonSettlers10Slots.DungeonSettlers10SlotsMod), "Extended Hotbar", "1.0.1", "Danny/Codex")]
+[assembly: MelonInfo(typeof(DungeonSettlers10Slots.DungeonSettlers10SlotsMod), "Extended Hotbar", "1.0.2", "Fre-yin")]
 [assembly: MelonGame(null, "DungeonSettlers")]
 [assembly: HarmonyDontPatchAll]
 

@@ -6,7 +6,7 @@ notice. This does not license Dungeon Settlers, game code, artwork, fonts,
 trademarks or other third-party content.
 
 SkillFrame__sharedassets0_mod_4898.png is original Dungeon Settlers artwork
-edited by Danny, NOT a wholly original MIT-licensed asset. Preserve its
+edited by Fre-yin, NOT a wholly original MIT-licensed asset. Preserve its
 adjacent NOTICE.txt. Original rights remain with CanOpener or the respective
 rights holders; this package grants no separate permission to reuse or
 redistribute those game-derived materials as free assets.

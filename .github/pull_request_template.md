@@ -6,7 +6,7 @@ What changed, and why?
 Falls vorhanden, Issue verlinken. / Link the issue, if any.
 
 ## Betroffene Komponente / Affected component
-Hotbar / Helper / Dokumentation (documentation) / Sonstiges (other)
+Hotbar / Dokumentation (documentation) / Sonstiges (other)
 
 ## Prüfung / Validation
 Welche Prüfungen wurden durchgeführt und mit welchem Ergebnis?

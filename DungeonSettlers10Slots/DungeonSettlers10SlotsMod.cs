@@ -36,10 +36,10 @@ public sealed partial class DungeonSettlers10SlotsMod
     internal static bool RunUiAudits { get; } = Environment.GetCommandLineArgs().Contains(UiAuditArgument);
     internal static bool RunAudits { get; } = RunUiAudits || Environment.GetCommandLineArgs().Contains("--ds-run-item-audits")
         || Environment.GetCommandLineArgs().Contains("--ds-run-audits");
-    // DS_B.0.4.23 code baseline, Steam builds 25269660 and 25284551. Both builds
-    // have this identical executable/metadata pair; partial patches stay blocked.
-    private const string SupportedHash = "8049A17906060F10A5A35ACB530740C6D61C2F07E6AE814A5902B5CF76A63017";
-    private const string SupportedMetadataHash = "8D462701B21307252B6A0A5B0E77EECDFE7E10BC54F9D66EA59A1127E371DF47";
+    // DS_B.0.4.29 code baseline, Steam build 25846389. Executable and metadata
+    // must match as a pair; partial patches stay blocked.
+    private const string SupportedHash = "4D7D851991C0DB7D16E68CA6FA2F4E33945A6289405C012100D9B5E6A570C04D";
+    private const string SupportedMetadataHash = "C11FAC80BFC461E286BDB593E7D6CA06AD1717F3DE5D3086E4708EEB6DA357DB";
 
     internal void StartRuntime(HotbarLog logger, HarmonyLib.Harmony harmony)
     {
@@ -62,11 +62,11 @@ public sealed partial class DungeonSettlers10SlotsMod
         var metadata = Path.Combine(Application.dataPath, "il2cpp_data", "Metadata", "global-metadata.dat");
         if (FileHash(binary) != SupportedHash || FileHash(metadata) != SupportedMetadataHash)
         {
-            Log.Warning("Unbekannte oder nicht zusammengehörige Spieldateien: 10-Slot-Erweiterung deaktiviert; erwartet den geprüften Spielcode aus DS_B.0.4.23 / Steam 25269660 oder 25284551 (Spielcode und Metadaten).");
+            Log.Warning("Unbekannte oder nicht zusammengehörige Spieldateien: 10-Slot-Erweiterung deaktiviert; erwartet den geprüften Spielcode aus DS_B.0.4.29 / Steam 25846389 (Spielcode und Metadaten).");
             CompatibilityRejected = true;
             return;
         }
-        Log.Msg("Compatibility fingerprints PASS: DS_B.0.4.23 code baseline / Steam 25269660 or 25284551; native binary and metadata match.");
+        Log.Msg("Compatibility fingerprints PASS: DS_B.0.4.29 code baseline / Steam 25846389; native binary and metadata match.");
 #if BEPINEX
         NativeSaveDictionary.VerifyInterop();
         Log.Msg("BepInEx save dictionary interop PASS: boxed native save record roundtrip before patching.");

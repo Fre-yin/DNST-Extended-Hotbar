@@ -5,6 +5,7 @@ using global::Refactor.UI;
 using global::Refactor.UI.Util;
 using global::Refactor.Util;
 using global::TMPro;
+using SubUI_Dropdown = global::Refactor.SubUI_Dropdown;
 #else
 using Il2CppRefactor.Main.InputModule;
 using Il2CppRefactor.Setting;
@@ -12,6 +13,7 @@ using Il2CppRefactor.UI;
 using Il2CppRefactor.UI.Util;
 using Il2CppRefactor.Util;
 using Il2CppTMPro;
+using SubUI_Dropdown = Il2CppRefactor.SubUI_Dropdown;
 #endif
 using UnityEngine;
 
@@ -80,8 +82,11 @@ internal static class NativeLocalizationChecks
             ConfigureLayout(baseline);
             Require(!baseline._hasInitDefaults, "baseline has not run Awake");
             baseline.RefreshOnRunTime();
-            Require(baseline.maxVisibleLines == 0, "unprepared native refresh reproduces zero visible lines");
-            DungeonSettlers10SlotsMod.Log.Msg("Native localization regression reproduced: inactive label refresh before Awake sets maxVisibleLines=0.");
+            // DS_B.0.4.29 stores the initial defaults on the first refresh, so the
+            // former failure no longer reproduces there. The checks below hold either way.
+            DungeonSettlers10SlotsMod.Log.Msg(baseline.maxVisibleLines == 0
+                ? "Native localization regression reproduced: inactive label refresh before Awake sets maxVisibleLines=0."
+                : $"Native localization regression not present in this game build: inactive label refresh before Awake keeps maxVisibleLines={baseline.maxVisibleLines}.");
             var view = root.AddComponent<SubUI_KeySetting>();
             var settings = new KeySetting();
             view._keySettingReader = settings.Cast<IKeySettingReader>();
@@ -89,6 +94,15 @@ internal static class NativeLocalizationChecks
             view._awaitInputPopup = Child<RectTransform>("AwaitInput");
             view._awaitConflictPopup = Child<RectTransform>("AwaitConflict");
             view._awaitText = Child<DASText>("AwaitText");
+            // DS_B.0.4.29: waiting for a key first closes the keyboard layout and compatibility dropdowns.
+            SubUI_Dropdown Dropdown(string name)
+            {
+                var dropdown = Child<SubUI_Dropdown>(name);
+                dropdown._dropdownButtonParent = Child<RectTransform>(name + "Buttons");
+                return dropdown;
+            }
+            view._layoutDropdown = Dropdown("LayoutDropdown");
+            view._compatibilityDropdown = Dropdown("CompatibilityDropdown");
             var row = Child<SubUI_KeySettingParts>("Row");
             row._titleText = Child<DASText>("Title");
             row._titleText.SetUseTextKey(true);

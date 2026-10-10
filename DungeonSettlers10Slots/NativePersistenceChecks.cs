@@ -28,7 +28,7 @@ internal static class NativePersistenceChecks
         Directory.CreateDirectory(directory);
         targetPath = Path.Combine(directory, "campaign.json");
         saveName = "DSHotbarAudit-" + Guid.NewGuid().ToString("N");
-        var harmony = new HarmonyLib.Harmony("Danny.DungeonSettlers10Slots.PersistenceAudit");
+        var harmony = new HarmonyLib.Harmony("fre-yin.dnst.extended-hotbar.persistence-audit");
         try
         {
             harmony.Patch(AccessTools.Method(typeof(SaveLoadHelper), nameof(SaveLoadHelper.GetCampaignSavePath)), prefix: Method(nameof(RedirectPath)));

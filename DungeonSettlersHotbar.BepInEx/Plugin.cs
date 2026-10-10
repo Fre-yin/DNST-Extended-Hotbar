@@ -8,7 +8,7 @@ using UnityEngine.SceneManagement;
 
 namespace DungeonSettlers10Slots;
 
-[BepInPlugin(Id, "Extended Hotbar (BepInEx)", "1.0.1")]
+[BepInPlugin(Id, "Extended Hotbar (BepInEx)", "1.0.2")]
 [BepInProcess("DungeonSettlers.exe")]
 public sealed class Plugin : BasePlugin
 {

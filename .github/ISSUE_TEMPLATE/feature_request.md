@@ -1,6 +1,6 @@
 ---
 name: "Funktionswunsch / Feature request"
-about: "Eine Verbesserung für Hotbar oder Helper vorschlagen / Suggest an improvement"
+about: "Eine Verbesserung für die Hotbar vorschlagen / Suggest an improvement"
 title: "[Feature] "
 labels: ""
 assignees: ""
@@ -9,7 +9,7 @@ assignees: ""
 Deutsch oder Englisch ist willkommen. / German or English is welcome.
 
 ## Betroffene Komponente / Affected component
-Hotbar / Helper / Dokumentation (documentation)
+Hotbar / Dokumentation (documentation)
 
 ## Problem oder Bedarf / Problem or need
 Was möchtest du erreichen? Was fehlt oder ist umständlich?

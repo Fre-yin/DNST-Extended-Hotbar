@@ -6,7 +6,7 @@ Diese Anleitung beschreibt die Builds der eigenständigen MelonLoader- und BepIn
 
 ## Voraussetzungen für den MelonLoader-Build
 
-- Windows x64 und eine eigene Installation von Dungeon Settlers **Steam 25284551 auf der unveränderten DS_B.0.4.23-Codebasis**. Build 25269660 hat dieselben geprüften Spielcode- und Metadaten-Fingerabdrücke.
+- Windows x64 und eine eigene Installation von Dungeon Settlers **Steam 25846389 (DS_B.0.4.29)**.
 - **MelonLoader 0.7.3** im eigenen Spielordner. Starte das Spiel damit einmal, damit die benötigten Schnittstellen unter `MelonLoader/Il2CppAssemblies` erzeugt werden. Beende das Spiel anschließend.
 - Ein .NET SDK, das `net6.0` bauen kann, die .NET-6-Referenzpakete und eine .NET-6-Laufzeit für die Tests. Der lokale Prüfstand verwendet SDK **10.0.302** mit installierter .NET-6-Unterstützung. `dotnet --list-sdks` und `dotnet --list-runtimes` zeigen die vorhandenen Versionen.
 - Für das optionale Paketierungsskript: **PowerShell 7** (`pwsh`). Für den direkten DLL-Build reicht ein Terminal.
@@ -51,9 +51,9 @@ Neue Pakete enthalten den optionalen Demo-Spielstand immer. Lege ihn gezielt unt
 
 Die Ausschlüsse in `.gitignore` gelten für Git, nicht für manuelle Browser-Uploads. Lade erzeugte Build-Ordner, lokal ergänzte Grafiken und Spielstände daher nicht zusammen mit dem Quellcode über die GitHub-Webseite hoch.
 
-Der Quellcode steht bei Version **1.0.1** und prüft weiterhin die identischen Fingerabdrücke der unterstützten Spielbuilds 25269660 und 25284551. Ändere diese Prüfung nicht einfach, um ein unbekanntes Spielupdate freizuschalten; dafür müssen die Schnittstellen und das Verhalten erneut geprüft werden.
+Der Quellcode steht bei Version **1.0.2** und prüft die Fingerabdrücke von Spielcode und Metadaten des unterstützten Spielbuilds 25846389. Ändere diese Prüfung nicht einfach, um ein unbekanntes Spielupdate freizuschalten; dafür müssen die Schnittstellen und das Verhalten erneut geprüft werden.
 
-## BepInEx 1.0.1
+## BepInEx 1.0.2
 
 Die BepInEx-Ausgabe ist ein eigenständiges Mod-Paket. Ihr Build benötigt eine eigene initialisierte BepInEx 6 Unity IL2CPP x64 Spielkopie (getestet: 6.0.0-be.788+5b766a3), keine MelonLoader-Referenzen.
 

@@ -1,13 +1,13 @@
-# Extended Hotbar — BepInEx 1.0.1
+# Extended Hotbar: BepInEx 1.0.2
 
 Zehn aktive Skill-Slots, separater Basisangriff und drei Item-Slots für
 Dungeon Settlers. Eigener BepInEx-Einstieg, gemeinsame Spiellogik mit der
-MelonLoader-Version 1.0.1. Version 1.0 kennzeichnet den funktionsvollständigen,
+MelonLoader-Version 1.0.2. Version 1.0 kennzeichnet den funktionsvollständigen,
 stabilisierten Umfang; die unten genannten Testgrenzen bleiben bestehen.
 
 ## Voraussetzungen
 
-- Windows x64; Steam-Build 25284551 auf der unveränderten DS_B.0.4.23-Codebasis.
+- Windows x64; Steam-Build 25846389 (DS_B.0.4.29).
 - Separates Spielverzeichnis mit BepInEx **Unity.IL2CPP win-x64**, getestet mit
   **6.0.0-be.788+5b766a3**. BepInEx 5 / Mono ist hierfür falsch.
 - Steam muss mit einer berechtigten Spielinstallation verfügbar sein.
@@ -57,16 +57,22 @@ das Entfernen des Plugins ist keine Spielstand-Konvertierung zu Vanilla.
 
 ## Prüfstand und Grenzen
 
-Am 13.09.2026 auf Steam-Build 25284551 in getrennten Spielkopien geprüft;
-GameAssembly und IL2CPP-Metadaten sind bytegleich mit DS_B.0.4.23 / 25269660:
-beide Loader-Builds, reine Datentests, native zehn Slots,
+Am 10.10.2026 auf Steam-Build 25846389 (DS_B.0.4.29) geprüft, unter BepInEx
+und unter MelonLoader: beide Loader-Builds, reine Datentests, native zehn Slots,
 GUID-Trennung, Save/Load inklusive tatsächlichem temporärem Dateischreiben,
 Erhalt alter 12-Slot-Daten, drei Item-Slots, Tastaturfilter und Belegungen,
-zehn Sprachen, Rahmen-Lebensdauer sowie BepInEx-Update-/Szenen-/Quit-Callbacks.
-Zusätzlich: Skill- und Item-Kontextmenüs mit None, Shift, Ctrl und Alt gegen
-die bereits für Build 25269660 angepasste und in 25284551 unveränderte Eingabeschnittstelle. BepInEx beendet den Test sauber.
-Aktuelle Details: `../DungeonSettlers10Slots/PATCH-25284551.md` im Quellbaum.
+Tastennamen nach Tastaturlayout, zehn Sprachen, Rahmen-Lebensdauer sowie
+BepInEx-Update-/Szenen-/Quit-Callbacks. Zusätzlich: Skill- und Item-Kontextmenüs
+mit None, Shift, Ctrl und Alt. Unter BepInEx wurde außerdem eine Kampagne geladen
+und die Hotbar mit ihren Tastennamen geprüft. BepInEx beendet den Test sauber.
+In beiden Loadern wurden Kampagnen gemeinsam mit Dungeon Settlers Delvers: Core 0.4.1
+und Frieren 0.4.1 geladen; beide erkennen die Hotbar 1.0.2 als kompatibel.
+Aktuelle Details: `../DungeonSettlers10Slots/PATCH-25846389.md` im Quellbaum.
 `VALIDATION.md` enthält historische Tests auf 0.4.19.
+
+1.0.2 passt die Mod an das Spielupdate DS_B.0.4.29 an. Die Tastennamen folgen dem
+Tastaturlayout aus den Spieloptionen. Außerdem enthält die DLL keinen lokalen
+Build-Pfad mehr, und Autoren- und Lizenzangaben sind vereinheitlicht.
 
 1.0.1 (26.09.2026) ist eine Wartungsausgabe ohne neuen Funktionsumfang. Bei
 unbekanntem Spielbuild deaktiviert sich das Plugin jetzt nur mit einer Warnung
@@ -107,16 +113,21 @@ weiterhin erforderlich; dort verbleibt auch der MelonLoader-Einstieg.
 
 ## English summary
 
-Feature-complete BepInEx 6 Unity IL2CPP x64 port tested with Steam build 25284551
-on the unchanged DS_B.0.4.23 code baseline (also used by Steam 25269660).
+Feature-complete BepInEx 6 Unity IL2CPP x64 port tested with Steam build 25846389
+(DS_B.0.4.29).
 Install the package's `BepInEx` folder into a separate BepInEx game copy, with
 the plugin DLL and its adjacent assets kept together. Never mix loaders.
 Extra bindings start empty; existing bindings are preserved. Choose keys in
 the game options; no number-key, Q/E/R or Shift preset is applied. Both copies share
 the real save/settings directory: back up first, close all copies, and begin
-with a new test campaign. Native tests on 0.4.23 passed for slots, persistence,
-bindings, localization, frame lifetime, loader callbacks and None/Shift/Ctrl/Alt
-context-menu routing through the input factory already adapted in 0.3.9. No input-logic change was needed for 1.0.0.
+with a new test campaign. Native tests on 0.4.29 passed for slots, persistence,
+bindings, key names per keyboard layout, localization, frame lifetime, loader callbacks
+and None/Shift/Ctrl/Alt context-menu routing; a loaded campaign passed the key-name check.
+Under both loaders, campaigns were loaded alongside Delvers Core 0.4.1 and Frieren 0.4.1;
+both recognize Hotbar 1.0.2 as compatible.
+1.0.2 adapts the mod to the DS_B.0.4.29 game update: key names follow the keyboard
+layout chosen in the game options, the DLL no longer contains a local build path,
+and author and license notes are unified.
 1.0.1 is a maintenance release. On an unknown game build it now disables itself
 with a warning instead of a load error, and its log no longer contains the local
 game folder. It also makes save-path matching more robust and fixes the

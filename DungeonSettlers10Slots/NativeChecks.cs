@@ -99,13 +99,14 @@ internal static class NativeChecks
 
     static void CheckKeyLabels()
     {
+        var settings = new KeySetting();
         for (var digit = 0; digit <= 9; digit++)
         {
             var code = KeyCode.Alpha0 + digit;
             Require(code.ToString() == "Alpha" + digit, "reproduce raw hotbar enum text");
-            Require(HotbarKeyLabels.Display(code) == digit.ToString(), "compact digit " + digit);
+            Require(HotbarKeyLabels.Display(settings.Cast<IKeySettingReader>(), code) == digit.ToString(), "compact digit " + digit);
+            Require(HotbarKeyLabels.Display(null, code) == digit.ToString(), "compact digit without reader " + digit);
         }
-        var settings = new KeySetting();
         var type = ExtraBindings.TypeAt(5);
         settings.BindKey(type, 0, KeyCode.None);
         Require(HotbarKeyLabels.Read(settings.Cast<IKeySettingReader>(), type) == "", "unbound label empty");
@@ -113,9 +114,14 @@ internal static class NativeChecks
         Require(HotbarKeyLabels.Read(settings.Cast<IKeySettingReader>(), type) == "F12", "secondary-only label");
         settings.BindKey(type, 0, KeyCode.Alpha1);
         Require(HotbarKeyLabels.Read(settings.Cast<IKeySettingReader>(), type) == "1", "primary label preferred");
+        // The labels follow the layout chosen in the game's options (Alpha1 is "&" on AZERTY).
+        settings.SetKeyboardLayout(KeyboardLayoutType.AZERTY);
+        var azerty = settings.GetDisplayKey(KeyCode.Alpha1);
+        Require(azerty != "1" && HotbarKeyLabels.Read(settings.Cast<IKeySettingReader>(), type) == azerty, "keyboard layout label");
+        settings.SetKeyboardLayout(KeyboardLayoutType.QWERTY);
         settings.ResetDefaultSetting();
         Require(HotbarKeyLabels.Read(settings.Cast<IKeySettingReader>(), type) == "", "reset leaves skill ten unbound");
-        DungeonSettlers10SlotsMod.Log.Msg("Native key-label checks PASS: Alpha0-9 -> 0-9; original formatter; unbound, secondary-only, primary and reset labels; no campaign settings changed.");
+        DungeonSettlers10SlotsMod.Log.Msg("Native key-label checks PASS: Alpha0-9 -> 0-9; game formatter with and without reader; keyboard layout; unbound, secondary-only, primary and reset labels; no campaign settings changed.");
     }
 
     static void CheckContainer()

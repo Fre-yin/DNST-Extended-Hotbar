@@ -2,6 +2,31 @@
 
 Alle wesentlichen Änderungen an Extended Hotbar werden hier pro veröffentlichter Mod-Version zusammengefasst. MelonLoader- und BepInEx-Ausgaben verwenden dieselbe Versionsnummer und gemeinsame Spiellogik.
 
+## 1.0.2: 10.10.2026
+
+Anpassung an das Spielupdate DS_B.0.4.29 (Steam-Build 25846389), zusammen mit den bisher unveröffentlichten Wartungsänderungen vom 29.09.2026. Unverändert bleiben Spielstandformat, Item-Erweiterung (Version 1), Binding-IDs, Tastenbelegungen, Layout, Rahmengrafik und der DLL-Name `DungeonSettlers10Slots.dll`.
+
+### Spielupdate DS_B.0.4.29
+
+- Neue Fingerabdrücke für Spielcode und Metadaten von Steam-Build 25846389. Auf anderen Spielbuilds schaltet sich die Hotbar weiterhin mit einer Warnung ab. Für DS_B.0.4.23 bleibt 1.0.1 passend.
+- Das Spiel benennt Tasten jetzt nach dem Tastaturlayout aus den Spieloptionen (QWERTY, QWERTZ, AZERTY, JIS). Die Hotbar verwendet dafür dieselbe Funktion des Spiels wie dessen eigene Plätze, weil die bisher genutzte Formatierung entfallen ist. Nach einem Layoutwechsel werden die Namen neu gesetzt.
+- UI-Prüfmodus: Das Spiel hat den früheren Fehler bei Beschriftungen vor `Awake` selbst behoben. Die Prüfung meldet das jetzt, statt den Fehler vorauszusetzen. Die nachgebaute Optionszeile enthält die neuen Auswahlfelder für Tastaturlayout und Kompatibilität, die das Spiel beim Warten auf eine Taste schließt.
+
+### Mod
+
+- Die Release-DLLs enthalten keinen lokalen Build-Pfad mehr (`DebugType none` und `PathMap` für Release). Beide Paketskripte brechen ab, falls eine DLL doch einen Benutzerpfad enthält.
+- Autoren- und Lizenzangaben sind vereinheitlicht. Die MelonLoader-Anzeige lautet „Extended Hotbar v1.0.2 by Fre-yin“.
+- Die Harmony-ID der Speicherprüfung ist angepasst. Das Verhalten bleibt gleich.
+- Der eingestellte Extended Hotbar Helper ist aus dem Repository entfernt. Der CodeQL-Lauf baut nur noch die Mod und ihre Tests.
+- MelonLoader und BepInEx tragen einheitlich Version 1.0.2.
+
+### Prüfung
+
+- Beide Builds ohne Warnungen oder Fehler. Pakettests: MelonLoader 33/33, BepInEx 32/32.
+- Steam-Build 25846389 mit BepInEx 6.0.0-be.788 und MelonLoader 0.7.3: Die nativen Prüfläufe bestanden in beiden Loadern. Geprüft wurden zehn Slots, Speichern und Laden mit einer temporären Datei, die Tastaturmatrix, die Gegenstandsplätze, Kontextmenüs mit None, Shift, Ctrl und Alt, die Tastennamen mit Tastaturlayout, zehn Sprachen und die Lebensdauer des Rahmens. BepInEx beendete den Test mit Exitcode 0.
+- BepInEx: Kampagne geladen. Die UI-Prüfung der Tastennamen bestand auf allen sechs zusätzlichen Plätzen, und die Hotbar liegt mittig zwischen Figurenfeld und Steuerknöpfen.
+- Beide Loader: Kampagnen gemeinsam mit Dungeon Settlers Delvers: Core 0.4.1 und Frieren 0.4.1 geladen. Core erkennt die Ladepatches der Hotbar 1.0.2 als kompatibel, Frieren meldet die Hotbar als kompatibel.
+
 ## 1.0.1 — 26.09.2026
 
 Wartungsausgabe nach einem Code-Review. Kein neuer Funktionsumfang. Unverändert bleiben:

@@ -10,7 +10,7 @@ in LICENSE ist maßgeblich; diese Erklärung verändert ihn nicht.
 
 Diese Freigabe erstreckt sich NICHT auf Dungeon Settlers, Spielcode,
 Spielgrafiken, Spieltexte, Marken oder andere Inhalte fremder Rechteinhaber.
-Insbesondere ist SkillFrame__sharedassets0_mod_4898.png eine von Danny
+Insbesondere ist SkillFrame__sharedassets0_mod_4898.png eine von Fre-yin
 bearbeitete Originalgrafik aus Dungeon Settlers, kein vollständig neu
 geschaffenes, frei lizenziertes Asset. Sie ist ausdrücklich von MIT
 ausgenommen. Der zugehörige Hinweis liegt auch direkt im Grafikordner.
@@ -44,7 +44,7 @@ and license notice is preserved. LICENSE contains the governing license text.
 This grant does NOT cover Dungeon Settlers, game code, game artwork, game
 text, trademarks or other third-party material. In particular,
 SkillFrame__sharedassets0_mod_4898.png is original Dungeon Settlers artwork
-edited by Danny, not a wholly original freely licensed asset. It is expressly
+edited by Fre-yin, not a wholly original freely licensed asset. It is expressly
 excluded from MIT. A notice also accompanies it in the asset folder.
 
 The optional 10SlotsTestfile.json is a prepared Dungeon Settlers save, not

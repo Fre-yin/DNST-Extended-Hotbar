@@ -66,8 +66,9 @@ internal static class HotbarLabelChecks
                         if (primary) settings.BindKey(type, 0, code);
                     }
                     HotbarKeyLabels.Apply(clone, reader);
-                    var expected = code >= KeyCode.Alpha0 && code <= KeyCode.Alpha9
-                        ? ((int)code - (int)KeyCode.Alpha0).ToString() : SubUI_KeySetting.ToDisplayKey(code);
+                    var expected = reader.GetDisplayKey(code);
+                    if (code >= KeyCode.Alpha0 && code <= KeyCode.Alpha9)
+                        Require(expected == ((int)code - (int)KeyCode.Alpha0).ToString(), "QWERTY digit name " + code);
                     for (var extra = 0; extra < DungeonSettlers10SlotsMod.ExtraCount; extra++)
                     {
                         var uiIndex = DungeonSettlers10SlotsMod.FirstExtra + extra + 1;
@@ -88,7 +89,7 @@ internal static class HotbarLabelChecks
             for (var extra = 0; extra < distinct.Length; extra++) settings.BindKey(ExtraBindings.TypeAt(extra), 0, distinct[extra]);
             HotbarKeyLabels.Apply(clone, reader);
             for (var extra = 0; extra < distinct.Length; extra++)
-                Require(clone._skillSlots[DungeonSettlers10SlotsMod.FirstExtra + extra + 1]._txtInputKey.GetText() == HotbarKeyLabels.Display(distinct[extra]), "distinct extra-slot routing " + extra);
+                Require(clone._skillSlots[DungeonSettlers10SlotsMod.FirstExtra + extra + 1]._txtInputKey.GetText() == HotbarKeyLabels.Display(reader, distinct[extra]), "distinct extra-slot routing " + extra);
 
             settings.ResetDefaultSetting();
             HotbarKeyLabels.Apply(clone, reader);

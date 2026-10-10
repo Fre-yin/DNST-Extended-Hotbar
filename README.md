@@ -4,7 +4,7 @@
 
 Zehn aktive Fähigkeitsplätze, ein separater Basisangriff und drei Gegenstandsplätze für Dungeon Settlers.
 
-**Version 1.0.1 für MelonLoader und BepInEx — Wartungsausgabe der funktionsvollständigen 1.0.**
+**Version 1.0.2 für BepInEx und MelonLoader: die funktionsvollständige 1.0, angepasst an das Spielupdate DS_B.0.4.29.**
 
 ## Downloads
 
@@ -12,8 +12,8 @@ Lade das eigenständige Mod-Paket für deinen installierten Loader herunter:
 
 | Loader | Mod-Paket |
 | --- | --- |
-| MelonLoader | [Extended-Hotbar-1.0.1.zip](https://github.com/Fre-yin/DNST-Extended-Hotbar/releases/download/v1.0.1/Extended-Hotbar-1.0.1.zip) |
-| BepInEx | [Extended-Hotbar-BepInEx-1.0.1.zip](https://github.com/Fre-yin/DNST-Extended-Hotbar/releases/download/v1.0.1/Extended-Hotbar-BepInEx-1.0.1.zip) |
+| BepInEx | [Extended-Hotbar-BepInEx-1.0.2.zip](https://github.com/Fre-yin/DNST-Extended-Hotbar/releases/download/v1.0.2/Extended-Hotbar-BepInEx-1.0.2.zip) |
+| MelonLoader | [Extended-Hotbar-1.0.2.zip](https://github.com/Fre-yin/DNST-Extended-Hotbar/releases/download/v1.0.2/Extended-Hotbar-1.0.2.zip) |
 
 Diese Links führen direkt zu den jeweiligen Mod-ZIPs. Die automatisch erzeugten Quellcode-Archive sind keine Installationspakete.
 
@@ -21,13 +21,13 @@ Nur das MelonLoader-Paket enthält den optionalen Demo-Spielstand DS_B.0.4.17. E
 
 ## Voraussetzungen und Installation
 
-- Windows x64 und Dungeon Settlers **Steam-Build 25284551 auf der unveränderten DS_B.0.4.23-Codebasis**. Build 25269660 verwendet dieselben geprüften Spielcode- und Metadaten-Fingerabdrücke.
-- Separat installiertes **MelonLoader 0.7.3** oder **BepInEx 6 Unity IL2CPP x64**, getestet mit **6.0.0-be.788+5b766a3**. BepInEx 5 und Mono werden nicht unterstützt.
+- Windows x64 und Dungeon Settlers **Steam-Build 25846389 (DS_B.0.4.29)**. Für die ältere Spielversion DS_B.0.4.23 bleibt 1.0.1 passend. Bei einem anderen Spielbuild schaltet sich die Hotbar mit einer Warnung ab.
+- Separat installiertes **BepInEx 6 Unity IL2CPP x64**, getestet mit **6.0.0-be.788+5b766a3**, oder **MelonLoader 0.7.3**. BepInEx 5 und Mono werden nicht unterstützt.
 - Pro Spielordner nur einen Loader verwenden. Die Pakete enthalten weder das Spiel noch den Loader.
 
 1. Spielstände sichern und alle Spielinstanzen schließen. Verschiedene Spielkopien können dieselben Spielstände und Einstellungen verwenden.
 2. Das zu deinem Loader passende Mod-ZIP entpacken.
-3. Bei MelonLoader den enthaltenen **Mods**-Ordner mit dem Spielordner zusammenführen. Bei BepInEx den enthaltenen **BepInEx**-Ordner mit dem Spielordner zusammenführen.
+3. Bei BepInEx den enthaltenen **BepInEx**-Ordner mit dem Spielordner zusammenführen. Bei MelonLoader den enthaltenen **Mods**-Ordner mit dem Spielordner zusammenführen.
 4. Die mitgelieferte Ordnerstruktur beibehalten: Mod-DLL und Grafikordner gehören zusammen. Bei einem Update die bisherigen Hotbar-Dateien vorher außerhalb des Mod-Ordners sichern.
 5. Das Spiel starten, zunächst in einer Testkampagne prüfen und die gewünschten Tasten in den Spieloptionen belegen.
 
@@ -39,7 +39,14 @@ Wähle deine Tasten selbst in den Spieloptionen. Es gibt kein vorgeschriebenes T
 
 ## Prüfstand und Grenzen
 
-1.0.1 ist eine Wartungsausgabe ohne neuen Funktionsumfang. Spielstandformat, Tastenbelegungen, Layout und Grafik sind gegenüber 1.0.0 unverändert. Die Änderungen:
+1.0.2 passt die Hotbar an das Spielupdate DS_B.0.4.29 an. Spielstandformat, Tastenbelegungen, Layout und Grafik sind gegenüber 1.0.0 unverändert. Neu in 1.0.2:
+- Unterstützt Steam-Build 25846389 (DS_B.0.4.29).
+- Die Tastennamen auf der Hotbar folgen dem Tastaturlayout, das in den Spieloptionen eingestellt ist (QWERTY, QWERTZ, AZERTY oder JIS), wie bei den Plätzen des Spiels.
+- Die DLLs enthalten keinen lokalen Build-Pfad mehr.
+- Autoren- und Lizenzangaben sind vereinheitlicht.
+- Der eingestellte Extended Hotbar Helper ist nicht mehr Teil des Repositorys.
+
+Die Änderungen von 1.0.1:
 - BepInEx deaktiviert sich bei unbekanntem Spielbuild jetzt wie MelonLoader nur mit einer Warnung.
 - Das BepInEx-Log enthält keinen lokalen Spielordner mehr.
 - Der Speicherpfad-Abgleich ist robuster, und ein unbestätigtes Speichern wird im Log gemeldet.
@@ -48,7 +55,7 @@ Wähle deine Tasten selbst in den Spieloptionen. Es gibt kein vorgeschriebenes T
 
 Einzelheiten stehen im [Changelog](DungeonSettlers10Slots/CHANGELOG.md).
 
-Beide 1.0.1-Builds liefen mit 0 Warnungen und 0 Fehlern. Die Pakettests bestanden mit 33/33 für MelonLoader und 32/32 für BepInEx. Die BepInEx-DLL bestand die nativen Prüfläufe einschließlich UI-Prüfungen mit geladener Kampagne, gemeinsam mit Dungeon Settlers Delvers: Core 0.2.0. Die MelonLoader-DLL lud gemeinsam mit Delvers Core und Frieren 0.2.0. Die vollständigen nativen 1.0.0-Prüfungen auf Steam-Build 25284551 sind im [Patchbericht](DungeonSettlers10Slots/PATCH-25284551.md) beschrieben.
+Beide 1.0.2-Builds liefen ohne Warnungen und Fehler. Die Pakettests bestanden mit 33/33 für MelonLoader und 32/32 für BepInEx. Auf Steam-Build 25846389 bestanden die nativen Prüfungen in beiden Loadern: zehn Slots, Speichern und Laden, Tastaturmatrix, Gegenstandsplätze, zehn Sprachen, Rahmen und Loader-Lebenszyklus. Unter BepInEx wurde zusätzlich eine Kampagne geladen und die Hotbar mit ihren Tastennamen geprüft. In beiden Loadern wurden außerdem Kampagnen gemeinsam mit Dungeon Settlers Delvers: Core 0.4.1 und Frieren 0.4.1 geladen; Core erkannte die Ladepatches der Hotbar 1.0.2 als kompatibel, und Frieren meldet die Hotbar als kompatibel. Einzelheiten stehen im [Patchbericht](DungeonSettlers10Slots/PATCH-25846389.md).
 
 Version 1.0 bezeichnet den abgeschlossenen Funktionsumfang. Sichtbarer Kampf- und Langzeitbetrieb, Kampagnenwechsel, alle Auflösungen und beliebige Fremdmod-Kombinationen sind dadurch nicht vollständig geprüft. Die Prüfläufe veränderten keine reale Kampagne, persönlichen Tastenbelegungen oder Steam-Dateien. Abweichende Spielcode- oder Metadaten-Fingerabdrücke werden weiterhin blockiert.
 

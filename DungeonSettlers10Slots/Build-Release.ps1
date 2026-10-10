@@ -61,6 +61,11 @@ $builtFileInfo = [Diagnostics.FileVersionInfo]::GetVersionInfo($builtDll)
 if ($builtFileInfo.ProductName -ne 'Extended Hotbar' -or $builtFileInfo.FileDescription -ne 'Extended Hotbar') {
     throw 'Sichtbarer DLL-Name ist nicht Extended Hotbar; keine Paketierung.'
 }
+# A local build path (for example a debug-file path) would reveal the builder's user folder.
+$builtText = [Text.Encoding]::GetEncoding(28591).GetString([IO.File]::ReadAllBytes($builtDll))
+if ($builtText -match '(?i):\\Users\\|:\x00\\\x00U\x00s\x00e\x00r\x00s\x00') {
+    throw 'Die DLL enthält einen lokalen Benutzerpfad; keine Paketierung. Siehe PathMap in Directory.Build.props.'
+}
 $packageFiles = [ordered]@{
     "Mods/$assemblyName.dll" = $builtDll
     "Mods/DungeonSettlers10SlotsAssets/$assetName" = $framePath

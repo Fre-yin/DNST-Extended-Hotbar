@@ -19,6 +19,11 @@ if ([Reflection.AssemblyName]::GetAssemblyName($dll).Name -ne 'DungeonSettlersHo
     [Diagnostics.FileVersionInfo]::GetVersionInfo($dll).ProductVersion -ne $version) {
     throw 'Unexpected plugin identity/version.'
 }
+# A local build path (for example a debug-file path) would reveal the builder's user folder.
+$dllText = [Text.Encoding]::GetEncoding(28591).GetString([IO.File]::ReadAllBytes($dll))
+if ($dllText -match '(?i):\\Users\\|:\x00\\\x00U\x00s\x00e\x00r\x00s\x00') {
+    throw 'The DLL contains a local user path; no package created. See PathMap in Directory.Build.props.'
+}
 $shared = Join-Path $PSScriptRoot '..\DungeonSettlers10Slots'
 $plugin = 'BepInEx/plugins/ExtendedHotbar'
 $files = [ordered]@{

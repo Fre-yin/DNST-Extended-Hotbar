@@ -9,10 +9,10 @@ The development handover reports:
 - 224 Helper tests passed, including loader separation, profile conflicts, undo and signature purposes.
 - 150 UI previews across ten languages were generated; selected German/Japanese views were inspected.
 - BepInEx native and normal-start checks completed cleanly; the normal run recorded 548 update and three scene callbacks. Native tests included 3312 keyboard-assignment checks.
-- Danny subsequently confirmed key configuration in the Steam version and other functions as successful on 2026-09-10. This does not identify every test case or establish complete BepInEx combat/long-session coverage.
+- Fre-yin subsequently confirmed key configuration in the Steam version and other functions as successful on 2026-09-10. This does not identify every test case or establish complete BepInEx combat/long-session coverage.
 
 The loader message `Class::Init signatures have been exhausted, using a substitute!` remains visible. Documented tests passed despite it. Unknown game fingerprints stay blocked. Long campaigns and arbitrary third-party mod combinations are not comprehensively validated.
 
 The unchanged release ZIP has 64392 bytes and SHA256 `77193451CD045D03A50E24A80F2D0582E178F335D90926EDF9AAF9E6B3880547`. Packaged instructions retain their earlier conservative test status; no archive was repacked for this documentation update.
 
-Deutsch: Dieser Bericht fasst den freigegebenen Entwicklungsstand und Dannys anschließende Rückmeldung zusammen. Er ist kein neuer Kompletttest und keine universelle Kompatibilitätsgarantie. Spielkopien teilen normalerweise Saves/Einstellungen; Kopien nicht gleichzeitig starten und Originalspielstände sichern.
+Deutsch: Dieser Bericht fasst den freigegebenen Entwicklungsstand und die anschließende Rückmeldung von Fre-yin zusammen. Er ist kein neuer Kompletttest und keine universelle Kompatibilitätsgarantie. Spielkopien teilen normalerweise Saves/Einstellungen; Kopien nicht gleichzeitig starten und Originalspielstände sichern.

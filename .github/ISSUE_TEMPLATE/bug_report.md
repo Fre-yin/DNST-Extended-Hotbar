@@ -1,6 +1,6 @@
 ---
 name: "Fehler melden / Bug report"
-about: "Ein Problem mit Hotbar oder Helper melden / Report a Hotbar or Helper problem"
+about: "Ein Problem mit der Hotbar melden / Report a Hotbar problem"
 title: "[Bug] "
 labels: ""
 assignees: ""
@@ -17,9 +17,7 @@ Was funktioniert nicht? / What is not working?
 ## Versionen / Versions
 Nicht relevante Angaben mit „N/A“ markieren. / Mark irrelevant entries as “N/A”.
 
-- Komponente / Component: Hotbar / Helper / beide (both)
 - Hotbar-Version / Hotbar version:
-- Helper-Version / Helper version:
 - Spielversion oder Steam-Build / Game version or Steam build:
 - MelonLoader-Version / MelonLoader version:
 - Windows-Version / Windows version:

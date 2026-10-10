@@ -4,9 +4,9 @@
 
 ### Geltungsbereich
 
-Diese Richtlinie gilt für DNST Extended Hotbar und den Extended Hotbar Helper.
+Diese Richtlinie gilt für DNST Extended Hotbar.
 
-Das Projekt befindet sich in der Vorabphase. Sicherheitskorrekturen werden für die jeweils aktuelle veröffentlichte Version der betroffenen Komponente vorgesehen. Für ältere Versionen werden keine separaten Sicherheitsupdates zugesichert. Hotbar und Helper haben unabhängige Versionsnummern.
+Das Projekt befindet sich in der Vorabphase. Sicherheitskorrekturen werden für die jeweils aktuelle veröffentlichte Version der Hotbar vorgesehen. Für ältere Versionen werden keine separaten Sicherheitsupdates zugesichert.
 
 ### Eine Sicherheitslücke melden
 
@@ -32,9 +32,9 @@ Allgemeine Fehler und Funktionswünsche ohne Sicherheitsbezug können über die 
 
 ### Scope
 
-This policy applies to DNST Extended Hotbar and the Extended Hotbar Helper.
+This policy applies to DNST Extended Hotbar.
 
-The project is in prerelease development. Security fixes are intended for the latest published version of the affected component. Separate security updates for older versions are not guaranteed. Hotbar and Helper use independent version numbers.
+The project is in prerelease development. Security fixes are intended for the latest published version of the Hotbar. Separate security updates for older versions are not guaranteed.
 
 ### Reporting a vulnerability
 

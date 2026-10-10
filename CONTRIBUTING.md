@@ -2,7 +2,7 @@
 
 ## Deutsch
 
-Beiträge zu DNST Extended Hotbar und dem Extended Hotbar Helper sind willkommen: Fehlermeldungen, Verbesserungsvorschläge, Dokumentation, Übersetzungen und gezielte Codeänderungen.
+Beiträge zu DNST Extended Hotbar sind willkommen: Fehlermeldungen, Verbesserungsvorschläge, Dokumentation, Übersetzungen und gezielte Codeänderungen.
 
 Bitte beachte unseren [Verhaltenskodex](CODE_OF_CONDUCT.md). Beiträge und Rückfragen sind auf Deutsch oder Englisch möglich.
 
@@ -10,8 +10,7 @@ Bitte beachte unseren [Verhaltenskodex](CODE_OF_CONDUCT.md). Beiträge und Rück
 
 Prüfe zuerst die README, die aktuellen Release-Hinweise und bestehende Issues. Wenn der Fehler noch nicht gemeldet wurde, erstelle ein Issue mit:
 
-- Betroffener Komponente: Hotbar oder Helper
-- Genauer Hotbar- und Helper-Version, soweit relevant
+- Genauer Hotbar-Version, soweit relevant
 - Spielversion bzw. Steam-Build sowie MelonLoader- und Windows-Version
 - Schritten zur Reproduktion
 - Erwartetem und tatsächlich beobachtetem Verhalten
@@ -40,13 +39,13 @@ Bei Übersetzungen gib bitte Sprache, betroffene Ansicht, bisherigen Text und de
 - Aktualisiere betroffene Dokumentation.
 - Füge keine Spieldateien, persönlichen Spielstände, Zugangsdaten oder privaten Signierschlüssel hinzu. Vermeide erzeugte Builds und Release-Archive in Quellcode-Pull-Requests.
 
-Hotbar und Helper werden unabhängig versioniert. Versionsänderungen, signierte Updatepakete und Veröffentlichungen werden mit dem Maintainer abgestimmt. Bestehende Release-Dateien und Tags dürfen nicht still ersetzt werden.
+Versionsänderungen und Veröffentlichungen werden mit dem Maintainer abgestimmt. Bestehende Release-Dateien und Tags dürfen nicht still ersetzt werden.
 
 Das Projekt wird in der Freizeit betreut. Eine feste Bearbeitungsfrist oder die Übernahme jedes Vorschlags kann nicht zugesichert werden.
 
 ## English
 
-Contributions to DNST Extended Hotbar and the Extended Hotbar Helper are welcome, including bug reports, suggestions, documentation, translations, and focused code changes.
+Contributions to DNST Extended Hotbar are welcome, including bug reports, suggestions, documentation, translations, and focused code changes.
 
 Please follow our [Code of Conduct](CODE_OF_CONDUCT.md). Contributions and questions may be written in German or English.
 
@@ -54,8 +53,7 @@ Please follow our [Code of Conduct](CODE_OF_CONDUCT.md). Contributions and quest
 
 Check the README, current release notes, and existing issues first. If the problem has not been reported, open an issue with:
 
-- Affected component: Hotbar or Helper
-- Exact Hotbar and Helper versions, where relevant
+- Exact Hotbar version, where relevant
 - Game version or Steam build, plus MelonLoader and Windows versions
 - Steps to reproduce the problem
 - Expected and actual behavior
@@ -84,6 +82,6 @@ For translations, include the language, affected screen, current text, and sugge
 - Update affected documentation.
 - Do not include game files, personal saves, credentials, or private signing keys. Keep generated builds and release archives out of source-code pull requests.
 
-Hotbar and Helper use independent version numbers. Version changes, signed update packages, and releases are coordinated with the maintainer. Existing release assets and tags must not be silently replaced.
+Version changes and releases are coordinated with the maintainer. Existing release assets and tags must not be silently replaced.
 
 This project is maintained in spare time. Review times and acceptance of proposals are not guaranteed.

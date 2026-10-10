@@ -44,8 +44,8 @@ jobs:
         with:
           category: '/language:csharp'
 
-  helper-and-core:
-    name: Helper and core tests (manual build)
+  core-tests:
+    name: Core tests (manual build)
     runs-on: windows-2022
     timeout-minutes: 30
     permissions:
@@ -60,8 +60,7 @@ jobs:
         with:
           persist-credentials: false
 
-      # The mod tests still target net6.0. Roslyn builds the helper against
-      # the .NET Framework 4.8 Developer Pack on the Windows runner.
+      # The mod tests still target net6.0; SDK 10 supplies the compiler.
       - name: Install compiler and test target packs
         uses: actions/setup-dotnet@26b0ec14cb23fa6904739307f278c14f94c95bf1 # v5
         with:
@@ -69,35 +68,11 @@ jobs:
             6.0.x
             10.0.x
 
-      - name: Download the pinned helper resource
-        run: |
-          $ErrorActionPreference = 'Stop'
-          $package = Join-Path $env:RUNNER_TEMP 'Extended-Hotbar-0.3.8.zip'
-          Invoke-WebRequest -Uri 'https://github.com/Fre-yin/DNST-Extended-Hotbar/releases/download/helper-v0.1.12/Extended-Hotbar-0.3.8.zip' -OutFile $package -TimeoutSec 120
-          $expected = 'D7824BD6B31E3760EBC803111261B75EC5ADF60FAE87B7AAC444DF9B2993F544'
-          if ((Get-FileHash -LiteralPath $package -Algorithm SHA256).Hash -ne $expected) {
-            throw 'Unexpected mod resource; refusing the helper build.'
-          }
-          $bepPackage = Join-Path $env:RUNNER_TEMP 'Extended-Hotbar-BepInEx-0.3.8-bepinex.1.zip'
-          Invoke-WebRequest -Uri 'https://github.com/Fre-yin/DNST-Extended-Hotbar/releases/download/helper-v0.1.12/Extended-Hotbar-BepInEx-0.3.8-bepinex.1.zip' -OutFile $bepPackage -TimeoutSec 120
-          if ((Get-FileHash -LiteralPath $bepPackage -Algorithm SHA256).Hash -ne '77193451CD045D03A50E24A80F2D0582E178F335D90926EDF9AAF9E6B3880547') {
-            throw 'Unexpected BepInEx resource; refusing the helper build.'
-          }
-          # Both packages are embedded only; never installed or launched.
-
       - name: Initialize CodeQL
         uses: github/codeql-action/init@cdf488f595d80d6e07e03d4674febd5ab45fa938 # v4
         with:
           languages: csharp
           build-mode: manual
-
-      - name: Build the real helper and run its isolated tests
-        run: |
-          $ErrorActionPreference = 'Stop'
-          $package = Join-Path $env:RUNNER_TEMP 'Extended-Hotbar-0.3.8.zip'
-          $output = Join-Path $env:RUNNER_TEMP 'cql-h'
-          $bepPackage = Join-Path $env:RUNNER_TEMP 'Extended-Hotbar-BepInEx-0.3.8-bepinex.1.zip'
-          & .\HotbarHelper\Build.ps1 -PackagePath $package -BepInExPackagePath $bepPackage -OutputDirectory $output
 
       - name: Rebuild the game-independent core tests
         run: |
@@ -110,7 +85,7 @@ jobs:
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 
       # Separate category: this result supplements, never replaces, all-source.
-      - name: Analyze the compiled helper and core tests
+      - name: Analyze the compiled core tests
         uses: github/codeql-action/analyze@cdf488f595d80d6e07e03d4674febd5ab45fa938 # v4
         with:
-          category: '/language:csharp/build:helper-and-core'
+          category: '/language:csharp/build:core-tests'

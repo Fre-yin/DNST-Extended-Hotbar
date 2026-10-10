@@ -6,7 +6,7 @@
     <Nullable>disable</Nullable>
     <AssemblyName>DungeonSettlersHotbar.BepInEx</AssemblyName>
     <RootNamespace>DungeonSettlers10Slots</RootNamespace>
-    <Version>1.0.1</Version>
+    <Version>1.0.2</Version>
     <AssemblyTitle>Extended Hotbar (BepInEx)</AssemblyTitle>
     <Product>Extended Hotbar</Product>
     <Deterministic>true</Deterministic>

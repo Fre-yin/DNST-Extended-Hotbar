@@ -2,5 +2,8 @@
   <PropertyGroup>
     <!-- All dependencies come from local SDK packs and the user's game folder. -->
     <RestoreConfigFile>$(MSBuildThisFileDirectory)NuGet.Config</RestoreConfigFile>
+    <!-- Release DLLs carry no debug-file path, so they never contain a local user folder. -->
+    <DebugType Condition="'$(Configuration)' == 'Release'">none</DebugType>
+    <PathMap Condition="'$(Configuration)' == 'Release'">$(MSBuildProjectDirectory)=/_/ExtendedHotbar/$(MSBuildProjectName)</PathMap>
   </PropertyGroup>
 </Project>

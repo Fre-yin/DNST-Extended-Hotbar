@@ -29,7 +29,7 @@ internal static class CombatBindingPreset
     {
         OriginalDefaults ??= bindings.ToArray();
         // Extend the native schema, never replace a native or user-selected key.
-        // Binding profiles belong to the Helper's explicit, backed-up operation.
+        // The mod never writes whole binding profiles.
         var extra = Enumerable.Range(0, DungeonSettlers10SlotsMod.ExtraCount).Select(ExtraBindings.TypeAt)
             .Concat(Enumerable.Range(1, 2).Select(ItemSlotInput.Key));
         foreach (var type in extra)
@@ -137,9 +137,9 @@ internal static class ShowCombatBindingModifiers
     internal static string Label(IKeySettingReader reader, KeyInputType type, int column)
     {
         if (!reader.TryGetBinding(type, column, out var binding) || binding.KeyCode == KeyCode.None) return "-";
-        var key = HotbarKeyLabels.Display(binding.KeyCode);
+        var key = HotbarKeyLabels.Display(reader, binding.KeyCode);
         if (binding.ModifierKey == KeyCode.None) return key;
-        var modifier = binding.ModifierKey == KeyCode.LeftShift ? "Shift" : HotbarKeyLabels.Display(binding.ModifierKey);
+        var modifier = binding.ModifierKey == KeyCode.LeftShift ? "Shift" : HotbarKeyLabels.Display(reader, binding.ModifierKey);
         return modifier + "+" + key;
     }
 
