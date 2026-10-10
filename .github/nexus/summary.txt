@@ -1,0 +1,1 @@
+Expands the Dungeon Settlers hotbar to 10 skill slots and 3 item quickslots. Version 1.0.2 for game version DS_B.0.4.29, with downloads for BepInEx and MelonLoader.

@@ -1,0 +1,80 @@
+EXTENDED HOTBAR
+
+More room for skills and items in Dungeon Settlers.
+
+Extended Hotbar expands the game's hotbar to 10 active skill slots, a separate basic attack and 3 item quickslots. Version 1.0.2 adapts the mod to the Dungeon Settlers game update DS_B.0.4.29, for both BepInEx and MelonLoader. The layout, artwork, key bindings and save format are unchanged from 1.0.0, so you can update without resetting your settings or migrating your saves.
+
+Choose the download that matches the mod loader you already use. You only need one.
+
+DOWNLOADS
+
+Extended Hotbar - BepInEx 1.0.2
+For BepInEx 6 Unity IL2CPP x64. This package does not contain a demo save.
+
+Extended Hotbar - MelonLoader 1.0.2
+For MelonLoader 0.7.3. This package also contains an optional DS_B.0.4.17 demo save. It is never imported automatically and is not needed to use the mod.
+
+WHAT IT DOES
+
+• Adds 10 active skill slots, a separate basic attack and 3 item quickslots.
+• Keeps the game's default keys and your existing saved bindings.
+• Lets you assign keys for the additional actions in the normal game options. New actions start unbound.
+• Shows key names in the keyboard layout chosen in the game options (QWERTY, QWERTZ, AZERTY or JIS).
+• Uses the game's hotbar, input and binding systems where possible.
+• Does not replace original game files.
+
+REQUIREMENTS
+
+• Windows x64.
+• Dungeon Settlers Steam build 25846389 (DS_B.0.4.29). For the older game version DS_B.0.4.23, use 1.0.1.
+• One separately installed loader: BepInEx 6 Unity IL2CPP x64, tested with 6.0.0-be.788+5b766a3, or MelonLoader 0.7.3.
+
+BepInEx 5 and BepInEx Mono are not supported. Do not run MelonLoader and BepInEx in the same game installation. The game and mod loaders are not included. If the game code or metadata does not match the supported build, the mod disables itself with a warning.
+
+INSTALLATION AND UPDATING
+
+1. Back up your saves and close the game. Separate game copies may share saves and settings.
+2. Install your chosen mod loader separately, then download the matching Extended Hotbar ZIP.
+3. For BepInEx, merge the included BepInEx folder into the game folder. For MelonLoader, merge the included Mods folder into the game folder.
+4. Keep the package's folder structure. The mod DLL and its artwork folder belong together.
+5. Before updating, back up your previous Hotbar files outside the mod folder and remove duplicate Hotbar DLLs.
+6. Start the game, try the mod in a test campaign and set your preferred keys in the game options.
+
+There is no required key profile. Existing binding conflicts are not cleared automatically, so check for overlapping assignments when setting up the new slots. Do not put the MelonLoader DLL in BepInEx or the BepInEx DLL in MelonLoader.
+
+WHAT CHANGED IN 1.0.2
+
+• Supports the Dungeon Settlers game update DS_B.0.4.29 (Steam build 25846389). Older Hotbar versions turn themselves off on this build.
+• Key names on the Hotbar follow the keyboard layout chosen in the game options, like the game's own slots.
+• The DLLs no longer contain a local build path.
+• Author and license notes are unified.
+• The discontinued Extended Hotbar Helper was removed.
+
+SAVES AND COMPATIBILITY
+
+Back up important saves before installing or updating any mod. The optional demo save in the MelonLoader ZIP must be imported manually if you want to use it. Removing Extended Hotbar does not convert a modded save back to a vanilla save. Reassigning controls in the game options can usually resolve leftover additional bindings.
+
+Extended Hotbar 1.0.2 was tested together with Dungeon Settlers Delvers: Core 0.4.1 and Frieren 0.4.1. If you use Delvers, update both to 0.4.1 for this game version.
+
+Earlier testing found severe 1 to 3 second freezes when selecting characters with Tic's Settler Toolkit 1.0.0 active. Extended Hotbar alone did not show that lag. Avoid using both mods together during normal play until this combination has been checked again. If the issue also occurs without the toolkit, please include your full mod list and loader log in a report.
+
+TESTING AND LIMITATIONS
+
+Both 1.0.2 packages built with 0 warnings and 0 errors. Package tests passed 32/32 for BepInEx and 33/33 for MelonLoader. On Steam build 25846389 the native checks passed under both loaders, and under BepInEx a campaign was loaded and the Hotbar was checked with its key names. Under both loaders, campaigns also ran alongside Dungeon Settlers Delvers: Core 0.4.1 and Frieren 0.4.1.
+
+These checks do not cover every campaign state, long play session, resolution or combination of third-party mods. The tested BepInEx loader may print "Class::Init signatures have been exhausted, using a substitute!"; the documented tests passed despite that message. If you encounter a problem, include the relevant log rather than assuming any warning is harmless.
+
+BUG REPORTS
+
+Please include the game version and Steam build, Extended Hotbar version, exact loader version, a complete list of other mods, steps to reproduce the issue and the relevant loader log. Remove personal information from logs before sharing them.
+
+Source code, releases and issue tracker:
+[url]https://github.com/Fre-yin/DNST-Extended-Hotbar[/url]
+
+CREDITS AND LICENSE
+
+An unofficial community project by Fre-yin. This is not an official CanOpener or publisher product.
+
+Original project code and instructions are licensed under the MIT License. Game artwork, demo saves and other game content are excluded. See the supplied license and third-party notices for details.
+
+Thanks to the MelonLoader and BepInEx projects.
