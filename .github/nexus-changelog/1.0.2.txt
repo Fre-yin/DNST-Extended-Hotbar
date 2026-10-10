@@ -1,0 +1,6 @@
+Updated for the Dungeon Settlers game update DS_B.0.4.29 (Steam build 25846389). Older Hotbar versions turn themselves off on this build.
+Key names on the Hotbar follow the keyboard layout chosen in the game options (QWERTY, QWERTZ, AZERTY or JIS).
+Tested together with Dungeon Settlers Delvers: Core 0.4.1 and Frieren 0.4.1. If you use Delvers, update both to 0.4.1.
+The DLLs no longer contain a local build path.
+Author and license notes now name Fre-yin only.
+The discontinued Extended Hotbar Helper was removed.
